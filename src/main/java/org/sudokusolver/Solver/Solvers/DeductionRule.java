@@ -1,6 +1,6 @@
-package org.example.Solver.Solvers;
+package org.sudokusolver.Solver.Solvers;
 
-import org.example.Core.SudokuBoard;
+import org.sudokusolver.Core.SudokuBoard;
 
 @FunctionalInterface
 public interface DeductionRule {

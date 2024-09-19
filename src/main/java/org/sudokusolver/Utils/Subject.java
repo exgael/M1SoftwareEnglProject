@@ -1,4 +1,4 @@
-package org.example.Utils;
+package org.sudokusolver.Utils;
 
 public interface Subject<T> {
     void addObserver(Observer<T> observer);
