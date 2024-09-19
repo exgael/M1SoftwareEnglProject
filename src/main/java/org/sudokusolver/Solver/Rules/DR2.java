@@ -1,7 +1,7 @@
-package org.example.Solver.Rules;
+package org.sudokusolver.Solver.Rules;
 
-import org.example.Core.SudokuBoard;
-import org.example.Solver.Solvers.DeductionRule;
+import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 public class DR2 implements DeductionRule {
     @Override

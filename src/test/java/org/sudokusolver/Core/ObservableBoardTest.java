@@ -1,6 +1,6 @@
-package org.example.Core;
+package org.sudokusolver.Core;
 
-import org.example.Utils.Observer;
+import org.sudokusolver.Utils.Observer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;

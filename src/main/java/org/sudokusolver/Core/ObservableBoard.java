@@ -1,7 +1,7 @@
-package org.example.Core;
+package org.sudokusolver.Core;
 
-import org.example.Utils.Observer;
-import org.example.Utils.Subject;
+import org.sudokusolver.Utils.Observer;
+import org.sudokusolver.Utils.Subject;
 
 import java.util.ArrayList;
 import java.util.List;

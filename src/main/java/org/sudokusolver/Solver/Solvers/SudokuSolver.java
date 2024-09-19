@@ -1,4 +1,4 @@
-package org.example.Solver.Solvers;
+package org.sudokusolver.Solver.Solvers;
 
 public class SudokuSolver {
 

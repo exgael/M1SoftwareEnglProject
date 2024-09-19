@@ -1,4 +1,4 @@
-package org.example.Core;
+package org.sudokusolver.Core;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
-package org.example;
+package org.sudokusolver;
 
-import org.example.Solver.Solvers.SudokuSolution;
-import org.example.Solver.Solvers.SudokuSolver;
+import org.sudokusolver.Solver.Solvers.SudokuSolution;
+import org.sudokusolver.Solver.Solvers.SudokuSolver;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.example.Utils;
+package org.sudokusolver.Utils;
 
 @FunctionalInterface
 public interface Observer<T> {

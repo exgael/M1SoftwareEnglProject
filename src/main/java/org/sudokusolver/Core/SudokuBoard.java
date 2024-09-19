@@ -1,4 +1,4 @@
-package org.example.Core;
+package org.sudokusolver.Core;
 
 import java.util.ArrayList;
 import java.util.List;
