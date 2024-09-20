@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DR3 implements DeductionRule {
 
-    private static boolean applyNakedPair(List<SudokuCell> unresolved) {
+    private boolean applyNakedPair(List<SudokuCell> unresolved) {
         for (int i = 0; i < unresolved.size(); i++) {
             var cell = unresolved.get(i);
             if (cell.candidateCount() == 2) {
