@@ -2,6 +2,7 @@ package org.sudokusolver.Core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
@@ -59,6 +60,25 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
                 .filter(value -> canPlaceValue(row, col, value))
                 .boxed()
                 .toList();
+    }
+    public Set<Integer> getCandidates(int row, int col) {
+        return getElement(row, col).getCandidates();
+    }
+
+    public void removeCandidate(int row, int col, int candidate) {
+        getElement(row, col).removeCandidate(candidate);
+    }
+
+    public boolean hasCandidate(int row, int col, int candidate) {
+        return getElement(row, col).hasCandidate(candidate);
+    }
+
+    public boolean isCellSolved(int row, int col) {
+        return getValue(row, col) != 0;
+    }
+
+    public int candidateCount(int row, int col) {
+        return getElement(row, col).candidateCount();
     }
 
     private boolean isValueInRow(int row, int value) {
