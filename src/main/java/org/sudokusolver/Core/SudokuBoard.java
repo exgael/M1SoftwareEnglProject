@@ -61,6 +61,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
                 .boxed()
                 .toList();
     }
+
     public Set<Integer> getCandidates(int row, int col) {
         return getElement(row, col).getCandidates();
     }
@@ -105,6 +106,36 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInColumn(col, cell -> {
             if (cell.candidateCount() == count) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findUnsolvedCellsInSubgrid(int row, int col) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInSubgrid(row, col, cell -> {
+            if (!cell.isSolved()) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findUnsolvedCellsInRow(int row) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInRow(row, cell -> {
+            if (!cell.isSolved()) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findUnsolvedCellsInColumns(int col) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInColumn(col, cell -> {
+            if (!cell.isSolved()) {
                 cells.add(cell);
             }
         });
