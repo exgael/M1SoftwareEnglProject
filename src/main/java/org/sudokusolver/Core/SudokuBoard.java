@@ -81,6 +81,36 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return getElement(row, col).candidateCount();
     }
 
+    public List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInSubgrid(row, col, cell -> {
+            if (cell.candidateCount() == count) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findCellWithCandidateCountInRow(int row, int count) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInRow(row, cell -> {
+            if (cell.candidateCount() == count) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findCellWithCandidateCountInColumn(int col, int count) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInColumn(col, cell -> {
+            if (cell.candidateCount() == count) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
     private boolean isValueInRow(int row, int value) {
         final boolean[] found = {false};
         forEachInRow(row, cell -> {
