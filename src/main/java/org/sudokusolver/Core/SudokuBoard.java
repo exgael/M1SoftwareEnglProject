@@ -1,19 +1,26 @@
 package org.sudokusolver.Core;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
+public class SudokuBoard extends ObservableBoard<SudokuCell> {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
 
     public SudokuBoard() {
-        super(9, 9, SudokuBoard.Cell::new);
+        super(9, 9, SudokuCell::new);
+        initializeCells();
+    }
+
+    private void initializeCells() {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                getElement(row, col).initializeCandidates(BOARD_SIZE);
+            }
+        }
     }
 
     public int getBoardSize() {
@@ -84,19 +91,19 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return found[0];
     }
 
-    private void forEachInRow(int row, Consumer<Cell> action) {
+    private void forEachInRow(int row, Consumer<SudokuCell> action) {
         for (int col = 0; col < BOARD_SIZE; col++) {
             action.accept(getElement(row, col));
         }
     }
 
-    private void forEachInColumn(int col, Consumer<Cell> action) {
+    private void forEachInColumn(int col, Consumer<SudokuCell> action) {
         for (int row = 0; row < BOARD_SIZE; row++) {
             action.accept(getElement(row, col));
         }
     }
 
-    private void forEachInSubgrid(int row, int col, Consumer<Cell> action) {
+    private void forEachInSubgrid(int row, int col, Consumer<SudokuCell> action) {
         int startRow = row - row % SUBGRID_SIZE;
         int startCol = col - col % SUBGRID_SIZE;
 
@@ -119,54 +126,6 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         if (value < 1 || value > BOARD_SIZE) {
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
-        }
-    }
-
-    public static class Cell {
-        private final Set<Integer> candidates;
-        private int number;
-
-        public Cell() {
-            this.number = 0; // 0 means no number set
-            this.candidates = new HashSet<>();
-            initializeCandidates();
-        }
-
-        private void initializeCandidates() {
-            if (this.number == 0) {
-                for (int i = 1; i <= BOARD_SIZE; i++) {
-                    candidates.add(i);
-                }
-            }
-        }
-
-        public int getNumber() {
-            return number;
-        }
-
-        public void setNumber(int number) {
-            this.number = number;
-            candidates.clear(); // Once a number is set, no candidates are needed
-        }
-
-        public Set<Integer> getCandidates() {
-            return candidates;
-        }
-
-        public void removeCandidate(int candidate) {
-            candidates.remove(candidate);
-        }
-
-        public boolean hasCandidate(int candidate) {
-            return candidates.contains(candidate);
-        }
-
-        public boolean isSolved() {
-            return number != 0;
-        }
-
-        public int candidateCount() {
-            return candidates.size();
         }
     }
 }
