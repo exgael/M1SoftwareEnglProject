@@ -92,7 +92,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findCellWithCandidateCountInRow(int row, int count) {
+    public List<SudokuCell> findsCellWithCandidateCountInRow(int row, int count) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInRow(row, cell -> {
             if (cell.candidateCount() == count) {
@@ -102,7 +102,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findCellWithCandidateCountInColumn(int col, int count) {
+    public List<SudokuCell> findCellsWithCandidateCountInColumn(int col, int count) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInColumn(col, cell -> {
             if (cell.candidateCount() == count) {
