@@ -55,35 +55,33 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
     }
 
     public boolean isValueInRow(int row, int value) {
-        for (int col = 0; col < BOARD_SIZE; col++) {
-            if (getValue(row, col) == value) {
-                return true;
+        final boolean[] found = {false};
+        forEachInRow(row, cell -> {
+            if (cell.getNumber() == value) {
+                found[0] = true;
             }
-        }
-        return false;
+        });
+        return found[0];
     }
 
     public boolean isValueInColumn(int col, int value) {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            if (getValue(row, col) == value) {
-                return true;
+        final boolean[] found = {false};
+        forEachInColumn(col, cell -> {
+            if (cell.getNumber() == value) {
+                found[0] = true;
             }
-        }
-        return false;
+        });
+        return found[0];
     }
 
     public boolean isValueInSubgrid(int row, int col, int value) {
-        int startRow = row - row % SUBGRID_SIZE;
-        int startCol = col - col % SUBGRID_SIZE;
-
-        for (int r = 0; r < SUBGRID_SIZE; r++) {
-            for (int c = 0; c < SUBGRID_SIZE; c++) {
-                if (getValue(startRow + r, startCol + c) == value) {
-                    return false;
-                }
+        final boolean[] found = {false};
+        forEachInSubgrid(row, col, cell -> {
+            if (cell.getNumber() == value) {
+                found[0] = true;
             }
-        }
-        return true;
+        });
+        return found[0];
     }
 
     public void clearValue(int row, int col) {
