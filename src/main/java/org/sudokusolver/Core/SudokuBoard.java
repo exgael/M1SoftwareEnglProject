@@ -74,7 +74,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     }
 
     public boolean isCellSolved(int row, int col) {
-        return getValue(row, col) != 0;
+        return getElement(row, col).isSolved();
     }
 
     public int candidateCount(int row, int col) {
