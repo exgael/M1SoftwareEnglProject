@@ -54,7 +54,7 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
                 .toList();
     }
 
-    public boolean isValueInRow(int row, int value) {
+    private boolean isValueInRow(int row, int value) {
         final boolean[] found = {false};
         forEachInRow(row, cell -> {
             if (cell.getNumber() == value) {
@@ -64,7 +64,7 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return found[0];
     }
 
-    public boolean isValueInColumn(int col, int value) {
+    private boolean isValueInColumn(int col, int value) {
         final boolean[] found = {false};
         forEachInColumn(col, cell -> {
             if (cell.getNumber() == value) {
@@ -74,7 +74,7 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return found[0];
     }
 
-    public boolean isValueInSubgrid(int row, int col, int value) {
+    private boolean isValueInSubgrid(int row, int col, int value) {
         final boolean[] found = {false};
         forEachInSubgrid(row, col, cell -> {
             if (cell.getNumber() == value) {
@@ -84,19 +84,19 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return found[0];
     }
 
-    public void forEachInRow(int row, Consumer<Cell> action) {
+    private void forEachInRow(int row, Consumer<Cell> action) {
         for (int col = 0; col < BOARD_SIZE; col++) {
             action.accept(getElement(row, col));
         }
     }
 
-    public void forEachInColumn(int col, Consumer<Cell> action) {
+    private void forEachInColumn(int col, Consumer<Cell> action) {
         for (int row = 0; row < BOARD_SIZE; row++) {
             action.accept(getElement(row, col));
         }
     }
 
-    public void forEachInSubgrid(int row, int col, Consumer<Cell> action) {
+    private void forEachInSubgrid(int row, int col, Consumer<Cell> action) {
         int startRow = row - row % SUBGRID_SIZE;
         int startCol = col - col % SUBGRID_SIZE;
 
