@@ -1,7 +1,9 @@
 package org.sudokusolver.Core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
@@ -95,12 +97,22 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         }
     }
 
-
     public static class Cell {
+        private final Set<Integer> candidates;
         private int number;
 
         public Cell() {
-            this.number = -1;
+            this.number = 0; // 0 means no number set
+            this.candidates = new HashSet<>();
+            initializeCandidates();
+        }
+
+        private void initializeCandidates() {
+            if (this.number == 0) {
+                for (int i = 1; i <= BOARD_SIZE; i++) {
+                    candidates.add(i);
+                }
+            }
         }
 
         public int getNumber() {
@@ -109,6 +121,27 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
 
         public void setNumber(int number) {
             this.number = number;
+            candidates.clear(); // Once a number is set, no candidates are needed
+        }
+
+        public Set<Integer> getCandidates() {
+            return candidates;
+        }
+
+        public void removeCandidate(int candidate) {
+            candidates.remove(candidate);
+        }
+
+        public boolean hasCandidate(int candidate) {
+            return candidates.contains(candidate);
+        }
+
+        public boolean isSolved() {
+            return number != 0;
+        }
+
+        public int candidateCount() {
+            return candidates.size();
         }
     }
 }
