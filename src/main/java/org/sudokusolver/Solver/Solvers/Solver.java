@@ -1,15 +1,14 @@
 package org.sudokusolver.Solver.Solvers;
 
-import org.sudokusolver.Core.SudokuBoard;
 import org.jetbrains.annotations.NotNull;
+import org.sudokusolver.Core.SudokuBoard;
 
 import java.util.List;
 
 public class Solver {
 
-    private boolean isSolved = false;
-
     private final List<DeductionRule> rules;
+    private boolean isSolved = false;
 
     public Solver(List<DeductionRule> rules) {
         this.rules = rules;
