@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
@@ -94,6 +95,29 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         if (value < 1 || value > BOARD_SIZE) {
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    public void forEachInRow(int row, Consumer<Cell> action) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            action.accept(getElement(row, col));
+        }
+    }
+
+    public void forEachInColumn(int col, Consumer<Cell> action) {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            action.accept(getElement(row, col));
+        }
+    }
+
+    public void forEachInSubgrid(int row, int col, Consumer<Cell> action) {
+        int startRow = row - row % SUBGRID_SIZE;
+        int startCol = col - col % SUBGRID_SIZE;
+
+        for (int r = 0; r < SUBGRID_SIZE; r++) {
+            for (int c = 0; c < SUBGRID_SIZE; c++) {
+                action.accept(getElement(startRow + r, startCol + c));
+            }
         }
     }
 
