@@ -31,6 +31,9 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
     public void setValue(int row, int col, int value) {
         validateValue(value);
         getElement(row, col).setNumber(value);
+        forEachInRow(row, cell -> cell.removeCandidate(value));
+        forEachInColumn(col, cell -> cell.removeCandidate(value));
+        forEachInSubgrid(row, col, cell -> cell.removeCandidate(value));
     }
 
     public void clearValue(int row, int col) {
