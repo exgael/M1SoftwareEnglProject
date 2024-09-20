@@ -24,8 +24,8 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return SUBGRID_SIZE;
     }
 
-    public boolean isBoardSolved() {
-        return false;
+    public int getValue(int row, int col) {
+        return getElement(row, col).getNumber();
     }
 
     public void setValue(int row, int col, int value) {
@@ -33,8 +33,12 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         getElement(row, col).setNumber(value);
     }
 
-    public int getValue(int row, int col) {
-        return getElement(row, col).getNumber();
+    public void clearValue(int row, int col) {
+        getElement(row, col).setNumber(0);
+    }
+
+    public boolean isBoardSolved() {
+        return false;
     }
 
     public List<Integer> getPossibleValues(int row, int col) {
@@ -45,13 +49,6 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
                 .filter(value -> canPlaceValue(row, col, value))
                 .boxed()
                 .toList();
-    }
-
-    private boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == 0 &&
-                !isValueInRow(row, value) &&
-                !isValueInColumn(col, value) &&
-                !isValueInSubgrid(row, col, value);
     }
 
     public boolean isValueInRow(int row, int value) {
@@ -84,18 +81,6 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
         return found[0];
     }
 
-    public void clearValue(int row, int col) {
-        getElement(row, col).setNumber(0);
-    }
-
-    private void validateValue(int value) {
-        if (value == 0) return;
-        if (value < 1 || value > BOARD_SIZE) {
-            String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
-            throw new IllegalArgumentException(errorMessage);
-        }
-    }
-
     public void forEachInRow(int row, Consumer<Cell> action) {
         for (int col = 0; col < BOARD_SIZE; col++) {
             action.accept(getElement(row, col));
@@ -116,6 +101,21 @@ public class SudokuBoard extends ObservableBoard<SudokuBoard.Cell> {
             for (int c = 0; c < SUBGRID_SIZE; c++) {
                 action.accept(getElement(startRow + r, startCol + c));
             }
+        }
+    }
+
+    private boolean canPlaceValue(int row, int col, int value) {
+        return getValue(row, col) == 0 &&
+                !isValueInRow(row, value) &&
+                !isValueInColumn(col, value) &&
+                !isValueInSubgrid(row, col, value);
+    }
+
+    private void validateValue(int value) {
+        if (value == 0) return;
+        if (value < 1 || value > BOARD_SIZE) {
+            String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 
