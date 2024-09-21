@@ -5,8 +5,8 @@ import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 public class DR2 implements DeductionRule {
     @Override
-    public boolean apply(SudokuBoard board) {
-        return false;
+    public void apply(SudokuBoard board) {
+        // TODO
     }
 
 }

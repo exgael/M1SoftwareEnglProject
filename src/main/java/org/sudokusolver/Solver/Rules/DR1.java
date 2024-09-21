@@ -1,11 +1,15 @@
 package org.sudokusolver.Solver.Rules;
 
+import org.sudokusolver.Core.Regions.Region;
 import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Core.SudokuCell;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
+
+import java.util.List;
 
 public class DR1 implements DeductionRule {
     @Override
-    public boolean apply(SudokuBoard board) {
-        return false;
+    public void apply(SudokuBoard board) {
+        // TODO
     }
 }
