@@ -1,14 +1,14 @@
 package org.sudokusolver.Solver.Rules;
 
-import org.sudokusolver.Core.RegionType;
+import org.sudokusolver.Core.SudokuComponents.Regions.RegionType;
 import org.sudokusolver.Core.SudokuBoard;
-import org.sudokusolver.Core.SudokuCell;
+import org.sudokusolver.Core.SudokuComponents.SudokuCell;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.sudokusolver.Core.RegionType.*;
+import static org.sudokusolver.Core.SudokuComponents.Regions.RegionType.*;
 
 public class DR3 implements DeductionRule {
 

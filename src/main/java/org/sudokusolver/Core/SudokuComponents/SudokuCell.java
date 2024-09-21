@@ -1,9 +1,11 @@
-package org.sudokusolver.Core;
+package org.sudokusolver.Core.SudokuComponents;
+
+import org.sudokusolver.Core.SudokuComponents.SudokuComponent;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class SudokuCell {
+public class SudokuCell implements SudokuComponent {
     private final Set<Integer> candidates;
     private int number;
 

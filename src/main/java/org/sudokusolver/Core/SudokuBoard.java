@@ -1,10 +1,13 @@
 package org.sudokusolver.Core;
 
+import org.sudokusolver.Core.SudokuComponents.Regions.Region;
+import org.sudokusolver.Core.SudokuComponents.Regions.RegionType;
+import org.sudokusolver.Core.SudokuComponents.SudokuCell;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class SudokuBoard extends ObservableBoard<SudokuCell> {
@@ -12,9 +15,14 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
 
+    private final List<Region> rows = new ArrayList<>();
+    private final List<Region> columns = new ArrayList<>();
+    private final List<Region> subgrids = new ArrayList<>();
+
     public SudokuBoard() {
         super(9, 9, SudokuCell::new);
         initializeCells();
+        initializeRegions();
     }
 
     private void initializeCells() {
@@ -25,12 +33,31 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         }
     }
 
-    public int getBoardSize() {
-        return BOARD_SIZE;
+    private void initializeRegions() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            int finalI = i;
+
+            List<SudokuCell> rowCells = IntStream.range(0, BOARD_SIZE)
+                    .mapToObj(row -> getElement(row, finalI))
+                    .toList();
+
+            List<SudokuCell> columnCells = IntStream.range(0, BOARD_SIZE)
+                    .mapToObj(col -> getElement(finalI, col))
+                    .toList();
+
+            int startRow = (i / SUBGRID_SIZE) * SUBGRID_SIZE;
+            int startCol = (i % SUBGRID_SIZE) * SUBGRID_SIZE;
+            List<SudokuCell> subgridCells = handleGetCellsInSubgrid(startRow, startCol);
+
+
+            this.rows.add(new Region(rowCells));
+            this.columns.add(new Region(columnCells));
+            this.subgrids.add(new Region(subgridCells));
+        }
     }
 
-    public int getSubgridSize() {
-        return SUBGRID_SIZE;
+    public int getBoardSize() {
+        return BOARD_SIZE;
     }
 
     public int getValue(int row, int col) {
@@ -40,11 +67,11 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     public void setValue(int row, int col, int value) {
         validateValue(value);
         getElement(row, col).setNumber(value);
-        this.removeRelatedCandidates(row, col, value);
-    }
 
-    private void removeRelatedCandidates(int row, int col, int candidate) {
-        this.forEachRegionRelatedToCoordinates(row, col, sudokuCell -> sudokuCell.removeCandidate(candidate));
+        // Remove value from candidates in related regions
+        getRowRegion(row).removeCandidate(value);
+        getColumnRegion(col).removeCandidate(value);
+        getSubgridRegion(row, col).removeCandidate(value);
     }
 
     private void validateValue(int value) {
@@ -74,42 +101,15 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     }
 
     private boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == 0 &&
-                !isValueInAnyRegionRelatedToCoordinates(row, col, value);
+        return getValue(row, col) == 0 && !isValueInTargetedRegions(row, col, value);
     }
 
-    private boolean isValueInAnyRegionRelatedToCoordinates(int row, int col, int value) {
-        return this.getCellsFromRegionsRelatedToCoordinates(row, col)
-                .stream()
-                .anyMatch(sudokuCell -> sudokuCell.getNumber() == value);
-    }
-
-    private Set<SudokuCell> getCellsFromRegionsRelatedToCoordinates(int row, int col) {
-        Set<SudokuCell> cells = new HashSet<>();
-        cells.addAll(this.getCellsInRow(row));
-        cells.addAll(this.getCellsInColumn(col));
-        cells.addAll(this.getCellsInSubgrid(row, col));
-        return cells;
-    }
-
-    public Set<Integer> getCandidates(int row, int col) {
-        return getElement(row, col).getCandidates();
-    }
-
-    public void removeCandidate(int row, int col, int candidate) {
-        getElement(row, col).removeCandidate(candidate);
-    }
-
-    public boolean hasCandidate(int row, int col, int candidate) {
-        return getElement(row, col).hasCandidate(candidate);
-    }
-
-    public boolean isCellSolved(int row, int col) {
-        return getElement(row, col).isSolved();
-    }
-
-    public int candidateCount(int row, int col) {
-        return getElement(row, col).candidateCount();
+    private boolean isValueInTargetedRegions(int row, int col, int value) {
+        Set<Region> regions = new HashSet<>();
+        regions.add(this.getRowRegion(row));
+        regions.add(this.getColumnRegion(col));
+        regions.add(this.getSubgridRegion(row, col));
+        return regions.stream().anyMatch(region -> region.containsValue(value));
     }
 
     public List<SudokuCell> findCellsWithCandidateCountInRegion(int index, int count, RegionType regionType) {
@@ -128,40 +128,28 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
 
     // REGIONS GETTERS
 
+    private Region getRowRegion(int row) {
+        return rows.get(row);
+    }
+
+    private Region getColumnRegion(int col) {
+        return columns.get(col);
+    }
+
+    private Region getSubgridRegion(int row, int col) {
+        int gridRow = row / SUBGRID_SIZE;
+        int gridCol = col / SUBGRID_SIZE;
+        int index = gridRow * SUBGRID_SIZE + gridCol;
+        return subgrids.get(index);
+    }
+
+
     private List<SudokuCell> getCellsInRegion(int index, RegionType regionType) {
         return switch (regionType) {
-            case ROW -> getCellsInRow(index);
-            case COLUMN -> getCellsInColumn(index);
-            case SUBGRID -> getCellsInSubgridByIndex(index);
+            case ROW -> getRowRegion(index).getCells();
+            case COLUMN -> getColumnRegion(index).getCells();
+            case SUBGRID -> getSubgridRegion(index / SUBGRID_SIZE, index % SUBGRID_SIZE).getCells();
         };
-    }
-
-    private List<SudokuCell> getCellsInRow(int row) {
-        List<SudokuCell> cells = new ArrayList<>();
-        for (int col = 0; col < BOARD_SIZE; col++) {
-            cells.add(getElement(row, col));
-        }
-        return cells;
-    }
-
-    private List<SudokuCell> getCellsInColumn(int col) {
-        List<SudokuCell> cells = new ArrayList<>();
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            cells.add(getElement(row, col));
-        }
-        return cells;
-    }
-
-    private List<SudokuCell> getCellsInSubgrid(int row, int col) {
-        int startRow = (row / SUBGRID_SIZE) * SUBGRID_SIZE;
-        int startCol = (col / SUBGRID_SIZE) * SUBGRID_SIZE;
-        return handleGetCellsInSubgrid(startRow, startCol);
-    }
-
-    private List<SudokuCell> getCellsInSubgridByIndex(int index) {
-        int startRow = (index / SUBGRID_SIZE) * SUBGRID_SIZE;
-        int startCol = (index % SUBGRID_SIZE) * SUBGRID_SIZE;
-        return handleGetCellsInSubgrid(startRow, startCol);
     }
 
     private List<SudokuCell> handleGetCellsInSubgrid(int startRow, int startCol) {
@@ -172,36 +160,5 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
             }
         }
         return cells;
-    }
-
-    // FOR EACH
-
-    private void forEachRegionRelatedToCoordinates(int row, int col, Consumer<SudokuCell> action) {
-        this.forEachInRow(row, action);
-        this.forEachInColumn(col, action);
-        this.forEachInSubgrid(row, col, action);
-    }
-
-    private void forEachInRow(int row, Consumer<SudokuCell> action) {
-        for (int col = 0; col < BOARD_SIZE; col++) {
-            action.accept(getElement(row, col));
-        }
-    }
-
-    private void forEachInColumn(int col, Consumer<SudokuCell> action) {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            action.accept(getElement(row, col));
-        }
-    }
-
-    private void forEachInSubgrid(int row, int col, Consumer<SudokuCell> action) {
-        int startRow = row - row % SUBGRID_SIZE;
-        int startCol = col - col % SUBGRID_SIZE;
-
-        for (int r = 0; r < SUBGRID_SIZE; r++) {
-            for (int c = 0; c < SUBGRID_SIZE; c++) {
-                action.accept(getElement(startRow + r, startCol + c));
-            }
-        }
     }
 }
