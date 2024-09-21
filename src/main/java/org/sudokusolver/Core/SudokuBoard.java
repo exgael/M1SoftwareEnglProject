@@ -22,9 +22,26 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
     private final List<Region> columns = new ArrayList<>();
     private final List<Region> subgrids = new ArrayList<>();
 
-    public SudokuBoard() {
+    public SudokuBoard(int[] board) {
         super(BOARD_SIZE, BOARD_SIZE, SudokuCell::new);
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                getElement(i, j).setNumber(board[i * BOARD_SIZE + j]);
+            }
+        }
+
         initializeRegions();
+        initializeCandidates();
+    }
+
+    private void initializeCandidates() {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                SudokuCell cell = getElement(row, col);
+                List<Integer> candidates = getPossibleValues(row, col);
+                cell.initializeCandidates(candidates);
+            }
+        }
     }
 
     private void initializeRegions() {
@@ -124,7 +141,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
         return getSubgridRegion(index);
     }
 
-    private Region getSubgridRegion(int index) {
+    Region getSubgridRegion(int index) {
         return subgrids.get(index);
     }
 
@@ -169,6 +186,21 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
             }
             sb.append("\n");
         }
+
+        // Now for each coordinate, print the candidates
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (getValue(row, col) != DEFAULT_VALUE) continue;
+                sb.append("Candidates for cell at row ");
+                sb.append(row + 1);
+                sb.append(" and column ");
+                sb.append(col + 1);
+                sb.append(": ");
+                sb.append(getElement(row, col).getCandidates());
+                sb.append("\n");
+            }
+        }
+
         sb.append("}");
         return sb.toString();
     }
