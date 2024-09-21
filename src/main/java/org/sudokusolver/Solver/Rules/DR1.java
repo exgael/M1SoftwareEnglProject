@@ -1,6 +1,8 @@
 package org.sudokusolver.Solver.Rules;
 
+import org.sudokusolver.Core.Regions.Region;
 import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Core.SudokuCell;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 import java.util.List;

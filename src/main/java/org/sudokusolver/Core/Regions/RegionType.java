@@ -1,4 +1,4 @@
-package org.sudokusolver.Core.SudokuComponents.Regions;
+package org.sudokusolver.Core.Regions;
 
 public enum RegionType {
     ROW,
