@@ -1,11 +1,13 @@
-package org.sudokusolver.Core.SudokuComponents;
+package org.sudokusolver.Core;
 
-import org.sudokusolver.Core.SudokuComponents.SudokuComponent;
+import org.sudokusolver.Utils.Inspectable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class SudokuCell implements SudokuComponent {
+public class SudokuCell implements Inspectable {
     private final Set<Integer> candidates;
     private int number;
 
@@ -14,11 +16,9 @@ public class SudokuCell implements SudokuComponent {
         this.candidates = new HashSet<>();
     }
 
-    public void initializeCandidates(int boardSize) {
+    public void initializeCandidates(List<Integer> candidates) {
         if (this.number == 0) {
-            for (int i = 1; i <= boardSize; i++) {
-                candidates.add(i);
-            }
+            this.candidates.addAll(candidates);
         }
     }
 
@@ -49,5 +49,23 @@ public class SudokuCell implements SudokuComponent {
 
     public int candidateCount() {
         return candidates.size();
+    }
+
+    @Override
+    public String toString() {
+        return "" + number;
+    }
+
+    @Override
+    public String debugDescription() {
+        StringBuilder sb = new StringBuilder();
+        if (number != 0) {
+            // Centered number in the cell
+            sb.append(String.format("  %1d  ", number));
+        } else {
+            sb.append(String.format("%1d    ", this.candidates.size()));
+        }
+
+        return sb.toString();
     }
 }

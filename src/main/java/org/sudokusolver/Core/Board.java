@@ -1,12 +1,13 @@
 package org.sudokusolver.Core;
 
 import org.jetbrains.annotations.NotNull;
+import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-class Board<T> {
+class Board<T extends Inspectable> {
 
     private final List<List<T>> grid;
 
