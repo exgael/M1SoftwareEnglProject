@@ -1,6 +1,6 @@
 package org.sudokusolver.Solver.Rules;
 
-import org.sudokusolver.Core.SudokuComponents.Regions.RegionType;
+import org.sudokusolver.Core.SudokuComponents.Regions.Region;
 import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Core.SudokuComponents.SudokuCell;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
@@ -8,26 +8,16 @@ import org.sudokusolver.Solver.Solvers.DeductionRule;
 import java.util.List;
 import java.util.Set;
 
-import static org.sudokusolver.Core.SudokuComponents.Regions.RegionType.*;
-
 public class DR3 implements DeductionRule {
 
     @Override
     public void apply(SudokuBoard board) {
-        for (int i = 0; i < board.getBoardSize(); i++) {
-            applyNakedPairsAcrossRegions(board, i);
-        }
+        board.applyToAllRegions(this::applyNakedPairToRegion);
     }
 
-    private void applyNakedPairsAcrossRegions(SudokuBoard board, int index) {
-        this.applyNakedPairToRegion(board, index, ROW);
-        this.applyNakedPairToRegion(board, index, COLUMN);
-        this.applyNakedPairToRegion(board, index, SUBGRID);
-    }
-
-    private void applyNakedPairToRegion(SudokuBoard board, int index, RegionType regionType) {
-        List<SudokuCell> unsolvedCells = board.findUnsolvedCellsInRegion(index, regionType);
-        List<SudokuCell> twoCandidatesCells = board.findCellsWithCandidateCountInRegion(index, 2, regionType);
+    private void applyNakedPairToRegion(Region region) {
+        List<SudokuCell> unsolvedCells = region.findUnsolvedCells();
+        List<SudokuCell> twoCandidatesCells = region.findCellsWithCandidateCount(2);
         this.applyNakedPair(twoCandidatesCells, unsolvedCells);
     }
 

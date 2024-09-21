@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class SudokuBoard extends ObservableBoard<SudokuCell> {
@@ -95,16 +96,10 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return regions.stream().anyMatch(region -> region.containsValue(value));
     }
 
-    public List<SudokuCell> findCellsWithCandidateCountInRegion(int index, int count, RegionType regionType) {
-        return this.getRegion(index, regionType).getCells().stream()
-                .filter(sudokuCell -> sudokuCell.candidateCount() == count)
-                .toList();
-    }
-
-    public List<SudokuCell> findUnsolvedCellsInRegion(int index, RegionType regionType) {
-        return this.getRegion(index, regionType).getCells().stream()
-                .filter(sudokuCell -> !sudokuCell.isSolved())
-                .toList();
+    public void applyToAllRegions(Consumer<Region> action) {
+        rows.forEach(action);
+        columns.forEach(action);
+        subgrids.forEach(action);
     }
 
     // Region accessors

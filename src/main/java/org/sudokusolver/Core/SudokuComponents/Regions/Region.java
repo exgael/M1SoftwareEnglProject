@@ -35,6 +35,18 @@ public class Region implements SudokuComponent {
         this.forEach(sudokuCell -> sudokuCell.removeCandidate(candidate));
     }
 
+    public List<SudokuCell> findCellsWithCandidateCount(int candidateCount) {
+        return this.cells.stream()
+                .filter(sudokuCell -> sudokuCell.candidateCount() == candidateCount)
+                .toList();
+    }
+
+    public List<SudokuCell> findUnsolvedCells() {
+        return this.cells.stream()
+                .filter(SudokuCell::isSolved)
+                .toList();
+    }
+
     public void removeCandidate(int candidate, Set<SudokuCell> excludeCells) {
         this.cells.stream()
                 .filter(sudokuCell -> !excludeCells.contains(sudokuCell))
