@@ -1,6 +1,7 @@
 package org.sudokusolver.Core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -39,9 +40,19 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     public void setValue(int row, int col, int value) {
         validateValue(value);
         getElement(row, col).setNumber(value);
-        forEachInRow(row, cell -> cell.removeCandidate(value));
-        forEachInColumn(col, cell -> cell.removeCandidate(value));
-        forEachInSubgrid(row, col, cell -> cell.removeCandidate(value));
+        this.removeRelatedCandidates(row, col, value);
+    }
+
+    private void removeRelatedCandidates(int row, int col, int candidate) {
+        this.forEachRegionRelatedToCoordinates(row, col, sudokuCell -> sudokuCell.removeCandidate(candidate));
+    }
+
+    private void validateValue(int value) {
+        if (value == 0) return;
+        if (value < 1 || value > BOARD_SIZE) {
+            String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
     public void clearValue(int row, int col) {
@@ -60,6 +71,25 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
                 .filter(value -> canPlaceValue(row, col, value))
                 .boxed()
                 .toList();
+    }
+
+    private boolean canPlaceValue(int row, int col, int value) {
+        return getValue(row, col) == 0 &&
+                !isValueInAnyRegionRelatedToCoordinates(row, col, value);
+    }
+
+    private boolean isValueInAnyRegionRelatedToCoordinates(int row, int col, int value) {
+        return this.getCellsFromRegionsRelatedToCoordinates(row, col)
+                .stream()
+                .anyMatch(sudokuCell -> sudokuCell.getNumber() == value);
+    }
+
+    private Set<SudokuCell> getCellsFromRegionsRelatedToCoordinates(int row, int col) {
+        Set<SudokuCell> cells = new HashSet<>();
+        cells.addAll(this.getCellsInRow(row));
+        cells.addAll(this.getCellsInColumn(col));
+        cells.addAll(this.getCellsInSubgrid(row, col));
+        return cells;
     }
 
     public Set<Integer> getCandidates(int row, int col) {
@@ -83,136 +113,84 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     }
 
     public List<SudokuCell> findCellsWithCandidateCountInRegion(int index, int count, RegionType regionType) {
-        List<SudokuCell> cells = new ArrayList<>();
-        switch (regionType) {
-            case ROW -> cells = this.findsCellWithCandidateCountInRow(index, count);
-            case COLUMN -> cells = this.findCellsWithCandidateCountInColumn(index, count);
-            case SUBGRID -> {
-                int[] gridCoordinates = getSubgridStartCoordinates(index);
-                cells = this.findCellsWithCandidateCountInSubgrid(gridCoordinates[0], gridCoordinates[1], count);
-            }
-        }
-        return cells;
-    }
-
-    private List<SudokuCell> findsCellWithCandidateCountInRow(int row, int count) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInRow(row, cell -> {
-            if (cell.candidateCount() == count) {
-                cells.add(cell);
-            }
-        });
-        return cells;
-    }
-
-    private List<SudokuCell> findCellsWithCandidateCountInColumn(int col, int count) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInColumn(col, cell -> {
-            if (cell.candidateCount() == count) {
-                cells.add(cell);
-            }
-        });
-        return cells;
-    }
-
-    private List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInSubgrid(row, col, cell -> {
-            if (cell.candidateCount() == count) {
-                cells.add(cell);
-            }
-        });
-        return cells;
+        return this.getCellsInRegion(index, regionType)
+                .stream()
+                .filter(sudokuCell -> sudokuCell.candidateCount() == count)
+                .toList();
     }
 
     public List<SudokuCell> findUnsolvedCellsInRegion(int index, RegionType regionType) {
+        return this.getCellsInRegion(index, regionType)
+                .stream()
+                .filter(sudokuCell -> !sudokuCell.isSolved())
+                .toList();
+    }
+
+    // REGIONS GETTERS
+
+    private List<SudokuCell> getCellsInRegion(int index, RegionType regionType) {
+        return switch (regionType) {
+            case ROW -> getCellsInRow(index);
+            case COLUMN -> getCellsInColumn(index);
+            case SUBGRID -> getCellsInSubgridByIndex(index);
+        };
+    }
+
+    private List<SudokuCell> getCellsInRow(int row) {
         List<SudokuCell> cells = new ArrayList<>();
-        switch (regionType) {
-            case ROW -> cells = this.findUnsolvedCellsInRow(index);
-            case COLUMN -> cells = this.findUnsolvedCellsInColumns(index);
-            case SUBGRID -> {
-                int[] gridCoordinates = getSubgridStartCoordinates(index);
-                cells = this.findUnsolvedCellsInSubgrid(gridCoordinates[0], gridCoordinates[1]);
-            }
-        }
-        return cells;
-    }
-
-    private List<SudokuCell> findUnsolvedCellsInSubgrid(int row, int col) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInSubgrid(row, col, cell -> {
-            if (!cell.isSolved()) {
-                cells.add(cell);
-            }
-        });
-        return cells;
-    }
-
-    private List<SudokuCell> findUnsolvedCellsInRow(int row) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInRow(row, cell -> {
-            if (!cell.isSolved()) {
-                cells.add(cell);
-            }
-        });
-        return cells;
-    }
-
-    private List<SudokuCell> findUnsolvedCellsInColumns(int col) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInColumn(col, cell -> {
-            if (!cell.isSolved()) {
-                cells.add(cell);
-            }
-        });
-        return cells;
-    }
-
-    private int[] getSubgridStartCoordinates(int index) {
-        int gridRow = Math.floorDiv(index, SUBGRID_SIZE) * SUBGRID_SIZE;
-        int gridCol = (index % SUBGRID_SIZE) * SUBGRID_SIZE;
-        return new int[]{gridRow, gridCol};
-    }
-
-    private boolean isValueInRow(int row, int value) {
-        final boolean[] found = {false};
-        forEachInRow(row, cell -> {
-            if (cell.getNumber() == value) {
-                found[0] = true;
-            }
-        });
-        return found[0];
-    }
-
-    private boolean isValueInColumn(int col, int value) {
-        final boolean[] found = {false};
-        forEachInColumn(col, cell -> {
-            if (cell.getNumber() == value) {
-                found[0] = true;
-            }
-        });
-        return found[0];
-    }
-
-    private boolean isValueInSubgrid(int row, int col, int value) {
-        final boolean[] found = {false};
-        forEachInSubgrid(row, col, cell -> {
-            if (cell.getNumber() == value) {
-                found[0] = true;
-            }
-        });
-        return found[0];
-    }
-
-    private void forEachInRow(int index, Consumer<SudokuCell> action) {
         for (int col = 0; col < BOARD_SIZE; col++) {
-            action.accept(getElement(index, col));
+            cells.add(getElement(row, col));
+        }
+        return cells;
+    }
+
+    private List<SudokuCell> getCellsInColumn(int col) {
+        List<SudokuCell> cells = new ArrayList<>();
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            cells.add(getElement(row, col));
+        }
+        return cells;
+    }
+
+    private List<SudokuCell> getCellsInSubgrid(int row, int col) {
+        int startRow = (row / SUBGRID_SIZE) * SUBGRID_SIZE;
+        int startCol = (col / SUBGRID_SIZE) * SUBGRID_SIZE;
+        return handleGetCellsInSubgrid(startRow, startCol);
+    }
+
+    private List<SudokuCell> getCellsInSubgridByIndex(int index) {
+        int startRow = (index / SUBGRID_SIZE) * SUBGRID_SIZE;
+        int startCol = (index % SUBGRID_SIZE) * SUBGRID_SIZE;
+        return handleGetCellsInSubgrid(startRow, startCol);
+    }
+
+    private List<SudokuCell> handleGetCellsInSubgrid(int startRow, int startCol) {
+        List<SudokuCell> cells = new ArrayList<>();
+        for (int r = 0; r < SUBGRID_SIZE; r++) {
+            for (int c = 0; c < SUBGRID_SIZE; c++) {
+                cells.add(getElement(startRow + r, startCol + c));
+            }
+        }
+        return cells;
+    }
+
+    // FOR EACH
+
+    private void forEachRegionRelatedToCoordinates(int row, int col, Consumer<SudokuCell> action) {
+        this.forEachInRow(row, action);
+        this.forEachInColumn(col, action);
+        this.forEachInSubgrid(row, col, action);
+    }
+
+    private void forEachInRow(int row, Consumer<SudokuCell> action) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            action.accept(getElement(row, col));
         }
     }
 
-    private void forEachInColumn(int index, Consumer<SudokuCell> action) {
+    private void forEachInColumn(int col, Consumer<SudokuCell> action) {
         for (int row = 0; row < BOARD_SIZE; row++) {
-            action.accept(getElement(row, index));
+            action.accept(getElement(row, col));
         }
     }
 
@@ -224,21 +202,6 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
             for (int c = 0; c < SUBGRID_SIZE; c++) {
                 action.accept(getElement(startRow + r, startCol + c));
             }
-        }
-    }
-
-    private boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == 0 &&
-                !isValueInRow(row, value) &&
-                !isValueInColumn(col, value) &&
-                !isValueInSubgrid(row, col, value);
-    }
-
-    private void validateValue(int value) {
-        if (value == 0) return;
-        if (value < 1 || value > BOARD_SIZE) {
-            String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
-            throw new IllegalArgumentException(errorMessage);
         }
     }
 }
