@@ -1,72 +1,61 @@
 package org.sudokusolver.Solver.Rules;
 
+import org.sudokusolver.Core.RegionType;
 import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Core.SudokuCell;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 import java.util.List;
+import java.util.Set;
+
+import static org.sudokusolver.Core.RegionType.*;
 
 public class DR3 implements DeductionRule {
 
     @Override
-    public boolean apply(SudokuBoard board) {
-        boolean succeeded = false;
+    public void apply(SudokuBoard board) {
         for (int i = 0; i < board.getBoardSize(); i++) {
-            if (applyNakedPairToRow(board, i)) {
-                succeeded = true;
-            }
-
-            if (applyNakedPairToColumn(board, i)) {
-                succeeded = true;
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                applyNakedPairsAcrossRegions(board, i, j);
             }
         }
+    }
 
-        for (int i = 0; i < board.getBoardSize(); i += board.getSubgridSize()) {
-            for (int j = 0; j < board.getBoardSize(); j += board.getSubgridSize()) {
-                if (applyNakedPairToSubgrid(board, i, j)) {
-                    succeeded = true;
+    private void applyNakedPairsAcrossRegions(SudokuBoard board, int row, int col) {
+        this.applyNakedPairToRegion(board, row, col, ROW);
+        this.applyNakedPairToRegion(board, row, col, COLUMN);
+        this.applyNakedPairToRegion(board, row, col, SUBGRID);
+    }
+
+    private void applyNakedPairToRegion(SudokuBoard board, int row, int col, RegionType regionType) {
+        List<SudokuCell> unsolvedCells = board.findUnsolvedCellsInRegion(row, col, regionType);
+        List<SudokuCell> twoCandidatesCells = board.findCellsWithCandidateCountInRegion(row, col, 2, regionType);
+        this.applyNakedPair(twoCandidatesCells, unsolvedCells);
+    }
+
+    private void applyNakedPair(List<SudokuCell> twoCandidateCells, List<SudokuCell> unsolvedCells) {
+        for (int i = 0; i < twoCandidateCells.size(); i++) {
+            var cell = twoCandidateCells.get(i);
+            // Find another cell with same candidates
+            for (int j = i + 1; j < twoCandidateCells.size(); j++) {
+                var otherCell = twoCandidateCells.get(j);
+                // Check for naked pair
+                if (cell.getCandidates().equals(otherCell.getCandidates())) {
+                    Set<Integer> candidates = cell.getCandidates();
+                    // Remove those candidates from all the other unsolved cells
+                    unsolvedCells.forEach(unsolvedCell -> {
+                        if (!unsolvedCell.equals(cell) && !unsolvedCell.equals(otherCell)) {
+                            cell.getCandidates().forEach(unsolvedCell::removeCandidate);
+                        }
+                    });
+                    break; // This cell has already found its pair.
                 }
             }
         }
-
-        return succeeded;
     }
 
-    private boolean applyNakedPairToRow(SudokuBoard board, int row) {
-        List<SudokuCell> unsolvedCell = board.findUnsolvedCellsInRow(row);
-        return applyNakedPair(unsolvedCell);
-    }
 
-    private boolean applyNakedPairToColumn(SudokuBoard board, int col) {
-        List<SudokuCell> unsolvedCell = board.findUnsolvedCellsInColumns(col);
-        return applyNakedPair(unsolvedCell);
-    }
-
-    private boolean applyNakedPairToSubgrid(SudokuBoard board, int row, int col) {
-        List<SudokuCell> unsolvedCell = board.findUnsolvedCellsInSubgrid(row, col);
-        return applyNakedPair(unsolvedCell);
-    }
-
-    private boolean applyNakedPair(List<SudokuCell> unresolved) {
-        for (int i = 0; i < unresolved.size(); i++) {
-            var cell = unresolved.get(i);
-            if (cell.candidateCount() == 2) {
-                // Find another cell with same candidates
-                for (var other : unresolved) {
-                    if (cell.equals(other)) continue;
-                    // Check for naked pair
-                    if (cell.getCandidates().equals(other.getCandidates())) {
-                        // Remove those candidates from all the other unresolved cells
-                        unresolved.forEach(sudokuCell -> {
-                            if (!sudokuCell.equals(cell) && !sudokuCell.equals(other)) {
-                                cell.getCandidates().forEach(sudokuCell::removeCandidate);
-                            }
-                        });
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    private void applyNakedTriple(List<SudokuCell> threeCandidateCells, List<SudokuCell> unsolvedCells) {
+        // TODO
     }
 }

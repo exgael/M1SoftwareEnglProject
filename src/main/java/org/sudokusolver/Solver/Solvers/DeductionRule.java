@@ -4,5 +4,5 @@ import org.sudokusolver.Core.SudokuBoard;
 
 @FunctionalInterface
 public interface DeductionRule {
-    boolean apply(SudokuBoard board);
+    void apply(SudokuBoard board);
 }
