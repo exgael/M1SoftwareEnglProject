@@ -12,21 +12,18 @@ public class DR3 implements DeductionRule {
 
     @Override
     public void apply(SudokuBoard board) {
-        board.applyToAllRegions(this::applyNakedPairToRegion);
+        board.forEachRegion(this::applyNakedPair);
     }
 
-    private void applyNakedPairToRegion(Region region) {
+    private void applyNakedPair(Region region) {
         List<SudokuCell> unsolvedCells = region.findUnsolvedCells();
         List<SudokuCell> twoCandidatesCells = region.findCellsWithCandidateCount(2);
-        this.applyNakedPair(twoCandidatesCells, unsolvedCells);
-    }
 
-    private void applyNakedPair(List<SudokuCell> twoCandidateCells, List<SudokuCell> unsolvedCells) {
-        for (int i = 0; i < twoCandidateCells.size(); i++) {
-            var cell = twoCandidateCells.get(i);
+        for (int i = 0; i < twoCandidatesCells.size(); i++) {
+            var cell = twoCandidatesCells.get(i);
             // Find another cell with same candidates
-            for (int j = i + 1; j < twoCandidateCells.size(); j++) {
-                var otherCell = twoCandidateCells.get(j);
+            for (int j = i + 1; j < twoCandidatesCells.size(); j++) {
+                var otherCell = twoCandidatesCells.get(j);
                 // Check for naked pair
                 if (cell.getCandidates().equals(otherCell.getCandidates())) {
                     Set<Integer> candidates = cell.getCandidates();

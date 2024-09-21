@@ -96,7 +96,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return regions.stream().anyMatch(region -> region.containsValue(value));
     }
 
-    public void applyToAllRegions(Consumer<Region> action) {
+    public void forEachRegion(Consumer<Region> action) {
         rows.forEach(action);
         columns.forEach(action);
         subgrids.forEach(action);
