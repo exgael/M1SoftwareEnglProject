@@ -1,13 +1,12 @@
-package org.sudokusolver.Core.SudokuComponents.Regions;
+package org.sudokusolver.Core.Regions;
 
-import org.sudokusolver.Core.SudokuComponents.SudokuCell;
-import org.sudokusolver.Core.SudokuComponents.SudokuComponent;
+import org.sudokusolver.Core.SudokuCell;
 
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Region implements SudokuComponent {
+public class Region {
 
     List<SudokuCell> cells;
 
@@ -25,12 +24,10 @@ public class Region implements SudokuComponent {
                 .anyMatch(sudokuCell -> sudokuCell.getNumber() == value);
     }
 
-    @Override
     public boolean isSolved() {
         return this.cells.stream().allMatch(SudokuCell::isSolved);
     }
 
-    @Override
     public void removeCandidate(int candidate) {
         this.forEach(sudokuCell -> sudokuCell.removeCandidate(candidate));
     }
@@ -43,7 +40,7 @@ public class Region implements SudokuComponent {
 
     public List<SudokuCell> findUnsolvedCells() {
         return this.cells.stream()
-                .filter(SudokuCell::isSolved)
+                .filter(sudokuCell -> !sudokuCell.isSolved())
                 .toList();
     }
 
