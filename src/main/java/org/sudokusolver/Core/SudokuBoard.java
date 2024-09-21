@@ -82,23 +82,16 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return getElement(row, col).candidateCount();
     }
 
-    public List<SudokuCell> findCellsWithCandidateCountInRegion(int row, int col, int count, RegionType regionType) {
+    public List<SudokuCell> findCellsWithCandidateCountInRegion(int index, int count, RegionType regionType) {
         List<SudokuCell> cells = new ArrayList<>();
         switch (regionType) {
-            case ROW -> cells = this.findsCellWithCandidateCountInRow(row, count);
-            case COLUMN -> cells = this.findCellsWithCandidateCountInColumn(col, count);
-            case SUBGRID -> cells = this.findCellsWithCandidateCountInSubgrid(row, col, count);
-        }
-        return cells;
-    }
-
-    private List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
-        List<SudokuCell> cells = new ArrayList<>();
-        this.forEachInSubgrid(row, col, cell -> {
-            if (cell.candidateCount() == count) {
-                cells.add(cell);
+            case ROW -> cells = this.findsCellWithCandidateCountInRow(index, count);
+            case COLUMN -> cells = this.findCellsWithCandidateCountInColumn(index, count);
+            case SUBGRID -> {
+                int[] gridCoordinates = getSubgridStartCoordinates(index);
+                cells = this.findCellsWithCandidateCountInSubgrid(gridCoordinates[0], gridCoordinates[1], count);
             }
-        });
+        }
         return cells;
     }
 
@@ -122,12 +115,25 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List <SudokuCell> findUnsolvedCellsInRegion(int row, int col, RegionType regionType) {
+    private List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
+        List<SudokuCell> cells = new ArrayList<>();
+        this.forEachInSubgrid(row, col, cell -> {
+            if (cell.candidateCount() == count) {
+                cells.add(cell);
+            }
+        });
+        return cells;
+    }
+
+    public List<SudokuCell> findUnsolvedCellsInRegion(int index, RegionType regionType) {
         List<SudokuCell> cells = new ArrayList<>();
         switch (regionType) {
-            case ROW -> cells = this.findUnsolvedCellsInRow(row);
-            case COLUMN -> cells = this.findUnsolvedCellsInColumns(col);
-            case SUBGRID -> cells = this.findUnsolvedCellsInSubgrid(row, col);
+            case ROW -> cells = this.findUnsolvedCellsInRow(index);
+            case COLUMN -> cells = this.findUnsolvedCellsInColumns(index);
+            case SUBGRID -> {
+                int[] gridCoordinates = getSubgridStartCoordinates(index);
+                cells = this.findUnsolvedCellsInSubgrid(gridCoordinates[0], gridCoordinates[1]);
+            }
         }
         return cells;
     }
@@ -162,6 +168,12 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
+    private int[] getSubgridStartCoordinates(int index) {
+        int gridRow = Math.floorDiv(index, SUBGRID_SIZE) * SUBGRID_SIZE;
+        int gridCol = (index % SUBGRID_SIZE) * SUBGRID_SIZE;
+        return new int[]{gridRow, gridCol};
+    }
+
     private boolean isValueInRow(int row, int value) {
         final boolean[] found = {false};
         forEachInRow(row, cell -> {
@@ -192,15 +204,15 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return found[0];
     }
 
-    private void forEachInRow(int row, Consumer<SudokuCell> action) {
+    private void forEachInRow(int index, Consumer<SudokuCell> action) {
         for (int col = 0; col < BOARD_SIZE; col++) {
-            action.accept(getElement(row, col));
+            action.accept(getElement(index, col));
         }
     }
 
-    private void forEachInColumn(int col, Consumer<SudokuCell> action) {
+    private void forEachInColumn(int index, Consumer<SudokuCell> action) {
         for (int row = 0; row < BOARD_SIZE; row++) {
-            action.accept(getElement(row, col));
+            action.accept(getElement(row, index));
         }
     }
 

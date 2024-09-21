@@ -15,21 +15,19 @@ public class DR3 implements DeductionRule {
     @Override
     public void apply(SudokuBoard board) {
         for (int i = 0; i < board.getBoardSize(); i++) {
-            for (int j = 0; j < board.getBoardSize(); j++) {
-                applyNakedPairsAcrossRegions(board, i, j);
-            }
+            applyNakedPairsAcrossRegions(board, i);
         }
     }
 
-    private void applyNakedPairsAcrossRegions(SudokuBoard board, int row, int col) {
-        this.applyNakedPairToRegion(board, row, col, ROW);
-        this.applyNakedPairToRegion(board, row, col, COLUMN);
-        this.applyNakedPairToRegion(board, row, col, SUBGRID);
+    private void applyNakedPairsAcrossRegions(SudokuBoard board, int index) {
+        this.applyNakedPairToRegion(board, index, ROW);
+        this.applyNakedPairToRegion(board, index, COLUMN);
+        this.applyNakedPairToRegion(board, index, SUBGRID);
     }
 
-    private void applyNakedPairToRegion(SudokuBoard board, int row, int col, RegionType regionType) {
-        List<SudokuCell> unsolvedCells = board.findUnsolvedCellsInRegion(row, col, regionType);
-        List<SudokuCell> twoCandidatesCells = board.findCellsWithCandidateCountInRegion(row, col, 2, regionType);
+    private void applyNakedPairToRegion(SudokuBoard board, int index, RegionType regionType) {
+        List<SudokuCell> unsolvedCells = board.findUnsolvedCellsInRegion(index, regionType);
+        List<SudokuCell> twoCandidatesCells = board.findCellsWithCandidateCountInRegion(index, 2, regionType);
         this.applyNakedPair(twoCandidatesCells, unsolvedCells);
     }
 
