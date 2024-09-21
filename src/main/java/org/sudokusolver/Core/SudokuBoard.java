@@ -82,7 +82,17 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return getElement(row, col).candidateCount();
     }
 
-    public List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
+    public List<SudokuCell> findCellsWithCandidateCountInRegion(int row, int col, int count, RegionType regionType) {
+        List<SudokuCell> cells = new ArrayList<>();
+        switch (regionType) {
+            case ROW -> cells = this.findsCellWithCandidateCountInRow(row, count);
+            case COLUMN -> cells = this.findCellsWithCandidateCountInColumn(col, count);
+            case SUBGRID -> cells = this.findCellsWithCandidateCountInSubgrid(row, col, count);
+        }
+        return cells;
+    }
+
+    private List<SudokuCell> findCellsWithCandidateCountInSubgrid(int row, int col, int count) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInSubgrid(row, col, cell -> {
             if (cell.candidateCount() == count) {
@@ -92,7 +102,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findsCellWithCandidateCountInRow(int row, int count) {
+    private List<SudokuCell> findsCellWithCandidateCountInRow(int row, int count) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInRow(row, cell -> {
             if (cell.candidateCount() == count) {
@@ -102,7 +112,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findCellsWithCandidateCountInColumn(int col, int count) {
+    private List<SudokuCell> findCellsWithCandidateCountInColumn(int col, int count) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInColumn(col, cell -> {
             if (cell.candidateCount() == count) {
@@ -112,7 +122,17 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findUnsolvedCellsInSubgrid(int row, int col) {
+    public List <SudokuCell> findUnsolvedCellsInRegion(int row, int col, RegionType regionType) {
+        List<SudokuCell> cells = new ArrayList<>();
+        switch (regionType) {
+            case ROW -> cells = this.findUnsolvedCellsInRow(row);
+            case COLUMN -> cells = this.findUnsolvedCellsInColumns(col);
+            case SUBGRID -> cells = this.findUnsolvedCellsInSubgrid(row, col);
+        }
+        return cells;
+    }
+
+    private List<SudokuCell> findUnsolvedCellsInSubgrid(int row, int col) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInSubgrid(row, col, cell -> {
             if (!cell.isSolved()) {
@@ -122,7 +142,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findUnsolvedCellsInRow(int row) {
+    private List<SudokuCell> findUnsolvedCellsInRow(int row) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInRow(row, cell -> {
             if (!cell.isSolved()) {
@@ -132,7 +152,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    public List<SudokuCell> findUnsolvedCellsInColumns(int col) {
+    private List<SudokuCell> findUnsolvedCellsInColumns(int col) {
         List<SudokuCell> cells = new ArrayList<>();
         this.forEachInColumn(col, cell -> {
             if (!cell.isSolved()) {
