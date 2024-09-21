@@ -1,8 +1,8 @@
 package org.sudokusolver.Core;
 
-import org.sudokusolver.Core.SudokuComponents.Regions.Region;
-import org.sudokusolver.Core.SudokuComponents.Regions.RegionType;
-import org.sudokusolver.Core.SudokuComponents.SudokuCell;
+import org.sudokusolver.Core.Regions.Region;
+import org.sudokusolver.Core.Regions.RegionType;
+import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,27 +11,20 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends ObservableBoard<SudokuCell> {
+public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspectable {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
+
+    private static final int DEFAULT_VALUE = 0;
 
     private final List<Region> rows = new ArrayList<>();
     private final List<Region> columns = new ArrayList<>();
     private final List<Region> subgrids = new ArrayList<>();
 
     public SudokuBoard() {
-        super(9, 9, SudokuCell::new);
-        initializeCells();
+        super(BOARD_SIZE, BOARD_SIZE, SudokuCell::new);
         initializeRegions();
-    }
-
-    private void initializeCells() {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                getElement(row, col).initializeCandidates(BOARD_SIZE);
-            }
-        }
     }
 
     private void initializeRegions() {
@@ -66,8 +59,12 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         getSubgridRegion(row, col).removeCandidate(value);
     }
 
+    public boolean isSolved() {
+        return rows.stream().allMatch(Region::isSolved);
+    }
+
     private void validateValue(int value) {
-        if (value == 0) return;
+        if (value == DEFAULT_VALUE) return;
         if (value < 1 || value > BOARD_SIZE) {
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
@@ -75,7 +72,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     }
 
     public List<Integer> getPossibleValues(int row, int col) {
-        if (getValue(row, col) != 0) {
+        if (getValue(row, col) != DEFAULT_VALUE) {
             return new ArrayList<>();
         }
         return IntStream.rangeClosed(1, BOARD_SIZE)
@@ -84,8 +81,8 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
                 .toList();
     }
 
-    private boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == 0 && !isValueInTargetedRegions(row, col, value);
+    public boolean canPlaceValue(int row, int col, int value) {
+        return getValue(row, col) == DEFAULT_VALUE && !isValueInTargetedRegions(row, col, value);
     }
 
     private boolean isValueInTargetedRegions(int row, int col, int value) {
@@ -112,12 +109,19 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         };
     }
 
-    private Region getRowRegion(int row) {
+    public Region getRowRegion(int row) {
         return rows.get(row);
     }
 
-    private Region getColumnRegion(int col) {
+    public Region getColumnRegion(int col) {
         return columns.get(col);
+    }
+
+    public Region getSubgridRegion(int row, int col) {
+        int gridRow = row / SUBGRID_SIZE;
+        int gridCol = col / SUBGRID_SIZE;
+        int index = gridRow * SUBGRID_SIZE + gridCol;
+        return getSubgridRegion(index);
     }
 
     private Region getSubgridRegion(int index) {
@@ -126,15 +130,15 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
 
     // Helper methods to initialize regions
 
-    private List<SudokuCell> getColumnCells(int row) {
+    private List<SudokuCell> getColumnCells(int col) {
         return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(col -> getElement(row, col))
+                .mapToObj(row -> getElement(row, col))
                 .toList();
     }
 
-    private List<SudokuCell> getRowCells(int col) {
+    private List<SudokuCell> getRowCells(int row) {
         return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(row -> getElement(row, col))
+                .mapToObj(col -> getElement(row, col))
                 .toList();
     }
 
@@ -148,10 +152,24 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return cells;
     }
 
-    private Region getSubgridRegion(int row, int col) {
-        int gridRow = row / SUBGRID_SIZE;
-        int gridCol = col / SUBGRID_SIZE;
-        int index = gridRow * SUBGRID_SIZE + gridCol;
-        return subgrids.get(index);
+    @Override
+    public String debugDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SudokuBoard{\n");
+
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+
+                sb.append(getValue(row, col));
+                sb.append(" ");
+
+                if ((col + 1) % SUBGRID_SIZE == 0 && col + 1 < BOARD_SIZE) {
+                    sb.append("| ");
+                }
+            }
+            sb.append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
     }
 }
