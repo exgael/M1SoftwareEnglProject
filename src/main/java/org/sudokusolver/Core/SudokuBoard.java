@@ -35,20 +35,11 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
 
     private void initializeRegions() {
         for (int i = 0; i < BOARD_SIZE; i++) {
-            int finalI = i;
-
-            List<SudokuCell> rowCells = IntStream.range(0, BOARD_SIZE)
-                    .mapToObj(row -> getElement(row, finalI))
-                    .toList();
-
-            List<SudokuCell> columnCells = IntStream.range(0, BOARD_SIZE)
-                    .mapToObj(col -> getElement(finalI, col))
-                    .toList();
-
+            List<SudokuCell> rowCells = getRowCells(i);
+            List<SudokuCell> columnCells = getColumnCells(i);
             int startRow = (i / SUBGRID_SIZE) * SUBGRID_SIZE;
             int startCol = (i % SUBGRID_SIZE) * SUBGRID_SIZE;
             List<SudokuCell> subgridCells = handleGetCellsInSubgrid(startRow, startCol);
-
 
             this.rows.add(new Region(rowCells));
             this.columns.add(new Region(columnCells));
@@ -82,14 +73,6 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         }
     }
 
-    public void clearValue(int row, int col) {
-        getElement(row, col).setNumber(0);
-    }
-
-    public boolean isBoardSolved() {
-        return false;
-    }
-
     public List<Integer> getPossibleValues(int row, int col) {
         if (getValue(row, col) != 0) {
             return new ArrayList<>();
@@ -113,20 +96,26 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
     }
 
     public List<SudokuCell> findCellsWithCandidateCountInRegion(int index, int count, RegionType regionType) {
-        return this.getCellsInRegion(index, regionType)
-                .stream()
+        return this.getRegion(index, regionType).getCells().stream()
                 .filter(sudokuCell -> sudokuCell.candidateCount() == count)
                 .toList();
     }
 
     public List<SudokuCell> findUnsolvedCellsInRegion(int index, RegionType regionType) {
-        return this.getCellsInRegion(index, regionType)
-                .stream()
+        return this.getRegion(index, regionType).getCells().stream()
                 .filter(sudokuCell -> !sudokuCell.isSolved())
                 .toList();
     }
 
-    // REGIONS GETTERS
+    // Region accessors
+
+    private Region getRegion(int index, RegionType regionType) {
+        return switch (regionType) {
+            case ROW -> getRowRegion(index);
+            case COLUMN -> getColumnRegion(index);
+            case SUBGRID -> getSubgridRegion(index);
+        };
+    }
 
     private Region getRowRegion(int row) {
         return rows.get(row);
@@ -136,20 +125,22 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
         return columns.get(col);
     }
 
-    private Region getSubgridRegion(int row, int col) {
-        int gridRow = row / SUBGRID_SIZE;
-        int gridCol = col / SUBGRID_SIZE;
-        int index = gridRow * SUBGRID_SIZE + gridCol;
+    private Region getSubgridRegion(int index) {
         return subgrids.get(index);
     }
 
+    // Helper methods to initialize regions
 
-    private List<SudokuCell> getCellsInRegion(int index, RegionType regionType) {
-        return switch (regionType) {
-            case ROW -> getRowRegion(index).getCells();
-            case COLUMN -> getColumnRegion(index).getCells();
-            case SUBGRID -> getSubgridRegion(index / SUBGRID_SIZE, index % SUBGRID_SIZE).getCells();
-        };
+    private List<SudokuCell> getColumnCells(int row) {
+        return IntStream.range(0, BOARD_SIZE)
+                .mapToObj(col -> getElement(row, col))
+                .toList();
+    }
+
+    private List<SudokuCell> getRowCells(int col) {
+        return IntStream.range(0, BOARD_SIZE)
+                .mapToObj(row -> getElement(row, col))
+                .toList();
     }
 
     private List<SudokuCell> handleGetCellsInSubgrid(int startRow, int startCol) {
@@ -160,5 +151,12 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> {
             }
         }
         return cells;
+    }
+
+    private Region getSubgridRegion(int row, int col) {
+        int gridRow = row / SUBGRID_SIZE;
+        int gridCol = col / SUBGRID_SIZE;
+        int index = gridRow * SUBGRID_SIZE + gridCol;
+        return subgrids.get(index);
     }
 }
