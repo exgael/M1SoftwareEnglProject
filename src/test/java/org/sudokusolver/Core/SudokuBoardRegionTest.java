@@ -13,7 +13,7 @@ class SudokuBoardRegionTest {
 
     @BeforeEach
     void setUp() {
-        board = new SudokuBoard();
+        board = new SudokuBoard(new int[81]);
     }
 
     @Test
