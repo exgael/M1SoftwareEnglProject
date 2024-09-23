@@ -131,11 +131,8 @@ public class RegionManager {
             return new ArrayList<>();
         }
 
-        // Return a list of possible values
-        return IntStream.rangeClosed(1, sudokuSize)
-                .filter(value -> canPlaceValue(row, col, value))
-                .boxed()
-                .toList();
+        // Return a list of candidates, get cell, return candidates
+        return getRowRegion(row).getCells().get(col).getCandidates().stream().toList();
     }
 
     /**
