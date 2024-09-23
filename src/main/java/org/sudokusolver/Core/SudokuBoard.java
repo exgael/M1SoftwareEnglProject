@@ -1,26 +1,19 @@
 package org.sudokusolver.Core;
 
-import org.sudokusolver.Core.Regions.Region;
-import org.sudokusolver.Core.Regions.RegionType;
 import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspectable {
+public class SudokuBoard extends Board<SudokuCell> implements Inspectable {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
-
     private static final int DEFAULT_VALUE = 0;
-
-    private final List<Region> rows = new ArrayList<>();
-    private final List<Region> columns = new ArrayList<>();
-    private final List<Region> subgrids = new ArrayList<>();
 
     public SudokuBoard(int[] board) {
         super(BOARD_SIZE, BOARD_SIZE, SudokuCell::new);
@@ -29,37 +22,15 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
                 getElement(i, j).setNumber(board[i * BOARD_SIZE + j]);
             }
         }
-
-        initializeRegions();
         initializeCandidates();
-    }
-
-    private void initializeCandidates() {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                SudokuCell cell = getElement(row, col);
-                List<Integer> candidates = getPossibleValues(row, col);
-                cell.initializeCandidates(candidates);
-            }
-        }
-    }
-
-    private void initializeRegions() {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            List<SudokuCell> rowCells = getRowCells(i);
-            List<SudokuCell> columnCells = getColumnCells(i);
-            int startRow = (i / SUBGRID_SIZE) * SUBGRID_SIZE;
-            int startCol = (i % SUBGRID_SIZE) * SUBGRID_SIZE;
-            List<SudokuCell> subgridCells = handleGetCellsInSubgrid(startRow, startCol);
-
-            this.rows.add(new Region(rowCells));
-            this.columns.add(new Region(columnCells));
-            this.subgrids.add(new Region(subgridCells));
-        }
     }
 
     public int getBoardSize() {
         return BOARD_SIZE;
+    }
+
+    public int getSubgridSize() {
+        return SUBGRID_SIZE;
     }
 
     public int getValue(int row, int col) {
@@ -68,16 +39,127 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
 
     public void setValue(int row, int col, int value) {
         validateValue(value);
-        getElement(row, col).setNumber(value);
 
-        // Remove value from candidates in related regions
-        getRowRegion(row).removeCandidate(value);
-        getColumnRegion(col).removeCandidate(value);
-        getSubgridRegion(row, col).removeCandidate(value);
+        // Remove value from candidates in related rows, columns, and subgrids
+        removeCandidateFromRow(row, value);
+        removeCandidateFromColumn(col, value);
+        removeCandidateFromSubgrid(row, col, value);
+
+        getElement(row, col).setNumber(value);
+    }
+
+    public int[] getCandidates(int row, int col) {
+        return getElement(row, col).getCandidates().stream().mapToInt(i -> i).toArray();
+    }
+
+    public void addCandidates(int[] candidates, int row, int col) {
+        for (int candidate : candidates) {
+            getElement(row, col).addCandidate(candidate);
+        }
+    }
+
+    public void removeCandidates(int[] candidates, int row, int col) {
+        for (int candidate : candidates) {
+            getElement(row, col).removeCandidate(candidate);
+        }
     }
 
     public boolean isSolved() {
-        return rows.stream().allMatch(Region::isSolved);
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (getElement(row, col).getNumber() == DEFAULT_VALUE) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void initializeCandidates() {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                SudokuCell cell = getElement(row, col);
+                if (cell.getNumber() == DEFAULT_VALUE) {
+                    List<Integer> candidates = getPossibleValues(row, col);
+                    cell.initializeCandidates(candidates);
+                }
+            }
+        }
+
+        // assert each non default cell has at least one candidate
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                SudokuCell cell = getElement(row, col);
+                if (cell.getNumber() == DEFAULT_VALUE) {
+                    if (cell.getCandidates().isEmpty()) {
+                        throw new IllegalStateException("No candidates for cell at row " + (row + 1) + " and column " + (col + 1));
+                    }
+                }
+            }
+        }
+    }
+
+    private List<Integer> getPossibleValues(int row, int col) {
+        Set<Integer> possibleValues = IntStream.rangeClosed(1, BOARD_SIZE).boxed().collect(Collectors.toSet());
+        removeValuesFromSet(possibleValues, getRowValues(row));
+        removeValuesFromSet(possibleValues, getColumnValues(col));
+        removeValuesFromSet(possibleValues, getSubgridValues(row, col));
+        return new ArrayList<>(possibleValues);
+    }
+
+    private void removeValuesFromSet(Set<Integer> set, List<Integer> values) {
+        values.forEach(set::remove);
+    }
+
+    private List<Integer> getRowValues(int row) {
+        return IntStream.range(0, BOARD_SIZE)
+                .mapToObj(col -> getElement(row, col).getNumber())
+                .filter(value -> value != DEFAULT_VALUE)
+                .collect(Collectors.toList());
+    }
+
+    private List<Integer> getColumnValues(int col) {
+        return IntStream.range(0, BOARD_SIZE)
+                .mapToObj(row -> getElement(row, col).getNumber())
+                .filter(value -> value != DEFAULT_VALUE)
+                .collect(Collectors.toList());
+    }
+
+    private List<Integer> getSubgridValues(int row, int col) {
+        List<Integer> subgridValues = new ArrayList<>();
+        forEachInSubgrid(row, col, (r, c) -> {
+            int value = getElement(r, c).getNumber();
+            if (value != DEFAULT_VALUE) {
+                subgridValues.add(value);
+            }
+        });
+        return subgridValues;
+    }
+
+    private void removeCandidateFromRow(int row, int value) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            getElement(row, col).removeCandidate(value);
+        }
+    }
+
+    private void removeCandidateFromColumn(int col, int value) {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            getElement(row, col).removeCandidate(value);
+        }
+    }
+
+    private void removeCandidateFromSubgrid(int row, int col, int value) {
+        forEachInSubgrid(row, col, (r, c) -> getElement(r, c).removeCandidate(value));
+    }
+
+    private void forEachInSubgrid(int row, int col, BiConsumer<Integer, Integer> action) {
+        int startRow = (row / SUBGRID_SIZE) * SUBGRID_SIZE;
+        int startCol = (col / SUBGRID_SIZE) * SUBGRID_SIZE;
+        for (int rowOffset = 0; rowOffset < SUBGRID_SIZE; rowOffset++) {
+            for (int colOffset = 0; colOffset < SUBGRID_SIZE; colOffset++) {
+                action.accept(startRow + rowOffset, startCol + colOffset);
+            }
+        }
     }
 
     private void validateValue(int value) {
@@ -86,87 +168,6 @@ public class SudokuBoard extends ObservableBoard<SudokuCell> implements Inspecta
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
         }
-    }
-
-    public List<Integer> getPossibleValues(int row, int col) {
-        if (getValue(row, col) != DEFAULT_VALUE) {
-            return new ArrayList<>();
-        }
-        return IntStream.rangeClosed(1, BOARD_SIZE)
-                .filter(value -> canPlaceValue(row, col, value))
-                .boxed()
-                .toList();
-    }
-
-    public boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == DEFAULT_VALUE && !isValueInTargetedRegions(row, col, value);
-    }
-
-    private boolean isValueInTargetedRegions(int row, int col, int value) {
-        Set<Region> regions = new HashSet<>();
-        regions.add(this.getRowRegion(row));
-        regions.add(this.getColumnRegion(col));
-        regions.add(this.getSubgridRegion(row, col));
-        return regions.stream().anyMatch(region -> region.containsValue(value));
-    }
-
-    public void forEachRegion(Consumer<Region> action) {
-        rows.forEach(action);
-        columns.forEach(action);
-        subgrids.forEach(action);
-    }
-
-    // Region accessors
-
-    private Region getRegion(int index, RegionType regionType) {
-        return switch (regionType) {
-            case ROW -> getRowRegion(index);
-            case COLUMN -> getColumnRegion(index);
-            case SUBGRID -> getSubgridRegion(index);
-        };
-    }
-
-    public Region getRowRegion(int row) {
-        return rows.get(row);
-    }
-
-    public Region getColumnRegion(int col) {
-        return columns.get(col);
-    }
-
-    public Region getSubgridRegion(int row, int col) {
-        int gridRow = row / SUBGRID_SIZE;
-        int gridCol = col / SUBGRID_SIZE;
-        int index = gridRow * SUBGRID_SIZE + gridCol;
-        return getSubgridRegion(index);
-    }
-
-    Region getSubgridRegion(int index) {
-        return subgrids.get(index);
-    }
-
-    // Helper methods to initialize regions
-
-    private List<SudokuCell> getColumnCells(int col) {
-        return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(row -> getElement(row, col))
-                .toList();
-    }
-
-    private List<SudokuCell> getRowCells(int row) {
-        return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(col -> getElement(row, col))
-                .toList();
-    }
-
-    private List<SudokuCell> handleGetCellsInSubgrid(int startRow, int startCol) {
-        List<SudokuCell> cells = new ArrayList<>();
-        for (int r = 0; r < SUBGRID_SIZE; r++) {
-            for (int c = 0; c < SUBGRID_SIZE; c++) {
-                cells.add(getElement(startRow + r, startCol + c));
-            }
-        }
-        return cells;
     }
 
     @Override

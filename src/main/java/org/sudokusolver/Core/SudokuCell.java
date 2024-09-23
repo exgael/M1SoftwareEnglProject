@@ -2,7 +2,6 @@ package org.sudokusolver.Core;
 
 import org.sudokusolver.Utils.Inspectable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,10 @@ public class SudokuCell implements Inspectable {
 
     public Set<Integer> getCandidates() {
         return candidates;
+    }
+
+    public void addCandidate(int candidate) {
+        candidates.add(candidate);
     }
 
     public void removeCandidate(int candidate) {

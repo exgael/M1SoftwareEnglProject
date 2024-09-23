@@ -1,8 +1,8 @@
 package org.sudokusolver.Solver.Solvers;
 
-import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Solver.Regions.RegionManager;
 
 @FunctionalInterface
 public interface DeductionRule {
-    void apply(SudokuBoard board);
+    void apply(RegionManager region);
 }

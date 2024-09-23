@@ -2,6 +2,7 @@ package org.sudokusolver.Solver.Solvers;
 
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Solver.Regions.RegionManager;
 
 import java.util.List;
 
@@ -9,8 +10,11 @@ public class SudokuSolver {
 
     private final Solver[] solvers;
 
+    RegionManager regionManager;
+
     private SudokuSolver(Solver[] solvers) {
         this.solvers = solvers;
+
     }
 
     public static SudokuSolver build() {
@@ -21,25 +25,19 @@ public class SudokuSolver {
         });
     }
 
-    public SudokuSolution findSudokuLevel(int[] linearBoard) {
-        int difficulty = 0; // The level of the grid is intrinsic to the number of solver used.
-
-        SudokuBoard board = initialize(linearBoard);
-
-        for (Solver solver : solvers) {
-            solver.solve(board); // Reuse grid from previous solving attempt.
-            difficulty++;
-            if (board.isSolved()) {
-                int[] linearizedBoard = finalizeSolution(board);
+    public SudokuSolution findSudokuLevel(SudokuBoard sudoku) {
+        int difficulty = 0;
+        if (regionManager == null) {
+            this.regionManager = new RegionManager(sudoku);
+        }
+        for (var solver : solvers) {
+            solver.solve(regionManager);
+            if (sudoku.isSolved()) {
+                int[] linearizedBoard = finalizeSolution(sudoku);
                 return new SudokuSolution(linearizedBoard, difficulty);
             }
         }
-
         return new SudokuSolution(null, -1);
-    }
-
-    private @NotNull SudokuBoard initialize(int @NotNull [] linearBoard) {
-        return new SudokuBoard(linearBoard);
     }
 
     private int @NotNull [] finalizeSolution(@NotNull SudokuBoard board) {

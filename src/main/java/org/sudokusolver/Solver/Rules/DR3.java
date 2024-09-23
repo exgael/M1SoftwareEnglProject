@@ -1,8 +1,9 @@
 package org.sudokusolver.Solver.Rules;
 
-import org.sudokusolver.Core.Regions.Region;
+import org.sudokusolver.Solver.Regions.Region;
 import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Core.SudokuCell;
+import org.sudokusolver.Solver.Regions.RegionManager;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
 import java.util.HashSet;
@@ -14,10 +15,10 @@ public class DR3 implements DeductionRule {
     // TODO : Use combinations to generalize for any naked count
 
     @Override
-    public void apply(SudokuBoard board) {
+    public void apply(RegionManager region) {
         // TODO: Determinate order of execution
-        board.forEachRegion(this::applyNakedPair);
-        board.forEachRegion(this::applyNakedTriple);
+       // board.forEachRegion(this::applyNakedPair);
+       // board.forEachRegion(this::applyNakedTriple);
     }
 
     private void applyNakedPair(Region region) {

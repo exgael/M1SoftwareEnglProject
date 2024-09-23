@@ -2,6 +2,7 @@ package org.sudokusolver.Solver.Solvers;
 
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Core.SudokuBoard;
+import org.sudokusolver.Solver.Regions.RegionManager;
 
 import java.util.List;
 
@@ -13,13 +14,7 @@ public class Solver {
         this.rules = rules;
     }
 
-    public void solve(SudokuBoard board) throws RuntimeException {
-        for (int i = 0; i < board.getBoardSize(); i++) {
-            applyRules(board);
-        }
-    }
-
-    private void applyRules(SudokuBoard board) {
-        rules.forEach((deductionRule -> deductionRule.apply(board)));
+    public void solve(RegionManager regionManager) throws RuntimeException {
+        rules.forEach((deductionRule -> deductionRule.apply(regionManager)));
     }
 }

@@ -1,5 +1,6 @@
 package org.sudokusolver;
 
+import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Solver.Solvers.SudokuSolution;
 import org.sudokusolver.Solver.Solvers.SudokuSolver;
 
@@ -19,8 +20,9 @@ public class Main {
                 0, 7, 4, 0, 9, 0, 1, 6, 2
         };
 
+        SudokuBoard board = new SudokuBoard(easySudoku);
         SudokuSolver sudokuSolver = SudokuSolver.build();
-        SudokuSolution sol = sudokuSolver.findSudokuLevel(easySudoku);
+        SudokuSolution sol = sudokuSolver.findSudokuLevel(board);
         System.out.println(sol);
     }
 }
