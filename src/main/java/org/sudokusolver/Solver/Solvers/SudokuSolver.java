@@ -31,6 +31,7 @@ public class SudokuSolver {
             this.regionManager = new RegionManager(sudoku);
         }
         for (var solver : solvers) {
+            difficulty++;
             solver.solve(regionManager);
             if (sudoku.isSolved()) {
                 int[] linearizedBoard = finalizeSolution(sudoku);
