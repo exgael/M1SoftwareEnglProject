@@ -26,9 +26,13 @@ public class RegionManager {
         initializeRegions(sudokuBoard);
     }
 
+    /**
+     * Initializes the regions of the Sudoku board.
+     * @param sudokuBoard The Sudoku board.
+     */
     private void initializeRegions(SudokuBoard sudokuBoard) {
         for (int i = 0; i < sudokuSize; i++) {
-            // Cells
+            // Collections of cells
             List<SudokuCell> rowCells = getRowCells(sudokuBoard, i);
             List<SudokuCell> columnCells = getColumnCells(sudokuBoard, i);
             int startRow = (i / subgridSize) * subgridSize;
@@ -47,6 +51,12 @@ public class RegionManager {
         }
     }
 
+    /**
+     * Builds a map of cells and coordinates.
+     * @param cells The list of cells.
+     * @param coordinates The list of coordinates.
+     * @return The map of cells and coordinates.
+     */
     private Map<SudokuCell, Coordinate> buildCoordinateMap(List<SudokuCell> cells, List<Coordinate> coordinates) {
         Map<SudokuCell, Coordinate> map = new HashMap<>();
         for (int j = 0; j < cells.size(); j++) {
@@ -55,11 +65,18 @@ public class RegionManager {
         return map;
     }
 
+    /**
+     * Returns the integer from the board.
+     * @param row The row index.
+     * @param col The column index.
+     * @return The cell.
+     */
     public int getValue(int row, int col) {
         return getRowRegion(row).getCells().get(col).getNumber();
     }
 
     public void setValue(int row, int col, int value) {
+        // Check if the value can be placed in the cell
         if (canPlaceValue(row, col, value)) {
             // Set the value in the specific cell
             SudokuCell cell = getRowRegion(row).getCells().get(col);
@@ -70,6 +87,12 @@ public class RegionManager {
         }
     }
 
+    /**
+     * Removes a value from the candidates of related cells in the same row, column, and subgrid.
+     * @param row The row index.
+     * @param col The column index.
+     * @param value The value to be removed.
+     */
     private void removeCandidatesFromRelatedRegions(int row, int col, int value) {
         // Remove from the same row
         Region rowRegion = getRowRegion(row);
@@ -96,20 +119,47 @@ public class RegionManager {
         });
     }
 
+    /**
+     * Returns a list of possible values for a cell.
+     * @param row The row index.
+     * @param col The column index.
+     * @return List of possible values.
+     */
     public List<Integer> getPossibleValues(int row, int col) {
+        // If the cell is already solved, return an empty list
         if (getValue(row, col) != DEFAULT_VALUE) {
             return new ArrayList<>();
         }
+
+        // Return a list of possible values
         return IntStream.rangeClosed(1, sudokuSize)
                 .filter(value -> canPlaceValue(row, col, value))
                 .boxed()
                 .toList();
     }
 
+    /**
+     * Checks if a value can be placed in a cell.
+     * To do so, the same value must not be present in the same row, column, or subgrid.
+     *
+     * @param row The row index.
+     * @param col The column index.
+     * @param value The value to be checked.
+     * @return True if the value can be placed, false otherwise.
+     */
     public boolean canPlaceValue(int row, int col, int value) {
-        return getValue(row, col) == DEFAULT_VALUE && !isValueInTargetedRegions(row, col, value);
+        boolean isCellEmpty = getValue(row, col) == DEFAULT_VALUE;
+        boolean isValueNotInTargetedRegions = !isValueInTargetedRegions(row, col, value);
+        return isCellEmpty && isValueNotInTargetedRegions;
     }
 
+    /**
+     * Checks if a value is in the targeted regions.
+     * @param row The row index.
+     * @param col The column index.
+     * @param value The value to be checked.
+     * @return True if the value is in the targeted regions, false otherwise.
+     */
     private boolean isValueInTargetedRegions(int row, int col, int value) {
         Set<Region> regions = new HashSet<>();
         regions.add(this.getRowRegion(row));
@@ -210,11 +260,9 @@ public class RegionManager {
      */
     private List<SudokuCell> handleGetCellsInSubgrid(SudokuBoard board, int startRow, int startCol) {
         List<SudokuCell> cells = new ArrayList<>();
-        for (int r = 0; r < subgridSize; r++) {
-            for (int c = 0; c < subgridSize; c++) {
-                cells.add(board.getElement(startRow + r, startCol + c));
-            }
-        }
+        iterateSubgrid(startRow, startCol, coordinate ->
+                cells.add(board.getElement(coordinate.row(), coordinate.column()))
+        );
         return cells;
     }
 
@@ -248,11 +296,21 @@ public class RegionManager {
      */
     private List<Coordinate> getSubgridCoordinates(int startRow, int startCol) {
         List<Coordinate> coordinates = new ArrayList<>();
-        for (int r = 0; r < subgridSize; r++) {
-            for (int c = 0; c < subgridSize; c++) {
-                coordinates.add(new Coordinate(startRow + r, startCol + c));
+        iterateSubgrid(startRow, startCol, coordinates::add);
+        return coordinates;
+    }
+
+    /**
+     * Executes an action for each cell in a subgrid.
+     * @param startRow The starting row index.
+     * @param startCol The starting column index.
+     * @param action The action to be performed.
+     */
+    private void iterateSubgrid(int startRow, int startCol, Consumer<Coordinate> action) {
+        for (int rOffset = 0; rOffset < subgridSize; rOffset++) {
+            for (int cOffset = 0; cOffset < subgridSize; cOffset++) {
+                action.accept(new Coordinate(startRow + rOffset, startCol + cOffset));
             }
         }
-        return coordinates;
     }
 }
