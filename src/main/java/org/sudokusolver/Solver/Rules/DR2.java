@@ -1,22 +1,39 @@
 package org.sudokusolver.Solver.Rules;
 
 import org.sudokusolver.Core.SudokuCell;
+import org.sudokusolver.Solver.Regions.Coordinate;
 import org.sudokusolver.Solver.Regions.Region;
 import org.sudokusolver.Solver.Regions.RegionManager;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DR2 implements DeductionRule {
 
     @Override
-    public void apply(RegionManager regionManager) {
-        regionManager.forEachRegion(this::applyHiddenSingle);
+    public boolean apply(RegionManager regionManager) {
+        return regionManager.stream()
+                .map(this::applyNakedPair)
+                .toList()
+                .contains(true);
     }
 
-    private void applyHiddenSingle(Region region) {
+    private boolean applyNakedPair(Region region) {
+        boolean nakedPairFound = false;
+        List<SudokuCell> pairCells = region.findCellsWithCandidateCount(2);
+        for (int i = 0; i < pairCells.size(); i++) {
+            for (int j = i + 1; j < pairCells.size(); j++) {
+                Set<Integer> candidates = new HashSet<>(pairCells.get(i).getCandidates());
+                if (candidates.equals(new HashSet<>(pairCells.get(j).getCandidates()))) {
+                    removeCandidatesFromOtherCells(region, candidates, Arrays.asList(pairCells.get(i), pairCells.get(j)));
+                    nakedPairFound = true;
+                }
+            }
+        }
+        return nakedPairFound;
+    }
+
+    private void applyHiddenSingle(Region region, RegionManager regionManager) {
         List<SudokuCell> cells = region.getCells();
         Map<Integer, SudokuCell> candidateMap = new HashMap<>();
 
@@ -36,8 +53,15 @@ public class DR2 implements DeductionRule {
         for (Map.Entry<Integer, SudokuCell> entry : candidateMap.entrySet()) {
             SudokuCell cell = entry.getValue();
             if (cell != null) {
-                cell.setNumber(entry.getKey());
+                Coordinate coordinate = region.getCellCoordinate(cell);
+                regionManager.setValue(coordinate.row(), coordinate.column(), entry.getKey());
             }
         }
+    }
+
+    private void removeCandidatesFromOtherCells(Region region, Set<Integer> candidates, List<SudokuCell> excludeCells) {
+        region.findUnsolvedCells().stream()
+                .filter(cell -> !excludeCells.contains(cell))
+                .forEach(cell -> cell.getCandidates().removeAll(candidates));
     }
 }

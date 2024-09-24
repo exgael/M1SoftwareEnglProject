@@ -15,10 +15,11 @@ public class DR3 implements DeductionRule {
     // TODO : Use combinations to generalize for any naked count
 
     @Override
-    public void apply(RegionManager regionManager) {
+    public boolean apply(RegionManager regionManager) {
         // TODO: Determinate order of execution
        // board.forEachRegion(this::applyNakedPair);
        // board.forEachRegion(this::applyNakedTriple);
+        return false;
     }
 
     private void applyNakedPair(Region region) {
