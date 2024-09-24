@@ -1,8 +1,8 @@
 package org.sudokusolver;
 
-import org.sudokusolver.Core.SudokuBoard;
-import org.sudokusolver.Solver.Solvers.SudokuSolution;
-import org.sudokusolver.Solver.Solvers.SudokuSolver;
+import org.sudokusolver.Gameplay.SudokuBoard;
+import org.sudokusolver.Strategy.SudokuSolution;
+import org.sudokusolver.Strategy.SudokuSolver;
 import org.sudokusolver.Utils.SudokuGrids;
 
 public class Main {

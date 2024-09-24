@@ -1,8 +1,8 @@
-package org.sudokusolver.Solver.Solvers;
+package org.sudokusolver.Strategy;
 
-import org.sudokusolver.Solver.Rules.DR1;
-import org.sudokusolver.Solver.Rules.DR2;
-import org.sudokusolver.Solver.Rules.DR3;
+import org.sudokusolver.Strategy.Rules.DR1;
+import org.sudokusolver.Strategy.Rules.DR2;
+import org.sudokusolver.Strategy.Rules.DR3;
 
 import java.util.ArrayList;
 import java.util.List;

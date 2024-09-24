@@ -1,6 +1,6 @@
-package org.sudokusolver.Solver.Solvers;
+package org.sudokusolver.Strategy;
 
-import org.sudokusolver.Solver.Regions.RegionManager;
+import org.sudokusolver.Strategy.Regions.RegionManager;
 
 import java.util.List;
 

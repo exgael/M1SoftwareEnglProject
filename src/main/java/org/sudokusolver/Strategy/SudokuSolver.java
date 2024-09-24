@@ -1,8 +1,8 @@
-package org.sudokusolver.Solver.Solvers;
+package org.sudokusolver.Strategy;
 
 import org.jetbrains.annotations.NotNull;
-import org.sudokusolver.Core.SudokuBoard;
-import org.sudokusolver.Solver.Regions.RegionManager;
+import org.sudokusolver.Gameplay.SudokuBoard;
+import org.sudokusolver.Strategy.Regions.RegionManager;
 
 public class SudokuSolver {
 

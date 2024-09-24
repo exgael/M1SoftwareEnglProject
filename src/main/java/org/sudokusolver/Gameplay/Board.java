@@ -1,4 +1,4 @@
-package org.sudokusolver.Core;
+package org.sudokusolver.Gameplay;
 
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Utils.Inspectable;

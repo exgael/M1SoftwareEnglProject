@@ -1,7 +1,7 @@
-package org.sudokusolver.Solver.Regions;
+package org.sudokusolver.Strategy.Regions;
 
-import org.sudokusolver.Core.SudokuBoard;
-import org.sudokusolver.Core.SudokuCell;
+import org.sudokusolver.Gameplay.SudokuBoard;
+import org.sudokusolver.Gameplay.SudokuCell;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -77,6 +77,10 @@ public class RegionManager {
      */
     public int getValue(int row, int col) {
         return getRowRegion(row).getCells().get(col).getNumber();
+    }
+
+    public SudokuCell getCell(int row, int col) {
+        return getRowRegion(row).getCells().get(col);
     }
 
     public void setValue(int row, int col, int value) {

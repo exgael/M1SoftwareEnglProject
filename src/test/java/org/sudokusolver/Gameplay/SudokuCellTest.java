@@ -1,4 +1,4 @@
-package org.sudokusolver.Core;
+package org.sudokusolver.Gameplay;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

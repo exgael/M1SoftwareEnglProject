@@ -1,6 +1,6 @@
-package org.sudokusolver.Solver.Regions;
+package org.sudokusolver.Strategy.Regions;
 
-import org.sudokusolver.Core.SudokuCell;
+import org.sudokusolver.Gameplay.SudokuCell;
 
 import java.util.List;
 import java.util.Map;
@@ -104,10 +104,11 @@ public class Region {
      * @param candidates   The candidates to remove.
      * @param excludeCells The cells to exclude.
      */
-    public void removeCandidates(Set<Integer> candidates, Set<SudokuCell> excludeCells) {
-        this.cells.stream()
+    public boolean removeCandidates(Set<Integer> candidates, Set<SudokuCell> excludeCells) {
+        return this.cells.stream()
                 .filter(sudokuCell -> !excludeCells.contains(sudokuCell))
-                .forEach(sudokuCell -> candidates.forEach(sudokuCell::removeCandidate));
+                .map(sudokuCell -> sudokuCell.removeCandidates(candidates))
+                .reduce(false, (a, b) -> a || b);
     }
 
     /**

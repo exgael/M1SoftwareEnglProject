@@ -1,4 +1,4 @@
-package org.sudokusolver.Core;
+package org.sudokusolver.Gameplay;
 
 import org.sudokusolver.Utils.Inspectable;
 import org.sudokusolver.Utils.Observer;

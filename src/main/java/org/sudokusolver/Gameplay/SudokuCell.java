@@ -1,4 +1,4 @@
-package org.sudokusolver.Core;
+package org.sudokusolver.Gameplay;
 
 import org.sudokusolver.Utils.Inspectable;
 
@@ -38,8 +38,12 @@ public class SudokuCell implements Inspectable {
         candidates.add(candidate);
     }
 
-    public void removeCandidate(int candidate) {
-        candidates.remove(candidate);
+    public boolean removeCandidate(int candidate) {
+        return candidates.remove(candidate);
+    }
+
+    public boolean removeCandidates(Set<Integer> candidates) {
+        return this.candidates.removeAll(candidates);
     }
 
     public void clearCandidates() {
