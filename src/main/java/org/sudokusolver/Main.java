@@ -3,26 +3,17 @@ package org.sudokusolver;
 import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Solver.Solvers.SudokuSolution;
 import org.sudokusolver.Solver.Solvers.SudokuSolver;
+import org.sudokusolver.Utils.SudokuGrids;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Sudoku Solver");
-
-        int[] easySudoku = new int[]{
-                2, 9, 0, 0, 7, 1, 0, 0, 0,
-                0, 8, 0, 3, 0, 9, 0, 0, 6,
-                0, 4, 0, 0, 0, 0, 0, 0, 0,
-                9, 0, 7, 0, 8, 0, 2, 0, 4,
-                0, 0, 0, 9, 0, 0, 6, 0, 0,
-                0, 0, 8, 0, 2, 0, 9, 1, 3,
-                0, 2, 9, 7, 0, 4, 0, 3, 8,
-                8, 0, 5, 1, 0, 0, 0, 7, 9,
-                0, 7, 4, 0, 9, 0, 1, 6, 2
-        };
-
-        SudokuBoard board = new SudokuBoard(easySudoku);
+        SudokuBoard board = new SudokuBoard(SudokuGrids.hardSudoku);
         SudokuSolver sudokuSolver = SudokuSolver.build();
         SudokuSolution sol = sudokuSolver.findSudokuLevel(board);
-        System.out.println(sol);
+        var solvedGrid = sol.sudokuBoard();
+
+        System.out.println("Level: " + sol.difficulty());
+        System.out.println(solvedGrid.debugDescription());
     }
 }
