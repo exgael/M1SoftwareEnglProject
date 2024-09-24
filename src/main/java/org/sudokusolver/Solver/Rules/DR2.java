@@ -1,48 +1,56 @@
 package org.sudokusolver.Solver.Rules;
 
 import org.sudokusolver.Core.SudokuCell;
-import org.sudokusolver.Solver.Regions.Coordinate;
 import org.sudokusolver.Solver.Regions.Region;
 import org.sudokusolver.Solver.Regions.RegionManager;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DR2 implements DeductionRule {
 
     @Override
     public boolean apply(RegionManager regionManager) {
         return regionManager.stream()
-                .map( region -> applyHiddenSingle(region, regionManager))
+                .map(this::applyNakedPair)
                 .toList()
                 .contains(true);
     }
 
-    private boolean applyHiddenSingle(Region region, RegionManager regionManager) {
-        List<SudokuCell> cells = region.getCells();
-        Map<Integer, SudokuCell> candidateMap = new HashMap<>();
-        boolean hiddenSingleFound = false;
-        for (SudokuCell cell : cells) {
-            if (cell.getNumber() == 0) {
-                for (int candidate : cell.getCandidates()) {
-                    if (!candidateMap.containsKey(candidate)) {
-                        candidateMap.put(candidate, cell);
-                    } else {
-                        // if number not unique in region, we remove it (not hidden single)
-                        candidateMap.put(candidate, null);
+    private boolean applyNakedPair(Region region) {
+        List<SudokuCell> candidateCells = region.findCellsWithCandidateCount(2);
+        boolean newNakedPairFound = false;
+        for (int i = 0; i < candidateCells.size(); i++) {
+            var cell = candidateCells.get(i);
+            // Find another cell with same candidates
+            for (int j = i + 1; j < candidateCells.size(); j++) {
+                var otherCell = candidateCells.get(j);
+                // Check for naked pair
+                if (isNakedPair(cell, otherCell)) {
+                    Set<Integer> candidates = cell.getCandidates();
+
+                    if (isAlreadyProcessed(region, new HashSet<>(List.of(cell, otherCell)))) {
+                        continue;
                     }
+
+                    newNakedPairFound = true;
+                    Set<SudokuCell> pair = new HashSet<>(List.of(cell, otherCell));
+                    region.removeCandidates(candidates, pair);
+                    break; // This cell is already processed
                 }
             }
         }
+        return newNakedPairFound;
+    }
 
-        for (Map.Entry<Integer, SudokuCell> entry : candidateMap.entrySet()) {
-            SudokuCell cell = entry.getValue();
-            if (cell != null) {
-                Coordinate coordinate = region.getCellCoordinate(cell);
-                regionManager.setValue(coordinate.row(), coordinate.column(), entry.getKey());
-                hiddenSingleFound = true;
-            }
-        }
-        return hiddenSingleFound;
+    private boolean isNakedPair(SudokuCell cell1, SudokuCell cell2) {
+        return cell1.getCandidates().equals(cell2.getCandidates());
+    }
+
+    private boolean isAlreadyProcessed(Region region, Set<SudokuCell> pair) {
+        return region.findCellsWithCandidates(pair.stream().flatMap(cell -> cell.getCandidates().stream()).collect(Collectors.toSet())).size() == 2;
     }
 }

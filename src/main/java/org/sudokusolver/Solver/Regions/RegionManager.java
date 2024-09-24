@@ -29,6 +29,7 @@ public class RegionManager {
 
     /**
      * Initializes the regions of the Sudoku board.
+     *
      * @param sudokuBoard The Sudoku board.
      */
     private void initializeRegions(SudokuBoard sudokuBoard) {
@@ -54,7 +55,8 @@ public class RegionManager {
 
     /**
      * Builds a map of cells and coordinates.
-     * @param cells The list of cells.
+     *
+     * @param cells       The list of cells.
      * @param coordinates The list of coordinates.
      * @return The map of cells and coordinates.
      */
@@ -68,6 +70,7 @@ public class RegionManager {
 
     /**
      * Returns the integer from the board.
+     *
      * @param row The row index.
      * @param col The column index.
      * @return The cell.
@@ -91,11 +94,18 @@ public class RegionManager {
 
     /**
      * Removes a value from the candidates of related cells in the same row, column, and subgrid.
-     * @param row The row index.
-     * @param col The column index.
+     *
+     * @param row   The row index.
+     * @param col   The column index.
      * @param value The value to be removed.
      */
     private void removeCandidateFromRelatedRegions(int row, int col, int value) {
+
+        if (row == 6 && col == 4) {
+            System.out.println("removeCandidateFromRelatedRegions");
+
+        }
+
         // Remove from the same row
         getRowRegion(row).forEach(cell -> cell.removeCandidate(value));
 
@@ -108,6 +118,7 @@ public class RegionManager {
 
     /**
      * Return a stream of all the regions.
+     *
      * @return The stream of regions.
      */
     public Stream<Region> stream() {
@@ -116,6 +127,7 @@ public class RegionManager {
 
     /**
      * Returns a list of possible values for a cell.
+     *
      * @param row The row index.
      * @param col The column index.
      * @return List of possible values.
@@ -134,8 +146,8 @@ public class RegionManager {
      * Checks if a value can be placed in a cell.
      * To do so, the same value must not be present in the same row, column, or subgrid.
      *
-     * @param row The row index.
-     * @param col The column index.
+     * @param row   The row index.
+     * @param col   The column index.
      * @param value The value to be checked.
      * @return True if the value can be placed, false otherwise.
      */
@@ -147,8 +159,9 @@ public class RegionManager {
 
     /**
      * Checks if a value is in the targeted regions.
-     * @param row The row index.
-     * @param col The column index.
+     *
+     * @param row   The row index.
+     * @param col   The column index.
      * @param value The value to be checked.
      * @return True if the value is in the targeted regions, false otherwise.
      */
@@ -167,6 +180,7 @@ public class RegionManager {
 
     /**
      * Returns a row region.
+     *
      * @param row The row index.
      * @return The row region.
      */
@@ -176,6 +190,7 @@ public class RegionManager {
 
     /**
      * Returns a row region.
+     *
      * @param col The column index.
      * @return The row region.
      */
@@ -185,6 +200,7 @@ public class RegionManager {
 
     /**
      * Returns a subgrid region.
+     *
      * @param row The row index.
      * @param col The column index.
      * @return The subgrid region.
@@ -198,6 +214,7 @@ public class RegionManager {
 
     /**
      * Returns a subgrid region.
+     *
      * @param index The index of the subgrid.
      * @return The subgrid region.
      */
@@ -207,6 +224,7 @@ public class RegionManager {
 
     /**
      * Iterates over all regions.
+     *
      * @param action The action to be performed.
      */
     public void forEachRegion(Consumer<Region> action) {
@@ -221,8 +239,9 @@ public class RegionManager {
 
     /**
      * Returns a list of cells in a row.
+     *
      * @param board The Sudoku board.
-     * @param row The row index.
+     * @param row   The row index.
      * @return List of cells.
      */
     private List<SudokuCell> getRowCells(SudokuBoard board, int row) {
@@ -233,8 +252,9 @@ public class RegionManager {
 
     /**
      * Returns a list of cells in a column.
+     *
      * @param board The Sudoku board.
-     * @param col The column index.
+     * @param col   The column index.
      * @return List of cells.
      */
     private List<SudokuCell> getColumnCells(SudokuBoard board, int col) {
@@ -245,7 +265,8 @@ public class RegionManager {
 
     /**
      * Returns a list of cells in a subgrid.
-     * @param board The Sudoku board.
+     *
+     * @param board    The Sudoku board.
      * @param startRow The starting row index.
      * @param startCol The starting column index.
      * @return List of cells.
@@ -260,6 +281,7 @@ public class RegionManager {
 
     /**
      * Returns a list of coordinates for a given row.
+     *
      * @param row The row index.
      * @return List of coordinates.
      */
@@ -271,6 +293,7 @@ public class RegionManager {
 
     /**
      * Returns a list of coordinates for a given column.
+     *
      * @param col The column index.
      * @return List of coordinates.
      */
@@ -282,6 +305,7 @@ public class RegionManager {
 
     /**
      * Returns a list of coordinates for a subgrid.
+     *
      * @param startRow The starting row index.
      * @param startCol The starting column index.
      * @return List of coordinates.
@@ -294,9 +318,10 @@ public class RegionManager {
 
     /**
      * Executes an action for each cell in a subgrid.
+     *
      * @param startRow The starting row index.
      * @param startCol The starting column index.
-     * @param action The action to be performed.
+     * @param action   The action to be performed.
      */
     private void iterateSubgrid(int startRow, int startCol, Consumer<Coordinate> action) {
         for (int rOffset = 0; rOffset < subgridSize; rOffset++) {

@@ -1,11 +1,8 @@
 package org.sudokusolver.Solver.Solvers;
 
-import org.jetbrains.annotations.NotNull;
-import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Solver.Regions.RegionManager;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Solver {
 

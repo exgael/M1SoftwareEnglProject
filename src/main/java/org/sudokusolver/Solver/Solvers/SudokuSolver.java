@@ -53,6 +53,6 @@ public class SudokuSolver {
         boolean isSolving;
         do {
             isSolving = solver.solve(regionManager);
-        }  while (isSolving);
+        } while (isSolving);
     }
 }

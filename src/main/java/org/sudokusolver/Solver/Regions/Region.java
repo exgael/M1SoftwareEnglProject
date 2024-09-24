@@ -72,6 +72,12 @@ public class Region {
                 .toList();
     }
 
+    public List<SudokuCell> findCellsWithCandidates(Set<Integer> candidates) {
+        return this.cells.stream()
+                .filter(sudokuCell -> sudokuCell.getCandidates().containsAll(candidates))
+                .toList();
+    }
+
     /**
      * Finds unsolved cells in the region.
      *
@@ -95,7 +101,7 @@ public class Region {
     /**
      * Removes candidates from all cells in the region except those specified in the exclude set.
      *
-     * @param candidates The candidates to remove.
+     * @param candidates   The candidates to remove.
      * @param excludeCells The cells to exclude.
      */
     public void removeCandidates(Set<Integer> candidates, Set<SudokuCell> excludeCells) {
@@ -107,7 +113,7 @@ public class Region {
     /**
      * Removes a candidate from all cells in the region except those specified in the exclude set.
      *
-     * @param candidate The candidate to remove.
+     * @param candidate    The candidate to remove.
      * @param excludeCells The cells to exclude.
      */
     public void removeCandidate(int candidate, Set<SudokuCell> excludeCells) {

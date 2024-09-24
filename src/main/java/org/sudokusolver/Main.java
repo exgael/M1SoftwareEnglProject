@@ -13,7 +13,7 @@ public class Main {
 
         // Easy
         SudokuBoard easyBoard = new SudokuBoard(SudokuGrids.easySudoku);
-        SudokuSolution easySol  = sudokuSolver.findSudokuLevel(easyBoard);
+        SudokuSolution easySol = sudokuSolver.findSudokuLevel(easyBoard);
         System.out.println("Sudoku solved. Difficulty found: " + easySol.difficulty());
         System.out.println(easySol.sudokuBoard().debugDescription());
 

@@ -1,10 +1,10 @@
 package org.sudokusolver.Solver.Rules;
 
+import org.sudokusolver.Core.SudokuCell;
 import org.sudokusolver.Solver.Regions.Coordinate;
 import org.sudokusolver.Solver.Regions.Region;
 import org.sudokusolver.Solver.Regions.RegionManager;
 import org.sudokusolver.Solver.Solvers.DeductionRule;
-import org.sudokusolver.Core.SudokuCell;
 
 import java.util.List;
 
@@ -29,6 +29,4 @@ public class DR1 implements DeductionRule {
         }
         return obviousSingleFound;
     }
-
-
 }

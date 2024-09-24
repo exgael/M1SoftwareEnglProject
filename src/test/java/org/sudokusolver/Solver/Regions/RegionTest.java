@@ -1,4 +1,4 @@
-package org.sudokusolver.Core.Regions;
+package org.sudokusolver.Solver.Regions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
