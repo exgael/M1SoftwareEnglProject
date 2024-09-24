@@ -13,30 +13,15 @@ public class DR2 implements DeductionRule {
     @Override
     public boolean apply(RegionManager regionManager) {
         return regionManager.stream()
-                .map(this::applyNakedPair)
+                .map( region -> applyHiddenSingle(region, regionManager))
                 .toList()
                 .contains(true);
     }
 
-    private boolean applyNakedPair(Region region) {
-        boolean nakedPairFound = false;
-        List<SudokuCell> pairCells = region.findCellsWithCandidateCount(2);
-        for (int i = 0; i < pairCells.size(); i++) {
-            for (int j = i + 1; j < pairCells.size(); j++) {
-                Set<Integer> candidates = new HashSet<>(pairCells.get(i).getCandidates());
-                if (candidates.equals(new HashSet<>(pairCells.get(j).getCandidates()))) {
-                    removeCandidatesFromOtherCells(region, candidates, Arrays.asList(pairCells.get(i), pairCells.get(j)));
-                    nakedPairFound = true;
-                }
-            }
-        }
-        return nakedPairFound;
-    }
-
-    private void applyHiddenSingle(Region region, RegionManager regionManager) {
+    private boolean applyHiddenSingle(Region region, RegionManager regionManager) {
         List<SudokuCell> cells = region.getCells();
         Map<Integer, SudokuCell> candidateMap = new HashMap<>();
-
+        boolean hiddenSingleFound = false;
         for (SudokuCell cell : cells) {
             if (cell.getNumber() == 0) {
                 for (int candidate : cell.getCandidates()) {
@@ -55,13 +40,9 @@ public class DR2 implements DeductionRule {
             if (cell != null) {
                 Coordinate coordinate = region.getCellCoordinate(cell);
                 regionManager.setValue(coordinate.row(), coordinate.column(), entry.getKey());
+                hiddenSingleFound = true;
             }
         }
-    }
-
-    private void removeCandidatesFromOtherCells(Region region, Set<Integer> candidates, List<SudokuCell> excludeCells) {
-        region.findUnsolvedCells().stream()
-                .filter(cell -> !excludeCells.contains(cell))
-                .forEach(cell -> cell.getCandidates().removeAll(candidates));
+        return hiddenSingleFound;
     }
 }
