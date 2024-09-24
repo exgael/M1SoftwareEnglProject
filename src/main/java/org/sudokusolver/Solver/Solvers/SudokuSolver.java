@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Solver.Regions.RegionManager;
 
-import java.util.List;
-
 public class SudokuSolver {
 
     private final Solver[] solvers;
@@ -31,28 +29,28 @@ public class SudokuSolver {
             this.regionManager = new RegionManager(sudoku);
         }
         for (var solver : solvers) {
+            // Update sudoku level
             difficulty++;
-            solver.solve(regionManager);
+
+            // Solve sudoku
+            applySolver(solver);
+
+            // Check if sudoku is solved
             if (sudoku.isSolved()) {
-                int[] linearizedBoard = finalizeSolution(sudoku);
-                return new SudokuSolution(linearizedBoard, difficulty);
+
+                // if sudoku is solved, return the solution
+                return new SudokuSolution(sudoku, difficulty);
             }
         }
-        return new SudokuSolution(null, -1);
+
+        // if sudoku is not solved, return the unsolved sudoku
+        return new SudokuSolution(sudoku, -1);
     }
 
-    private int @NotNull [] finalizeSolution(@NotNull SudokuBoard board) {
-        int[] linearizedGrid = new int[board.getRows() * board.getCols()];
-
-        for (int i = 0; i < linearizedGrid.length; i++) {
-            // switch row each 9th increment
-            int row = i / board.getRows();
-
-            // Switch col every increment up until 8 and restart
-            int col = i % board.getCols();
-            linearizedGrid[i] = board.getValue(row, col);
-        }
-
-        return linearizedGrid;
+    public void applySolver(@NotNull Solver solver) {
+        boolean isSolving;
+        do {
+            isSolving = solver.solve(regionManager);
+        }  while (isSolving);
     }
 }

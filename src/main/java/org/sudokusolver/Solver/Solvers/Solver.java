@@ -5,6 +5,7 @@ import org.sudokusolver.Core.SudokuBoard;
 import org.sudokusolver.Solver.Regions.RegionManager;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Solver {
 
@@ -14,7 +15,10 @@ public class Solver {
         this.rules = rules;
     }
 
-    public void solve(RegionManager regionManager) throws RuntimeException {
-        rules.forEach((deductionRule -> deductionRule.apply(regionManager)));
+    public boolean solve(RegionManager regionManager) throws RuntimeException {
+        return rules.stream()
+                .map(rule -> rule.apply(regionManager))
+                .toList()
+                .contains(true);
     }
 }

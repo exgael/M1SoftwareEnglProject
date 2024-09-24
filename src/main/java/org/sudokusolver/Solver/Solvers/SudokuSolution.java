@@ -1,4 +1,6 @@
 package org.sudokusolver.Solver.Solvers;
 
-public record SudokuSolution(int[] solvedGrid, int difficulty) {
+import org.sudokusolver.Core.SudokuBoard;
+
+public record SudokuSolution(SudokuBoard sudokuBoard, int difficulty) {
 }
