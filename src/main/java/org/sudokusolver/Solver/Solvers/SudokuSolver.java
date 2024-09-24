@@ -37,12 +37,14 @@ public class SudokuSolver {
 
             // Check if sudoku is solved
             if (sudoku.isSolved()) {
-
+                // Reset region manager
+                regionManager = null;
                 // if sudoku is solved, return the solution
                 return new SudokuSolution(sudoku, difficulty);
             }
         }
 
+        regionManager = null;
         // if sudoku is not solved, return the unsolved sudoku
         return new SudokuSolution(sudoku, -1);
     }
