@@ -82,9 +82,10 @@ public class RegionManager {
             // Set the value in the specific cell
             SudokuCell cell = getRowRegion(row).getCells().get(col);
             cell.setNumber(value);
+            cell.clearCandidates();  // Clear candidates for the cell where we set the value
 
             // Remove the value from the candidates of related cells in the same row, column, and subgrid
-            removeCandidatesFromRelatedRegions(row, col, value);
+            removeCandidateFromRelatedRegions(row, col, value);
         }
     }
 
@@ -94,30 +95,15 @@ public class RegionManager {
      * @param col The column index.
      * @param value The value to be removed.
      */
-    private void removeCandidatesFromRelatedRegions(int row, int col, int value) {
+    private void removeCandidateFromRelatedRegions(int row, int col, int value) {
         // Remove from the same row
-        Region rowRegion = getRowRegion(row);
-        rowRegion.forEach(sudokuCell -> {
-            if (!sudokuCell.isSolved()) {
-                sudokuCell.removeCandidate(value);
-            }
-        });
+        getRowRegion(row).forEach(cell -> cell.removeCandidate(value));
 
         // Remove from the same column
-        Region columnRegion = getColumnRegion(col);
-        columnRegion.forEach(sudokuCell -> {
-            if (!sudokuCell.isSolved()) {
-                sudokuCell.removeCandidate(value);
-            }
-        });
+        getColumnRegion(col).forEach(cell -> cell.removeCandidate(value));
 
         // Remove from the same subgrid
-        Region subgridRegion = getSubgridRegion(row, col);
-        subgridRegion.forEach(sudokuCell -> {
-            if (!sudokuCell.isSolved()) {
-                sudokuCell.removeCandidate(value);
-            }
-        });
+        getSubgridRegion(row, col).forEach(cell -> cell.removeCandidate(value));
     }
 
     /**
