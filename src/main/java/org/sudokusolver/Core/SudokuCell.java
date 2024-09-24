@@ -42,6 +42,10 @@ public class SudokuCell implements Inspectable {
         candidates.remove(candidate);
     }
 
+    public void clearCandidates() {
+        candidates.clear();
+    }
+
     public boolean hasCandidate(int candidate) {
         return candidates.contains(candidate);
     }
