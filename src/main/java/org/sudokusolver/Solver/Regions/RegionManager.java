@@ -6,6 +6,7 @@ import org.sudokusolver.Core.SudokuCell;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class RegionManager {
 
@@ -117,6 +118,14 @@ public class RegionManager {
                 sudokuCell.removeCandidate(value);
             }
         });
+    }
+
+    /**
+     * Return a stream of all the regions.
+     * @return The stream of regions.
+     */
+    public Stream<Region> stream() {
+        return Stream.of(rows, columns, subgrids).flatMap(Collection::stream);
     }
 
     /**
