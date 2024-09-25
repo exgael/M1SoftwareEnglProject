@@ -6,38 +6,27 @@ public class SudokuSolver {
     RegionManager regionManager;
 
     public SudokuSolution findSudokuLevel(SudokuBoard sudoku) {
-        DifficultyLevel difficulty = DifficultyLevel.EASY;
         if (regionManager == null) {
             this.regionManager = new RegionManager(sudoku);
         }
 
-        while(difficulty != DifficultyLevel.EXPERT) {
-            Solver solver = new Solver(difficulty);
+        DifficultyLevel difficulty = DifficultyLevel.EASY;
+        boolean isSolved = false;
+        Solver solver;
+
+        do {
+            solver = new Solver(difficulty);
             solver.applySolver(regionManager);
+
             if (sudoku.isSolved()) {
-                regionManager = null;
-                return new SudokuSolution(sudoku, difficulty);
+                isSolved = true;
+            } else {
+                difficulty = difficulty.getNext();
             }
-            difficulty = incrementDifficulty(difficulty);
-        }
+
+        } while(difficulty != null && !isSolved);
 
         regionManager = null;
-        // return unsolved sudoku with expert level
-        return new SudokuSolution(sudoku, DifficultyLevel.EXPERT);
-    }
-
-    private DifficultyLevel incrementDifficulty(DifficultyLevel difficulty) {
-        switch (difficulty) {
-            case EASY -> {
-                return DifficultyLevel.MEDIUM;
-            }
-            case MEDIUM -> {
-                return DifficultyLevel.HARD;
-            }
-            case HARD -> {
-                return DifficultyLevel.EXPERT;
-            }
-            default -> throw new RuntimeException("Expert level not implemented yet");
-        }
+        return new SudokuSolution(sudoku, difficulty);
     }
 }
