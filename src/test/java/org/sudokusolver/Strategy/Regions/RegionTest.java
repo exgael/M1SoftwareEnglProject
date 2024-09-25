@@ -91,7 +91,7 @@ class RegionTest {
 
     @Test
     void testFindUnsolvedCells() {
-        List<SudokuCell> unsolvedCells = rowRegion.findUnsolvedCells();
+        Set<SudokuCell> unsolvedCells = rowRegion.findUnsolvedCells();
         assertFalse(unsolvedCells.isEmpty());
         unsolvedCells.forEach(cell -> assertFalse(cell.isSolved()));
     }

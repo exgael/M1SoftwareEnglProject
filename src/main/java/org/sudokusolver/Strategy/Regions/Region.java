@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Region {
 
@@ -81,12 +82,12 @@ public class Region {
     /**
      * Finds unsolved cells in the region.
      *
-     * @return List of unsolved cells.
+     * @return Set of unsolved cells.
      */
-    public List<SudokuCell> findUnsolvedCells() {
+    public Set<SudokuCell> findUnsolvedCells() {
         return this.cells.stream()
                 .filter(sudokuCell -> !sudokuCell.isSolved())
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     /**
