@@ -8,6 +8,7 @@ public enum DifficultyLevel {
     /**
      * Get the next difficulty level
      * <a href="https://stackoverflow.com/questions/17664445/is-there-an-increment-operator-for-java-enum">Source</a>
+     *
      * @return the next difficulty level
      */
     public DifficultyLevel getNext() {

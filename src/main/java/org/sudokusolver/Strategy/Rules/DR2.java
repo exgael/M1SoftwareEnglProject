@@ -1,13 +1,14 @@
 package org.sudokusolver.Strategy.Rules;
 
 import org.sudokusolver.Gameplay.SudokuCell;
+import org.sudokusolver.Strategy.DeductionRule;
 import org.sudokusolver.Strategy.Regions.Coordinate;
 import org.sudokusolver.Strategy.Regions.Region;
 import org.sudokusolver.Strategy.Regions.RegionManager;
-import org.sudokusolver.Strategy.DeductionRule;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DR2 implements DeductionRule {
 

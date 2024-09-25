@@ -3,6 +3,7 @@ package org.sudokusolver.Strategy;
 import org.jetbrains.annotations.Nullable;
 import org.sudokusolver.Gameplay.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
+
 public class SudokuSolver {
     RegionManager regionManager;
 
@@ -41,7 +42,7 @@ public class SudokuSolver {
                 difficulty = difficulty.getNext();
             }
 
-        } while(difficulty != null && !isSolved);
+        } while (difficulty != null && !isSolved);
         return difficulty;
     }
 
