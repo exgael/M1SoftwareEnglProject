@@ -1,15 +1,32 @@
 package org.sudokusolver.Strategy;
 
+import org.jetbrains.annotations.Nullable;
 import org.sudokusolver.Gameplay.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
 public class SudokuSolver {
     RegionManager regionManager;
 
+    /**
+     * Try to solve the Sudoku puzzle and return the solution.
+     *
+     * @param sudoku the Sudoku puzzle
+     * @return the Sudoku solution
+     */
     public SudokuSolution findSudokuLevel(SudokuBoard sudoku) {
-        if (regionManager == null) {
-            this.regionManager = new RegionManager(sudoku);
-        }
+        initializeRegionManager(sudoku);
+        DifficultyLevel difficulty = solve(sudoku);
+        cleanUpRegionManager();
+        return new SudokuSolution(sudoku, difficulty);
+    }
 
+    /**
+     * Solve the Sudoku puzzle.
+     *
+     * @param sudoku the Sudoku puzzle
+     * @return the difficulty level of the Sudoku puzzle or null if the puzzle is not solvable
+     */
+    @Nullable
+    private DifficultyLevel solve(SudokuBoard sudoku) {
         DifficultyLevel difficulty = DifficultyLevel.EASY;
         boolean isSolved = false;
         Solver solver;
@@ -25,8 +42,27 @@ public class SudokuSolver {
             }
 
         } while(difficulty != null && !isSolved);
+        return difficulty;
+    }
 
+
+    /**
+     * Initialize the region manager.
+     * This is necessary if the SudokuSolver is used multiple times for different Sudoku puzzles.
+     *
+     * @param sudoku the Sudoku puzzle
+     */
+    private void initializeRegionManager(SudokuBoard sudoku) {
+        if (regionManager == null) {
+            this.regionManager = new RegionManager(sudoku);
+        }
+    }
+
+    /**
+     * Clean up the region manager.
+     * This is necessary if the SudokuSolver is used multiple times for different Sudoku puzzles.
+     */
+    private void cleanUpRegionManager() {
         regionManager = null;
-        return new SudokuSolution(sudoku, difficulty);
     }
 }
