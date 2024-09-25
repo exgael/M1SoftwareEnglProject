@@ -3,24 +3,20 @@ package org.sudokusolver.Strategy;
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Gameplay.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
+import org.sudokusolver.Strategy.SolvingStrategies.EasySolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategies.HardSolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategies.MediumSolvingStrategy;
+
+import java.util.Set;
 
 public class SudokuSolver {
 
-    private final Solver[] solvers;
+    private final Set<SolvingStrategy> strategies;
 
     RegionManager regionManager;
 
-    private SudokuSolver(Solver[] solvers) {
-        this.solvers = solvers;
-
-    }
-
-    public static SudokuSolver build() {
-        return new SudokuSolver(new Solver[]{
-                SolverFactory.createEasySolver(),
-                SolverFactory.createMediumSolver(),
-                SolverFactory.createHardSolver(),
-        });
+    public SudokuSolver() {
+        this.strategies = Set.of(new EasySolvingStrategy(), new MediumSolvingStrategy(), new HardSolvingStrategy());
     }
 
     public SudokuSolution findSudokuLevel(SudokuBoard sudoku) {
@@ -28,12 +24,12 @@ public class SudokuSolver {
         if (regionManager == null) {
             this.regionManager = new RegionManager(sudoku);
         }
-        for (var solver : solvers) {
+        for (var strategy : strategies) {
             // Update sudoku level
             difficulty++;
 
             // Solve sudoku
-            applySolver(solver);
+            applySolver(strategy);
 
             // Check if sudoku is solved
             if (sudoku.isSolved()) {
@@ -49,10 +45,10 @@ public class SudokuSolver {
         return new SudokuSolution(sudoku, -1);
     }
 
-    public void applySolver(@NotNull Solver solver) {
+    public void applySolver(@NotNull SolvingStrategy strategy) {
         boolean isSolving;
         do {
-            isSolving = solver.solve(regionManager);
+            isSolving = strategy.solve(regionManager);
         } while (isSolving);
     }
 }

@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Sudoku Solver");
 
-        SudokuSolver sudokuSolver = SudokuSolver.build();
+        SudokuSolver sudokuSolver = new SudokuSolver();
 
         // Easy
         SudokuBoard easyBoard = new SudokuBoard(SudokuGrids.easySudoku);
