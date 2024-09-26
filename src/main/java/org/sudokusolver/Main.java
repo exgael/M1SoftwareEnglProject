@@ -5,11 +5,21 @@ import org.sudokusolver.Strategy.SudokuSolution;
 import org.sudokusolver.Strategy.SudokuSolver;
 import org.sudokusolver.Utils.SudokuGrids;
 
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Sudoku Solver");
 
         SudokuSolver sudokuSolver = new SudokuSolver();
+
+        // Test Read File
+        String fileName = "C:/Users/Moi/Documents/M1 IA/S. ENG/PROJET/M1SoftwareEnglProject/src/main/java/org/sudokusolver/ex1.txt";
+        int[] board = ReadFile.readFile(fileName);
+        SudokuBoard someBoard = new SudokuBoard(board);
+        SudokuSolution testSol = sudokuSolver.findSudokuLevel(someBoard);
+        System.out.println("Sudoku solved. Difficulty found: " + testSol.difficultyLevel());
+        System.out.println(testSol.sudokuBoard().debugDescription());
 
         // Easy
         SudokuBoard easyBoard = new SudokuBoard(SudokuGrids.easySudoku);
