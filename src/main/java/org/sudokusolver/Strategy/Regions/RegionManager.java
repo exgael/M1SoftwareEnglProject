@@ -105,11 +105,6 @@ public class RegionManager {
      */
     private void removeCandidateFromRelatedRegions(int row, int col, int value) {
 
-        if (row == 6 && col == 4) {
-            System.out.println("removeCandidateFromRelatedRegions");
-
-        }
-
         // Remove from the same row
         getRowRegion(row).forEach(cell -> cell.removeCandidate(value));
 
