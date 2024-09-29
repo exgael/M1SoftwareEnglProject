@@ -1,6 +1,5 @@
 package org.sudokusolver.Gameplay.Sudoku;
 
-import org.sudokusolver.Gameplay.Sudoku.Board;
 import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
