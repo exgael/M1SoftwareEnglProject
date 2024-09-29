@@ -1,10 +1,10 @@
 package org.sudokusolver;
 
-import org.sudokusolver.File.ReadFileFromResources;
 import org.sudokusolver.File.SudokuFileParser;
+import org.sudokusolver.Gameplay.Solver.SudokuSolver;
 import org.sudokusolver.Gameplay.SudokuBoard;
-import org.sudokusolver.Strategy.SudokuSolution;
-import org.sudokusolver.Strategy.SudokuSolver;
+import org.sudokusolver.Gameplay.Solver.SudokuSolution;
+import org.sudokusolver.Strategy.SudokuDRSolver;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,21 +17,21 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Sudoku Solver");
 
-        SudokuSolver sudokuSolver = new SudokuSolver();
+        SudokuSolver solver = new SudokuDRSolver();
         SudokuFileParser fileParser = new SudokuFileParser();
 
         String[] filenames = getFileNames();
 
         for (String filename : filenames) {
-            processSudokuFile(filename, sudokuSolver, fileParser);
+            processSudokuFile(filename, solver, fileParser);
         }
     }
 
-    private static void processSudokuFile(String filename, SudokuSolver sudokuSolver, SudokuFileParser fileParser) {
+    private static void processSudokuFile(String filename, SudokuSolver solver, SudokuFileParser fileParser) {
         try {
             int[] board = fileParser.parseFileTo1DArray(filename);
             SudokuBoard someBoard = new SudokuBoard(board);
-            SudokuSolution testSol = sudokuSolver.findSudokuLevel(someBoard);
+            SudokuSolution testSol = solver.trySolveSudoku(someBoard);
             logResult(testSol);
         } catch (IOException e) {
             handleFileError(filename, e);

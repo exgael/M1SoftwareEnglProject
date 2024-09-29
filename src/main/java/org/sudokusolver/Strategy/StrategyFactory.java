@@ -1,5 +1,6 @@
 package org.sudokusolver.Strategy;
 
+import org.sudokusolver.Gameplay.Solver.DifficultyLevel;
 import org.sudokusolver.Strategy.SolvingStrategies.EasySolvingStrategy;
 import org.sudokusolver.Strategy.SolvingStrategies.HardSolvingStrategy;
 import org.sudokusolver.Strategy.SolvingStrategies.MediumSolvingStrategy;

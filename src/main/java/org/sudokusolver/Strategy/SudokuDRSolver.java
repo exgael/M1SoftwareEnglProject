@@ -1,10 +1,13 @@
 package org.sudokusolver.Strategy;
 
 import org.jetbrains.annotations.Nullable;
+import org.sudokusolver.Gameplay.Solver.DifficultyLevel;
+import org.sudokusolver.Gameplay.Solver.SudokuSolution;
+import org.sudokusolver.Gameplay.Solver.SudokuSolver;
 import org.sudokusolver.Gameplay.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
 
-public class SudokuSolver {
+public class SudokuDRSolver implements SudokuSolver {
     RegionManager regionManager;
 
     /**
@@ -13,7 +16,8 @@ public class SudokuSolver {
      * @param sudoku the Sudoku puzzle
      * @return the Sudoku solution
      */
-    public SudokuSolution findSudokuLevel(SudokuBoard sudoku) {
+    @Override
+    public SudokuSolution trySolveSudoku(SudokuBoard sudoku) {
         initializeRegionManager(sudoku);
         DifficultyLevel difficulty = solve(sudoku);
         cleanUpRegionManager();

@@ -1,5 +1,6 @@
 package org.sudokusolver.Strategy;
 
+import org.sudokusolver.Gameplay.Solver.DifficultyLevel;
 import org.sudokusolver.Strategy.Regions.RegionManager;
 
 public class Solver {

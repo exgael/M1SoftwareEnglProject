@@ -1,4 +1,4 @@
-package org.sudokusolver.Strategy;
+package org.sudokusolver.Gameplay.Solver;
 
 import org.sudokusolver.Gameplay.SudokuBoard;
 
