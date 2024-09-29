@@ -76,7 +76,7 @@ public class RegionManager {
      * @return The cell.
      */
     public int getValue(int row, int col) {
-        return getRowRegion(row).getCells().get(col).getNumber();
+        return getRowRegion(row).getCells().get(col).getValue();
     }
 
     public SudokuCell getCell(int row, int col) {
@@ -88,7 +88,7 @@ public class RegionManager {
         if (canPlaceValue(row, col, value)) {
             // Set the value in the specific cell
             SudokuCell cell = getRowRegion(row).getCells().get(col);
-            cell.setNumber(value);
+            cell.setValue(value);
             cell.clearCandidates();  // Clear candidates for the cell where we set the value
 
             // Remove the value from the candidates of related cells in the same row, column, and subgrid

@@ -16,10 +16,12 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
     private static final int DEFAULT_VALUE = 0;
 
     public SudokuBoard(int[] board) {
-        super(BOARD_SIZE, BOARD_SIZE, SudokuCell::new);
+        super(BOARD_SIZE, BOARD_SIZE);
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                getElement(i, j).setNumber(board[i * BOARD_SIZE + j]);
+                int value = board[i * BOARD_SIZE + j];
+                var newCell = new SudokuCell(value, i, j);
+                setElement(i, j, newCell);
             }
         }
         initializeCandidates();
@@ -34,7 +36,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
     }
 
     public int getValue(int row, int col) {
-        return getElement(row, col).getNumber();
+        return getElement(row, col).getValue();
     }
 
     public void setValue(int row, int col, int value) {
@@ -45,7 +47,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
         removeCandidateFromColumn(col, value);
         removeCandidateFromSubgrid(row, col, value);
 
-        getElement(row, col).setNumber(value);
+        getElement(row, col).setValue(value);
     }
 
     public int[] getCandidates(int row, int col) {
@@ -67,7 +69,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
     public boolean isSolved() {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                if (getElement(row, col).getNumber() == DEFAULT_VALUE) {
+                if (getElement(row, col).getValue() == DEFAULT_VALUE) {
                     return false;
                 }
             }
@@ -79,7 +81,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 SudokuCell cell = getElement(row, col);
-                if (cell.getNumber() == DEFAULT_VALUE) {
+                if (cell.getValue() == DEFAULT_VALUE) {
                     List<Integer> candidates = getPossibleValues(row, col);
                     cell.initializeCandidates(candidates);
                 }
@@ -90,7 +92,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 SudokuCell cell = getElement(row, col);
-                if (cell.getNumber() == DEFAULT_VALUE) {
+                if (cell.getValue() == DEFAULT_VALUE) {
                     if (cell.getCandidates().isEmpty()) {
                         throw new IllegalStateException("No candidates for cell at row " + (row + 1) + " and column " + (col + 1));
                     }
@@ -113,14 +115,14 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
 
     private List<Integer> getRowValues(int row) {
         return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(col -> getElement(row, col).getNumber())
+                .mapToObj(col -> getElement(row, col).getValue())
                 .filter(value -> value != DEFAULT_VALUE)
                 .collect(Collectors.toList());
     }
 
     private List<Integer> getColumnValues(int col) {
         return IntStream.range(0, BOARD_SIZE)
-                .mapToObj(row -> getElement(row, col).getNumber())
+                .mapToObj(row -> getElement(row, col).getValue())
                 .filter(value -> value != DEFAULT_VALUE)
                 .collect(Collectors.toList());
     }
@@ -128,7 +130,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
     private List<Integer> getSubgridValues(int row, int col) {
         List<Integer> subgridValues = new ArrayList<>();
         forEachInSubgrid(row, col, (r, c) -> {
-            int value = getElement(r, c).getNumber();
+            int value = getElement(r, c).getValue();
             if (value != DEFAULT_VALUE) {
                 subgridValues.add(value);
             }

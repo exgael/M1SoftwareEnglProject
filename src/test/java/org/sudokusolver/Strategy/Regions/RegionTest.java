@@ -67,8 +67,8 @@ class RegionTest {
         // Create a solved region
         List<SudokuCell> solvedCells = IntStream.rangeClosed(1, 9)
                 .mapToObj(i -> {
-                    SudokuCell cell = new SudokuCell();
-                    cell.setNumber(i);
+                    SudokuCell cell = new SudokuCell(0 ,0, 0);
+                    cell.setValue(i);
                     return cell;
                 })
                 .collect(Collectors.toList());
@@ -165,7 +165,7 @@ class RegionTest {
     @Test
     void testForEach() {
         List<Integer> values = new ArrayList<>();
-        rowRegion.forEach(cell -> values.add(cell.getNumber()));
+        rowRegion.forEach(cell -> values.add(cell.getValue()));
         assertEquals(Arrays.asList(0, 9, 0, 6, 8, 0, 2, 5, 0), values);
     }
 

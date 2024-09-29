@@ -25,7 +25,7 @@ public class DR2 implements DeductionRule {
         Map<Integer, SudokuCell> candidateMap = new HashMap<>();
         boolean hiddenSingleFound = false;
         for (SudokuCell cell : cells) {
-            if (cell.getNumber() == 0) {
+            if (cell.getValue() == 0) {
                 for (int candidate : cell.getCandidates()) {
                     if (!candidateMap.containsKey(candidate)) {
                         candidateMap.put(candidate, cell);

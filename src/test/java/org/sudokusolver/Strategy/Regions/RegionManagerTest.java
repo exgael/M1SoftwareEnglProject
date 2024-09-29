@@ -100,7 +100,7 @@ class RegionManagerTest {
             }
 
             // Verify cell value matches the board
-            assertEquals(board.getValue(coordinate.row(), coordinate.column()), cell.getNumber());
+            assertEquals(board.getValue(coordinate.row(), coordinate.column()), cell.getValue());
 
             // Ensure cell uniqueness within the region
             assertTrue(uniqueCells.add(cell), "Duplicate cell found in region");
@@ -121,7 +121,7 @@ class RegionManagerTest {
                 assertSame(rowCell, subgridCell);
 
                 // Verify that the cell value matches the board
-                assertEquals(board.getValue(row, col), rowCell.getNumber());
+                assertEquals(board.getValue(row, col), rowCell.getValue());
             }
         }
     }
@@ -132,15 +132,15 @@ class RegionManagerTest {
         regionManager.setValue(row, col, value);
 
         // Check row
-        assertEquals(value, regionManager.getRowRegion(row).getCells().get(col).getNumber());
+        assertEquals(value, regionManager.getRowRegion(row).getCells().get(col).getValue());
 
         // Check column
-        assertEquals(value, regionManager.getColumnRegion(col).getCells().get(row).getNumber());
+        assertEquals(value, regionManager.getColumnRegion(col).getCells().get(row).getValue());
 
         // Check subgrid
         int subgridIndex = (row / SUBGRID_SIZE) * SUBGRID_SIZE + (col / SUBGRID_SIZE);
         int cellIndexInSubgrid = (row % SUBGRID_SIZE) * SUBGRID_SIZE + (col % SUBGRID_SIZE);
-        assertEquals(value, regionManager.getSubgridRegion(subgridIndex).getCells().get(cellIndexInSubgrid).getNumber());
+        assertEquals(value, regionManager.getSubgridRegion(subgridIndex).getCells().get(cellIndexInSubgrid).getValue());
 
         // Check that the value is removed from candidates in related cells
         IntStream.range(0, BOARD_SIZE).forEach(i -> {
@@ -234,9 +234,9 @@ class RegionManagerTest {
         SudokuCell subgridCell = regionManager.getSubgridRegion((row / SUBGRID_SIZE) * SUBGRID_SIZE + (col / SUBGRID_SIZE))
                 .getCells().get((row % SUBGRID_SIZE) * SUBGRID_SIZE + (col % SUBGRID_SIZE));
 
-        assertEquals(value, rowCell.getNumber());
-        assertEquals(value, colCell.getNumber());
-        assertEquals(value, subgridCell.getNumber());
+        assertEquals(value, rowCell.getValue());
+        assertEquals(value, colCell.getValue());
+        assertEquals(value, subgridCell.getValue());
 
         assertTrue(rowCell.getCandidates().isEmpty());
         assertTrue(colCell.getCandidates().isEmpty());

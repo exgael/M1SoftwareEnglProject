@@ -5,7 +5,6 @@ import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class Board<T extends Inspectable> {
 
@@ -15,22 +14,22 @@ public class Board<T extends Inspectable> {
 
     private final int cols;
 
-    public Board(int rows, int cols, Supplier<T> defaultValueSupplier) {
+    public Board(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
             throw new IllegalArgumentException("Board size must be positive.");
         }
         this.rows = rows;
         this.cols = cols;
         this.grid = new ArrayList<>(rows);
-        this.initializeBoard(defaultValueSupplier);
+        this.initNullBoard();
     }
 
 
-    private void initializeBoard(Supplier<T> defaultValueSupplier) {
+    private void initNullBoard() {
         for (int row = 0; row < rows; row++) {
             List<T> rowList = new ArrayList<>(cols);
             for (int col = 0; col < cols; col++) {
-                rowList.add(defaultValueSupplier.get());
+                rowList.add(null);
             }
             grid.add(rowList);
         }

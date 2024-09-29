@@ -1,33 +1,58 @@
 package org.sudokusolver.Gameplay.Sudoku;
 
 import org.sudokusolver.Utils.Inspectable;
+import org.sudokusolver.Utils.Observer;
+import org.sudokusolver.Utils.Subject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SudokuCell implements Inspectable {
+public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
+    private int value;
     private final Set<Integer> candidates;
-    private int number;
+    private final int row, col;
+    private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
 
-    public SudokuCell() {
-        this.number = 0; // 0 means no number set
+    public SudokuCell(int value, int row, int col) {
         this.candidates = new HashSet<>();
+        this.value = value;
+        this.row = row;
+        this.col = col;
     }
 
     public void initializeCandidates(List<Integer> candidates) {
-        if (this.number == 0) {
+        if (value == 0) {
             this.candidates.addAll(candidates);
+            this.notifyObservers();
         }
     }
 
-    public int getNumber() {
-        return number;
+    public boolean isSolved() {
+        return value != 0;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
-        candidates.clear(); // Once a number is set, no candidates are needed
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        if (this.value != value) {
+            this.value = value;
+
+            // Once a number is set, no candidates are needed
+            candidates.clear();
+            this.notifyObservers();
+        }
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public Set<Integer> getCandidates() {
@@ -35,27 +60,34 @@ public class SudokuCell implements Inspectable {
     }
 
     public void addCandidate(int candidate) {
-        candidates.add(candidate);
+        if (candidates.add(candidate)) {
+            this.notifyObservers();
+        }
     }
 
     public boolean removeCandidate(int candidate) {
-        return candidates.remove(candidate);
+        if (candidates.remove(candidate)) {
+            this.notifyObservers();
+            return true;
+        }
+        return false;
     }
 
-    public boolean removeCandidates(Set<Integer> candidates) {
-        return this.candidates.removeAll(candidates);
+    public boolean removeCandidates(Set<Integer> candidatesToRemove) {
+        if (candidates.removeAll(candidatesToRemove)) {
+            this.notifyObservers();
+            return true;
+        }
+        return false;
     }
 
     public void clearCandidates() {
         candidates.clear();
+        this.notifyObservers(new SudokuCellUpdate(row, col, value, candidates));
     }
 
     public boolean hasCandidate(int candidate) {
         return candidates.contains(candidate);
-    }
-
-    public boolean isSolved() {
-        return number != 0;
     }
 
     public int candidateCount() {
@@ -63,16 +95,32 @@ public class SudokuCell implements Inspectable {
     }
 
     @Override
-    public String toString() {
-        return "" + number;
+    public void addObserver(Observer<SudokuCellUpdate> observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer<SudokuCellUpdate> observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers() {
+        notifyObservers(new SudokuCellUpdate(row, col, value, candidates));
+    }
+
+    @Override
+    public void notifyObservers(SudokuCellUpdate data) {
+        for (Observer<SudokuCellUpdate> observer : observers) {
+            observer.update(data);
+        }
     }
 
     @Override
     public String debugDescription() {
         StringBuilder sb = new StringBuilder();
-        if (number != 0) {
+        if (value != 0) {
             // Centered number in the cell
-            sb.append(String.format("  %1d  ", number));
+            sb.append(String.format("  %1d  ", value));
         } else {
             sb.append(String.format("%1d    ", this.candidates.size()));
         }

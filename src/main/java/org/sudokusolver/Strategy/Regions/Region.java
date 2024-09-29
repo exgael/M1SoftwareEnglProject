@@ -39,7 +39,7 @@ public class Region {
      */
     public boolean containsValue(int value) {
         return this.cells.stream()
-                .anyMatch(sudokuCell -> sudokuCell.getNumber() == value);
+                .anyMatch(sudokuCell -> sudokuCell.getValue() == value);
     }
 
     /**
