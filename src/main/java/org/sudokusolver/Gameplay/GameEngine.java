@@ -24,6 +24,14 @@ public class GameEngine {
         this.solver = solver;
     }
 
+    public void setGameInterface(GameInterface gameInterface) {
+        this.gameInterface = gameInterface;
+    }
+
+    public void addListener(Observer<SudokuCellUpdate> listener) {
+        listeners.add(listener);
+    }
+
     public void playNewSudoku(String filename) throws IOException {
         logger.info("Starting new game with file: " + filename);
         initGame(filename);
@@ -43,18 +51,6 @@ public class GameEngine {
 
         // Now that listeners are registered, we can initialize the board
         sudoku.init(board);
-    }
-
-    private void registerListenerToCurrentBoard() {
-        listeners.forEach(this::registerListenerToCellUpdate);
-    }
-
-    private void registerListenerToCellUpdate(Observer<SudokuCellUpdate> listener) {
-        for (int row = 0; row < sudoku.getBoardSize(); row++) {
-            for (int col = 0; col < sudoku.getBoardSize(); col++) {
-                sudoku.getElement(row, col).addObserver(listener);
-            }
-        }
     }
 
     private void play() {
@@ -85,11 +81,15 @@ public class GameEngine {
         }
     }
 
-    public void setGameInterface(GameInterface gameInterface) {
-        this.gameInterface = gameInterface;
+    private void registerListenerToCurrentBoard() {
+        listeners.forEach(this::registerListenerToCellUpdate);
     }
 
-    public void addListener(Observer<SudokuCellUpdate> listener) {
-        listeners.add(listener);
+    private void registerListenerToCellUpdate(Observer<SudokuCellUpdate> listener) {
+        for (int row = 0; row < sudoku.getBoardSize(); row++) {
+            for (int col = 0; col < sudoku.getBoardSize(); col++) {
+                sudoku.getElement(row, col).addObserver(listener);
+            }
+        }
     }
 }
