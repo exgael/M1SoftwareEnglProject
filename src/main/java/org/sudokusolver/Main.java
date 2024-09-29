@@ -1,51 +1,101 @@
 package org.sudokusolver;
 
+import org.sudokusolver.File.ReadFileFromResources;
 import org.sudokusolver.File.SudokuFileParser;
 import org.sudokusolver.Gameplay.SudokuBoard;
 import org.sudokusolver.Strategy.SudokuSolution;
 import org.sudokusolver.Strategy.SudokuSolver;
-import org.sudokusolver.Utils.SudokuGrids;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
+
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
         System.out.println("Sudoku Solver");
 
         SudokuSolver sudokuSolver = new SudokuSolver();
-
-        // Test Read File
-        String fileName = "/org/sudokusolver/example1_easy.txt";
         SudokuFileParser fileParser = new SudokuFileParser();
-        int[] board = fileParser.parseFileTo1DArray(fileName);
-        SudokuBoard someBoard = new SudokuBoard(board);
-        SudokuSolution testSol = sudokuSolver.findSudokuLevel(someBoard);
-        System.out.println("Sudoku solved. Difficulty found: " + testSol.difficultyLevel());
-        System.out.println(testSol.sudokuBoard().debugDescription());
 
-        // Easy
-        SudokuBoard easyBoard = new SudokuBoard(SudokuGrids.easySudoku);
-        SudokuSolution easySol = sudokuSolver.findSudokuLevel(easyBoard);
-        System.out.println("Sudoku solved. Difficulty found: " + easySol.difficultyLevel());
-        System.out.println(easySol.sudokuBoard().debugDescription());
+        String[] filenames = getFileNames();
 
-        // Medium
-        SudokuBoard mediumBoard = new SudokuBoard(SudokuGrids.mediumSudoku);
-        SudokuSolution mediumSol = sudokuSolver.findSudokuLevel(mediumBoard);
-        System.out.println("Sudoku solved. Difficulty found: " + mediumSol.difficultyLevel());
-        System.out.println(mediumSol.sudokuBoard().debugDescription());
-
-        // Hard
-        SudokuBoard hardBoard = new SudokuBoard(SudokuGrids.hardSudoku);
-        SudokuSolution hardSol = sudokuSolver.findSudokuLevel(hardBoard);
-        System.out.println("Sudoku solved. Difficulty found: " + hardSol.difficultyLevel());
-        System.out.println(hardSol.sudokuBoard().debugDescription());
-
-        // Master
-        SudokuBoard masterBoard = new SudokuBoard(SudokuGrids.masterSudoku);
-        SudokuSolution masterSol = sudokuSolver.findSudokuLevel(masterBoard);
-        System.out.println("Sudoku solved. Difficulty found: " + masterSol.difficultyLevel());
-        System.out.println(masterSol.sudokuBoard().debugDescription());
+        for (String filename : filenames) {
+            processSudokuFile(filename, sudokuSolver, fileParser);
+        }
     }
+
+    private static void processSudokuFile(String filename, SudokuSolver sudokuSolver, SudokuFileParser fileParser) {
+        try {
+            int[] board = fileParser.parseFileTo1DArray(filename);
+            SudokuBoard someBoard = new SudokuBoard(board);
+            SudokuSolution testSol = sudokuSolver.findSudokuLevel(someBoard);
+            logResult(testSol);
+        } catch (IOException e) {
+            handleFileError(filename, e);
+        } catch (Exception e) {
+            handleGeneralError(filename, e);
+        }
+    }
+
+    private static void logResult(SudokuSolution testSol) {
+        logger.log(Level.INFO, "Sudoku solved. Difficulty found: " + testSol.difficultyLevel());
+        logger.log(Level.INFO, testSol.sudokuBoard().debugDescription());
+    }
+
+    private static void handleFileError(String filename, IOException e) {
+        logger.log(Level.SEVERE, "Erreur lors de la lecture du fichier : " + filename, e);
+    }
+
+    private static void handleGeneralError(String filename, Exception e) {
+        logger.log(Level.SEVERE, "Une erreur inattendue s'est produite lors du traitement du fichier : " + filename, e);
+    }
+
+    private static String[] getFileNames() {
+        return new String[]{
+                "/sudoku_data/easy1.txt",
+                "/sudoku_data/easy2.txt",
+                "/sudoku_data/easy3.txt",
+                "/sudoku_data/easy4.txt",
+                "/sudoku_data/easy5.txt",
+                "/sudoku_data/easy6.txt",
+                "/sudoku_data/easy7.txt",
+                "/sudoku_data/easy8.txt",
+                "/sudoku_data/easy9.txt",
+                "/sudoku_data/easy10.txt",
+                "/sudoku_data/medium1.txt",
+                "/sudoku_data/medium2.txt",
+                "/sudoku_data/medium3.txt",
+                "/sudoku_data/medium4.txt",
+                "/sudoku_data/medium5.txt",
+                "/sudoku_data/medium6.txt",
+                "/sudoku_data/medium7.txt",
+                "/sudoku_data/medium8.txt",
+                "/sudoku_data/medium9.txt",
+                "/sudoku_data/medium10.txt",
+                "/sudoku_data/hard1.txt",
+                "/sudoku_data/hard2.txt",
+                "/sudoku_data/hard3.txt",
+                "/sudoku_data/hard4.txt",
+                "/sudoku_data/hard5.txt",
+                "/sudoku_data/hard6.txt",
+                "/sudoku_data/hard7.txt",
+                "/sudoku_data/hard8.txt",
+                "/sudoku_data/hard9.txt",
+                "/sudoku_data/hard10.txt",
+                "/sudoku_data/master1.txt",
+                "/sudoku_data/master2.txt",
+                "/sudoku_data/master3.txt",
+                "/sudoku_data/master4.txt",
+                "/sudoku_data/master5.txt",
+                "/sudoku_data/master6.txt",
+                "/sudoku_data/master7.txt",
+                "/sudoku_data/master8.txt",
+                "/sudoku_data/master9.txt",
+                "/sudoku_data/master10.txt"
+        };
+    }
+
 }

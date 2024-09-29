@@ -1,5 +1,7 @@
 package org.sudokusolver.File;
 
+import java.io.IOException;
+
 public class SudokuFileParser {
 
     private final ReadFileFromResources fileReader;
@@ -10,10 +12,9 @@ public class SudokuFileParser {
         this.parser = new ParseStringToIntArray();
     }
 
-    public int[] parseFileTo1DArray(String fileName) {
+    public int[] parseFileTo1DArray(String fileName) throws IOException {
         String content = fileReader.readFile(fileName);
         return parser.parseString(content);
     }
-
 }
 

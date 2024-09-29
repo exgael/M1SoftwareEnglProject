@@ -4,7 +4,8 @@ public class ParseStringToIntArray {
 
     public int[] parseString(String stringFile) {
 
-        stringFile = stringFile.replaceAll("\\s+", "");
+        // Remove all spaces and commas
+        stringFile = stringFile.replaceAll("[\\s,]+", "");
 
         if (stringFile.length() != 81) {
             throw new IllegalArgumentException("La longueur doit etre de 81 char");
