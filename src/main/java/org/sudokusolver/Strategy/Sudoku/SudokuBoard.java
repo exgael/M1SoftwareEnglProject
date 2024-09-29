@@ -49,6 +49,9 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
 
     public void setValue(int row, int col, int value) {
         validateValue(value);
+        if (getElement(row, col).getValue() != DEFAULT_VALUE) {
+            throw new IllegalArgumentException("Cell is already solved");
+        }
 
         // Remove value from candidates in related rows, columns, and subgrids
         removeCandidateFromRow(row, value);
