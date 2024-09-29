@@ -46,12 +46,10 @@ public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
 
             if (value != 0) {
                 try {
-                    Thread.sleep(100); // Sleep for 0.1 seconds
+                    Thread.sleep(10); // Sleep for 0.01 seconds
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Restore interrupted status
-                    System.err.println("Sleep interrupted: " + e.getMessage());
+                    //
                 }
-                System.out.println("Cell [" + row + ", " + col + "] set to " + value);
                 this.notifyObservers();
             }
         }
