@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends Board<SudokuCell> implements Inspectable {
+public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectable {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;

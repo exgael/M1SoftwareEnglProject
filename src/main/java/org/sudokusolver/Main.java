@@ -2,6 +2,7 @@ package org.sudokusolver;
 
 import org.sudokusolver.File.SudokuFileParser;
 import org.sudokusolver.Gameplay.Solver.SudokuSolver;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
 import org.sudokusolver.Gameplay.Solver.SudokuSolution;
 import org.sudokusolver.Strategy.SudokuDRSolver;
@@ -30,8 +31,8 @@ public class Main {
     private static void processSudokuFile(String filename, SudokuSolver solver, SudokuFileParser fileParser) {
         try {
             int[] board = fileParser.parseFileTo1DArray(filename);
-            SudokuBoard someBoard = new SudokuBoard(board);
-            SudokuSolution testSol = solver.trySolveSudoku(someBoard);
+            Sudoku sudoku = new SudokuBoard(board);
+            SudokuSolution testSol = solver.trySolveSudoku(sudoku);
             logResult(testSol);
         } catch (IOException e) {
             handleFileError(filename, e);
@@ -42,7 +43,7 @@ public class Main {
 
     private static void logResult(SudokuSolution testSol) {
         logger.log(Level.INFO, "Sudoku solved. Difficulty found: " + testSol.difficultyLevel());
-        logger.log(Level.INFO, testSol.sudokuBoard().debugDescription());
+        logger.log(Level.INFO, testSol.sudoku().debugDescription());
     }
 
     private static void handleFileError(String filename, IOException e) {

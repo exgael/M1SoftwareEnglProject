@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.sudokusolver.Gameplay.Solver.DifficultyLevel;
 import org.sudokusolver.Gameplay.Solver.SudokuSolution;
 import org.sudokusolver.Gameplay.Solver.SudokuSolver;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
 
@@ -17,7 +18,7 @@ public class SudokuDRSolver implements SudokuSolver {
      * @return the Sudoku solution
      */
     @Override
-    public SudokuSolution trySolveSudoku(SudokuBoard sudoku) {
+    public SudokuSolution trySolveSudoku(Sudoku sudoku) {
         initializeRegionManager(sudoku);
         DifficultyLevel difficulty = solve(sudoku);
         cleanUpRegionManager();
@@ -31,7 +32,7 @@ public class SudokuDRSolver implements SudokuSolver {
      * @return the difficulty level of the Sudoku puzzle or null if the puzzle is not solvable
      */
     @Nullable
-    private DifficultyLevel solve(SudokuBoard sudoku) {
+    private DifficultyLevel solve(Sudoku sudoku) {
         DifficultyLevel difficulty = DifficultyLevel.EASY;
         boolean isSolved = false;
         Solver solver;
@@ -57,7 +58,7 @@ public class SudokuDRSolver implements SudokuSolver {
      *
      * @param sudoku the Sudoku puzzle
      */
-    private void initializeRegionManager(SudokuBoard sudoku) {
+    private void initializeRegionManager(Sudoku sudoku) {
         if (regionManager == null) {
             this.regionManager = new RegionManager(sudoku);
         }

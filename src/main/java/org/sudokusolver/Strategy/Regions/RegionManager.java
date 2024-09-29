@@ -1,6 +1,6 @@
 package org.sudokusolver.Strategy.Regions;
 
-import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 
 import java.util.*;
@@ -18,28 +18,28 @@ public class RegionManager {
     private final int subgridSize;
     private final int DEFAULT_VALUE = 0;
 
-    public RegionManager(SudokuBoard sudokuBoard) {
-        this.sudokuSize = sudokuBoard.getBoardSize();
-        this.subgridSize = sudokuBoard.getSubgridSize();
+    public RegionManager(Sudoku sudoku) {
+        this.sudokuSize = sudoku.getBoardSize();
+        this.subgridSize = sudoku.getSubgridSize();
         this.rows = new ArrayList<>(sudokuSize);
         this.columns = new ArrayList<>(sudokuSize);
         this.subgrids = new ArrayList<>(sudokuSize);
-        initializeRegions(sudokuBoard);
+        initializeRegions(sudoku);
     }
 
     /**
      * Initializes the regions of the Sudoku board.
      *
-     * @param sudokuBoard The Sudoku board.
+     * @param sudoku The Sudoku board.
      */
-    private void initializeRegions(SudokuBoard sudokuBoard) {
+    private void initializeRegions(Sudoku sudoku) {
         for (int i = 0; i < sudokuSize; i++) {
             // Collections of cells
-            List<SudokuCell> rowCells = getRowCells(sudokuBoard, i);
-            List<SudokuCell> columnCells = getColumnCells(sudokuBoard, i);
+            List<SudokuCell> rowCells = getRowCells(sudoku, i);
+            List<SudokuCell> columnCells = getColumnCells(sudoku, i);
             int startRow = (i / subgridSize) * subgridSize;
             int startCol = (i % subgridSize) * subgridSize;
-            List<SudokuCell> subgridCells = handleGetCellsInSubgrid(sudokuBoard, startRow, startCol);
+            List<SudokuCell> subgridCells = handleGetCellsInSubgrid(sudoku, startRow, startCol);
 
             // Coordinates
             Map<SudokuCell, Coordinate> rowHashMapCoordinates = buildCoordinateMap(rowCells, getRowCoordinates(i));
@@ -243,7 +243,7 @@ public class RegionManager {
      * @param row   The row index.
      * @return List of cells.
      */
-    private List<SudokuCell> getRowCells(SudokuBoard board, int row) {
+    private List<SudokuCell> getRowCells(Sudoku board, int row) {
         return IntStream.range(0, sudokuSize)
                 .mapToObj(col -> board.getElement(row, col))
                 .toList();
@@ -256,7 +256,7 @@ public class RegionManager {
      * @param col   The column index.
      * @return List of cells.
      */
-    private List<SudokuCell> getColumnCells(SudokuBoard board, int col) {
+    private List<SudokuCell> getColumnCells(Sudoku board, int col) {
         return IntStream.range(0, sudokuSize)
                 .mapToObj(row -> board.getElement(row, col))
                 .toList();
@@ -270,7 +270,7 @@ public class RegionManager {
      * @param startCol The starting column index.
      * @return List of cells.
      */
-    private List<SudokuCell> handleGetCellsInSubgrid(SudokuBoard board, int startRow, int startCol) {
+    private List<SudokuCell> handleGetCellsInSubgrid(Sudoku board, int startRow, int startCol) {
         List<SudokuCell> cells = new ArrayList<>();
         iterateSubgrid(startRow, startCol, coordinate ->
                 cells.add(board.getElement(coordinate.row(), coordinate.column()))
