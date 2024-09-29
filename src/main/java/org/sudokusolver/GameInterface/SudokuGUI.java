@@ -1,19 +1,28 @@
-package org.sudokusolver.Graphics;
+package org.sudokusolver.GameInterface;
+
+import org.sudokusolver.Gameplay.GameEngine;
+import org.sudokusolver.Gameplay.GameInterface;
+import org.sudokusolver.Strategy.Solver.DifficultyLevel;
+import org.sudokusolver.Strategy.Sudoku.SudokuCellUpdate;
+import org.sudokusolver.Gameplay.UserMove;
+import org.sudokusolver.Utils.Observer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class SudokuGUI extends JFrame implements ActionListener {
+public class SudokuGUI extends JFrame implements Observer<SudokuCellUpdate>, GameInterface {
 
     private final JButton solveButton;
     private final JButton resetButton;
     private final JButton[] numberButtons;
     private final JLabel[][] cells;
+    private final GameEngine engine;
 
-    public SudokuGUI() {
+    public SudokuGUI(GameEngine engine) {
         super("Sudoku Solver");
+        this.engine = engine;
+        this.engine.setGameInterface(this);
+        this.engine.addListener(this);
 
         setSize(600, 400);
         setLocation(200, 200);
@@ -71,12 +80,24 @@ public class SudokuGUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new SudokuGUI();
+    @Override
+    public void update(SudokuCellUpdate cell) {
+        // todo: update the GUI
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        //to do: implement
+    public UserMove onRequestUserInput() {
+        // todo: implement
+        return null;
+    }
+
+    @Override
+    public void onSudokuFinished(int difficulty) {
+        // todo: implement
+    }
+
+    @Override
+    public void onInvalidMove(int value, int row, int col) {
+        // todo: implement
     }
 }
