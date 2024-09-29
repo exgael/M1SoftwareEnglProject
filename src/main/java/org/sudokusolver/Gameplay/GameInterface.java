@@ -1,7 +1,7 @@
 package org.sudokusolver.Gameplay;
 
 public interface GameInterface {
-    UserMove onRequestUserInput();
+    void onRequestUserInput();
     void onSudokuFinished(int level);
     void onInvalidMove(int value, int row, int col);
 }

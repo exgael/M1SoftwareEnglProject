@@ -25,19 +25,11 @@ public class GameEngine {
         this.solver = solver;
     }
 
-    public void setGameInterface(GameInterface gameInterface) {
-        this.gameInterface = gameInterface;
-    }
-
-    public void addListener(Observer<SudokuCellUpdate> listener) {
-        listeners.add(listener);
-    }
-
     public void playNewSudoku(String filename) throws IOException {
         logger.info("Starting new game with file: " + filename);
         initGame(filename);
         logger.info("Game initialized");
-        playRound();
+        play();
         logger.info("Game finished");
     }
 
@@ -54,39 +46,6 @@ public class GameEngine {
         sudoku.init(board);
     }
 
-    private void playRound() {
-        logger.info("Starting new round");
-        while (!sudoku.isSolved()) {
-            logger.info("Solver trying to solve sudoku");
-            var solverResult = solver.trySolveSudoku(sudoku);
-            if (sudoku.isSolved()) {
-                logger.info("Sudoku solved");
-                finishGame(solverResult);
-                break;
-            } else {
-                logger.info("Sudoku not solved");
-                getUserInputAndUpdateBoard();
-            }
-        }
-    }
-
-    private void finishGame(int level) {
-        System.out.println(sudoku.debugDescription());
-        gameInterface.onSudokuFinished(level);
-    }
-
-    private void getUserInputAndUpdateBoard() {
-        logger.info("Requesting user input");
-        UserMove userMove = gameInterface.onRequestUserInput();
-        logger.info("User input received: " + userMove);
-
-        try {
-            sudoku.setValue(userMove.row(), userMove.col(), userMove.value());
-        } catch (IllegalArgumentException e) {
-            gameInterface.onInvalidMove(userMove.value(), userMove.row(), userMove.col());
-        }
-    }
-
     private void registerListenerToCurrentBoard() {
         listeners.forEach(this::registerListenerToCellUpdate);
     }
@@ -97,5 +56,41 @@ public class GameEngine {
                 sudoku.getElement(row, col).addObserver(listener);
             }
         }
+    }
+
+    private void play() {
+        logger.info("Solver trying to solve sudoku");
+        int level = solver.trySolveSudoku(sudoku);
+
+        if (sudoku.isSolved()) {
+            logger.info("Sudoku solved");
+            finishGame(level);
+        } else {
+            logger.info("Solver couldn't make progress, requesting user input");
+            gameInterface.onRequestUserInput();
+        }
+    }
+
+    private void finishGame(int level) {
+        System.out.println(sudoku.debugDescription());
+        gameInterface.onSudokuFinished(level);
+    }
+
+    public void receiveUserMove(UserMove move) {
+        logger.info("Received user move: " + move);
+        try {
+            sudoku.setValue(move.row(), move.col(), move.value());
+            play(); // continue playing
+        } catch (IllegalArgumentException e) {
+            gameInterface.onInvalidMove(move.value(), move.row(), move.col());
+        }
+    }
+
+    public void setGameInterface(GameInterface gameInterface) {
+        this.gameInterface = gameInterface;
+    }
+
+    public void addListener(Observer<SudokuCellUpdate> listener) {
+        listeners.add(listener);
     }
 }

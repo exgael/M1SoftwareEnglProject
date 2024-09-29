@@ -9,8 +9,10 @@ import org.sudokusolver.Utils.Observer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class SudokuGUI extends JFrame implements Observer<SudokuCellUpdate>, GameInterface {
+public class SudokuGUI extends JFrame implements ActionListener, Observer<SudokuCellUpdate>, GameInterface {
 
     private final JButton solveButton;
     private final JButton resetButton;
@@ -86,9 +88,8 @@ public class SudokuGUI extends JFrame implements Observer<SudokuCellUpdate>, Gam
     }
 
     @Override
-    public UserMove onRequestUserInput() {
+    public void onRequestUserInput() {
         // todo: implement
-        return null;
     }
 
     @Override
@@ -99,5 +100,13 @@ public class SudokuGUI extends JFrame implements Observer<SudokuCellUpdate>, Gam
     @Override
     public void onInvalidMove(int value, int row, int col) {
         // todo: implement
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // todo: implement
+
+        // use this.engine.receiveUserMove(new UserMove(row, col, value));
+        // to send the user move to the engine
     }
 }
