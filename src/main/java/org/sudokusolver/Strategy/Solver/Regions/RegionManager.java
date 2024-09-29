@@ -89,7 +89,6 @@ public class RegionManager {
             // Set the value in the specific cell
             SudokuCell cell = getRowRegion(row).getCells().get(col);
             cell.setValue(value);
-            cell.clearCandidates();  // Clear candidates for the cell where we set the value
 
             // Remove the value from the candidates of related cells in the same row, column, and subgrid
             removeCandidateFromRelatedRegions(row, col, value);

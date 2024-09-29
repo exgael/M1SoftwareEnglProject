@@ -69,23 +69,20 @@ public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
 
     public void addCandidate(int candidate) {
         if (candidates.add(candidate)) {
-      //      this.notifyObservers();
+            this.notifyObservers();
         }
     }
 
     public boolean removeCandidate(int candidate) {
-        //     this.notifyObservers();
-        return candidates.remove(candidate);
+        boolean changed = candidates.remove(candidate);
+        this.notifyObservers();
+        return changed;
     }
 
     public boolean removeCandidates(Set<Integer> candidatesToRemove) {
-        //     this.notifyObservers();
-        return candidates.removeAll(candidatesToRemove);
-    }
-
-    public void clearCandidates() {
-        candidates.clear();
-     //   this.notifyObservers(new SudokuCellUpdate(row, col, value, candidates));
+        boolean changed = candidates.removeAll(candidatesToRemove);
+        this.notifyObservers();
+        return changed;
     }
 
     public boolean hasCandidate(int candidate) {
