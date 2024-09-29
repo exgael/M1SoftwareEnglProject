@@ -1,33 +1,34 @@
 package org.sudokusolver.Graphics;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SudokuGUI extends JFrame implements ActionListener {
 
-    private JButton solveButton;
-    private JButton resetButton;
-    private JButton[] numberButtons;
-    private JLabel[][] cells;
+    private final JButton solveButton;
+    private final JButton resetButton;
+    private final JButton[] numberButtons;
+    private final JLabel[][] cells;
 
-    public SudokuGUI(){
+    public SudokuGUI() {
         super("Sudoku Solver");
 
-        setSize(600,400);
-        setLocation(200,200);
+        setSize(600, 400);
+        setLocation(200, 200);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //container de base
         Container pane = getContentPane();
-        pane.setLayout(new GridLayout(1,2));
+        pane.setLayout(new GridLayout(1, 2));
 
         //left side
         JPanel leftPanel = new JPanel(new BorderLayout());
-        JPanel sudokuPanel = new JPanel(new GridLayout(9,9));
+        JPanel sudokuPanel = new JPanel(new GridLayout(9, 9));
         cells = new JLabel[9][9];
-        for (int row = 0; row < 9; row++){
-            for (int col = 0; col < 9; col++){
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
                 cells[row][col] = new JLabel("0");
                 cells[row][col].setHorizontalAlignment(JTextField.CENTER);
 
@@ -46,7 +47,7 @@ public class SudokuGUI extends JFrame implements ActionListener {
 
         //right side
         JPanel rightPanel = new JPanel(new BorderLayout());
-        JPanel numberPanel = new JPanel(new GridLayout(3,3));
+        JPanel numberPanel = new JPanel(new GridLayout(3, 3));
         numberButtons = new JButton[9];
         for (int i = 0; i < 9; i++) {
             numberButtons[i] = new JButton(String.valueOf(i + 1));
@@ -70,12 +71,12 @@ public class SudokuGUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    public static void main(String[] args) {
+        new SudokuGUI();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         //to do: implement
-    }
-
-    public static void main(String[] args) {
-        new SudokuGUI();
     }
 }

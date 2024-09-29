@@ -17,42 +17,9 @@ import static org.mockito.Mockito.never;
 
 class ObservableBoardTest {
 
-    static class MockCell implements Inspectable {
-        private int value;
-
-        public MockCell(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public String debugDescription() {
-            return Integer.toString(value);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-            MockCell other = (MockCell) obj;
-            return value == other.value;
-        }
-    }
-
-    private ObservableBoard<MockCell> board;
     private final int ROWS = 3;
     private final int COLS = 4;
+    private ObservableBoard<MockCell> board;
 
     private <T> Observer<BoardUpdate<T>> createMockObserver() {
         return  mock(new Observer<BoardUpdate<T>>() {
@@ -144,5 +111,38 @@ class ObservableBoardTest {
 
         verify(mockObserver1).update(new BoardUpdate<>(1, 1, new MockCell(0), new MockCell(5)));
         verify(mockObserver2).update(new BoardUpdate<>(1, 1, new MockCell(0), new MockCell(5)));
+    }
+
+    static class MockCell implements Inspectable {
+        private int value;
+
+        public MockCell(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        @Override
+        public String debugDescription() {
+            return Integer.toString(value);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null || obj.getClass() != this.getClass()) {
+                return false;
+            }
+            MockCell other = (MockCell) obj;
+            return value == other.value;
+        }
     }
 }

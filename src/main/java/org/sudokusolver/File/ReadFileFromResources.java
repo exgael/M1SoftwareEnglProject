@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ReadFileFromResources {
 
 
-    public String readFile(String fileName)  throws IOException {
+    public String readFile(String fileName) throws IOException {
         StringBuilder content = new StringBuilder();
 
         // Récupérer le flux d'entrée

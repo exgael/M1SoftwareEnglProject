@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegionManagerTest {
 
-    private SudokuBoard board;
-    private RegionManager regionManager;
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
+    private SudokuBoard board;
+    private RegionManager regionManager;
 
     @BeforeEach
     void setUp() {

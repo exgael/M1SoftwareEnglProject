@@ -13,21 +13,19 @@ import java.util.logging.Logger;
 public class GameEngine {
 
     private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
-
-    private Sudoku sudoku;
     private final SudokuSolver solver;
-
     SudokuFileParser fileParser;
+    private Sudoku sudoku;
+
+    public GameEngine(SudokuFileParser fileParser, SudokuSolver solver) {
+        this.fileParser = fileParser;
+        this.solver = solver;
+    }
 
     public void playNewSudoku(String filename) throws IOException {
         int[] board = fileParser.parseFileTo1DArray(filename);
         sudoku = new SudokuBoard(board);
         solve();
-    }
-
-    public GameEngine(SudokuFileParser fileParser, SudokuSolver solver) {
-        this.fileParser = fileParser;
-        this.solver = solver;
     }
 
     public void solve() {

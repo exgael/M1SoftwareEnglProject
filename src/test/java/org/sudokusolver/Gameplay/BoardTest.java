@@ -10,42 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
-    static class MockCell implements Inspectable {
-        private int value;
-
-        public MockCell(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public String debugDescription() {
-            return Integer.toString(value);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-            BoardTest.MockCell other = (BoardTest.MockCell) obj;
-            return value == other.getValue();
-        }
-    }
-
-    private Board<MockCell> board;
     private final int ROWS = 3;
     private final int COLS = 4;
+    private Board<MockCell> board;
 
     @BeforeEach
     void setUp() {
@@ -96,5 +63,38 @@ class BoardTest {
     void testInvalidBoardCreation() {
         assertThrows(IllegalArgumentException.class, () -> new Board<>(0, 5, () -> new MockCell(0)));
         assertThrows(IllegalArgumentException.class, () -> new Board<>(5, -1, () -> new MockCell(0)));
+    }
+
+    static class MockCell implements Inspectable {
+        private int value;
+
+        public MockCell(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        @Override
+        public String debugDescription() {
+            return Integer.toString(value);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null || obj.getClass() != this.getClass()) {
+                return false;
+            }
+            BoardTest.MockCell other = (BoardTest.MockCell) obj;
+            return value == other.getValue();
+        }
     }
 }
