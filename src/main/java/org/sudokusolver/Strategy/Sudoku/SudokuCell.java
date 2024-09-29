@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
-    private int value;
     private final Set<Integer> candidates;
     private final int row, col;
     private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
+    private int value;
 
     public SudokuCell(int value, int row, int col) {
         this.candidates = new HashSet<>();
@@ -76,19 +76,13 @@ public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
     }
 
     public boolean removeCandidate(int candidate) {
-        if (candidates.remove(candidate)) {
-       //     this.notifyObservers();
-            return true;
-        }
-        return false;
+        //     this.notifyObservers();
+        return candidates.remove(candidate);
     }
 
     public boolean removeCandidates(Set<Integer> candidatesToRemove) {
-        if (candidates.removeAll(candidatesToRemove)) {
-       //     this.notifyObservers();
-            return true;
-        }
-        return false;
+        //     this.notifyObservers();
+        return candidates.removeAll(candidatesToRemove);
     }
 
     public void clearCandidates() {

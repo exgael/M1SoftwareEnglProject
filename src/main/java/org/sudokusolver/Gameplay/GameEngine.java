@@ -15,10 +15,9 @@ public class GameEngine {
     private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
     private final SudokuSolver solver;
     private final SudokuFileParser fileParser;
+    private final List<Observer<SudokuCellUpdate>> listeners = new ArrayList<>();
     private GameInterface gameInterface;
     private Sudoku sudoku;
-
-    private final List<Observer<SudokuCellUpdate>> listeners = new ArrayList<>();
 
     public GameEngine(SudokuFileParser fileParser, SudokuSolver solver) {
         this.fileParser = fileParser;
