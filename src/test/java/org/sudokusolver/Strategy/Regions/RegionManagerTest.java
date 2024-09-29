@@ -4,8 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
-import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
+import org.sudokusolver.Strategy.Solver.Regions.Coordinate;
+import org.sudokusolver.Strategy.Solver.Regions.Region;
+import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
+import org.sudokusolver.Strategy.Sudoku.SudokuBoard;
+import org.sudokusolver.Strategy.Sudoku.SudokuCell;
 import org.sudokusolver.Utils.SudokuGrids;
 
 import java.util.*;

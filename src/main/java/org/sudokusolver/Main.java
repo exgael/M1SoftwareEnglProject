@@ -1,10 +1,12 @@
 package org.sudokusolver;
 
-import org.sudokusolver.File.SudokuFileParser;
+import org.sudokusolver.Utils.File.SudokuFileParser;
 import org.sudokusolver.Gameplay.GameEngine;
-import org.sudokusolver.Gameplay.Solver.SudokuSolver;
-import org.sudokusolver.Strategy.SudokuDRSolver;
+import org.sudokusolver.Gameplay.SudokuSolver;
+import org.sudokusolver.GameInterface.SudokuGUI;
+import org.sudokusolver.Strategy.Solver.SudokuDRSolver;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,16 +21,30 @@ public class Main {
         SudokuSolver solver = new SudokuDRSolver();
         SudokuFileParser fileParser = new SudokuFileParser();
         GameEngine gameEngine = new GameEngine(fileParser, solver);
-        String[] filenames = getFileNames();
 
-        for (String filename : filenames) {
-            try {
-                gameEngine.playNewSudoku(filename);
-            } catch (IOException e) {
-                handleFileError(filename, e);
-            } catch (Exception e) {
-                handleGeneralError(filename, e);
-            }
+        SwingUtilities.invokeLater(() -> {
+            new SudokuGUI(gameEngine);
+        });
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // No need to handle this
+        }
+
+        for (String filename : getFileNames()) {
+            startGame(gameEngine, filename);
+            break; // Stop after first game
+        }
+    }
+
+    private static void startGame(GameEngine gameEngine, String filename) {
+        try {
+            gameEngine.playNewSudoku(filename);
+        } catch (IOException e) {
+            handleFileError(filename, e);
+        } catch (Exception e) {
+            handleGeneralError(filename, e);
         }
     }
 
