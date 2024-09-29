@@ -25,7 +25,8 @@ class RegionManagerTest {
 
     @BeforeEach
     void setUp() {
-        board = new SudokuBoard(SudokuGrids.hardSudoku);
+        board = new SudokuBoard();
+        board.init(SudokuGrids.hardSudoku);
         regionManager = new RegionManager(board);
     }
 

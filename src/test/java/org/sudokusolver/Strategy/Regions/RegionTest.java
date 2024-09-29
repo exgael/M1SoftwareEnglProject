@@ -23,7 +23,8 @@ class RegionTest {
 
     @BeforeEach
     void setUp() {
-        board = new SudokuBoard(SudokuGrids.hardSudoku);
+        board = new SudokuBoard();
+        board.init(SudokuGrids.hardSudoku);
         rowRegion = createRowRegion(0);
         columnRegion = createColumnRegion(0);
         subgridRegion = createSubgridRegion(0, 0);
