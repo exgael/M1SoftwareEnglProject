@@ -1,5 +1,7 @@
 package org.sudokusolver.Gameplay;
 
+import org.sudokusolver.Gameplay.Sudoku.BoardUpdate;
+import org.sudokusolver.Gameplay.Sudoku.ObservableBoard;
 import org.sudokusolver.Utils.Inspectable;
 import org.sudokusolver.Utils.Observer;
 import org.junit.jupiter.api.BeforeEach;

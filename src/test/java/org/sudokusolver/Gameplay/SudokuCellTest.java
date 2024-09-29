@@ -3,6 +3,7 @@ package org.sudokusolver.Gameplay;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 
 import java.util.Arrays;
 import java.util.HashSet;

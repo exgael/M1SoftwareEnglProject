@@ -3,6 +3,7 @@ package org.sudokusolver.Gameplay;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.sudokusolver.Gameplay.Sudoku.Board;
 import org.sudokusolver.Utils.Inspectable;
 
 import static org.junit.jupiter.api.Assertions.*;

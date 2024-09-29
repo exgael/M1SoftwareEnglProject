@@ -1,6 +1,6 @@
 package org.sudokusolver.Strategy.Rules;
 
-import org.sudokusolver.Gameplay.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.DeductionRule;
 import org.sudokusolver.Strategy.Regions.Coordinate;
 import org.sudokusolver.Strategy.Regions.Region;

@@ -2,7 +2,7 @@ package org.sudokusolver;
 
 import org.sudokusolver.File.SudokuFileParser;
 import org.sudokusolver.Gameplay.Solver.SudokuSolver;
-import org.sudokusolver.Gameplay.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
 import org.sudokusolver.Gameplay.Solver.SudokuSolution;
 import org.sudokusolver.Strategy.SudokuDRSolver;
 

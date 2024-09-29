@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.sudokusolver.Gameplay.Solver.DifficultyLevel;
 import org.sudokusolver.Gameplay.Solver.SudokuSolution;
 import org.sudokusolver.Gameplay.Solver.SudokuSolver;
-import org.sudokusolver.Gameplay.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
 import org.sudokusolver.Strategy.Regions.RegionManager;
 
 public class SudokuDRSolver implements SudokuSolver {

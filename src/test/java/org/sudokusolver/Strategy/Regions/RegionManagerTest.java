@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.sudokusolver.Gameplay.SudokuBoard;
-import org.sudokusolver.Gameplay.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 import org.sudokusolver.Utils.SudokuGrids;
 
 import java.util.*;

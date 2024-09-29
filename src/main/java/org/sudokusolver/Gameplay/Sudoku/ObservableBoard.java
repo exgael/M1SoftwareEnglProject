@@ -1,5 +1,6 @@
-package org.sudokusolver.Gameplay;
+package org.sudokusolver.Gameplay.Sudoku;
 
+import org.sudokusolver.Gameplay.Sudoku.Board;
 import org.sudokusolver.Utils.Inspectable;
 import org.sudokusolver.Utils.Observer;
 import org.sudokusolver.Utils.Subject;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-class ObservableBoard<T extends Inspectable> extends Board<T> implements Subject<BoardUpdate<T>> {
+public class ObservableBoard<T extends Inspectable> extends Board<T> implements Subject<BoardUpdate<T>> {
     private final List<Observer<BoardUpdate<T>>> observers;
 
     public ObservableBoard(int rows, int cols, Supplier<T> cellValueSupplier) {

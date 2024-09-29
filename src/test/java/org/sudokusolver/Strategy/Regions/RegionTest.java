@@ -2,8 +2,8 @@ package org.sudokusolver.Strategy.Regions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sudokusolver.Gameplay.SudokuBoard;
-import org.sudokusolver.Gameplay.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 import org.sudokusolver.Utils.SudokuGrids;
 
 import java.util.*;

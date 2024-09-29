@@ -1,7 +1,7 @@
 package org.sudokusolver.Strategy.Rules;
 
 import org.jetbrains.annotations.NotNull;
-import org.sudokusolver.Gameplay.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.DeductionRule;
 import org.sudokusolver.Strategy.Regions.Region;
 import org.sudokusolver.Strategy.Regions.RegionManager;

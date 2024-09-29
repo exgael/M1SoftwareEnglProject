@@ -1,4 +1,4 @@
-package org.sudokusolver.Gameplay;
+package org.sudokusolver.Gameplay.Sudoku;
 
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Utils.Inspectable;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-class Board<T extends Inspectable> {
+public class Board<T extends Inspectable> {
 
     private final List<List<T>> grid;
 
