@@ -4,7 +4,6 @@ public class ParseStringToIntArray {
 
     public int[] parseString(String stringFile) {
 
-        // Remove all spaces and commas
         stringFile = stringFile.replaceAll("[\\s,]+", "");
 
         if (stringFile.length() != 81) {

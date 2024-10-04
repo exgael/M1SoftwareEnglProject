@@ -7,17 +7,14 @@ import java.io.InputStreamReader;
 
 public class ReadFileFromResources {
 
-
     public String readFile(String fileName) throws IOException {
         StringBuilder content = new StringBuilder();
 
-        // Récupérer le flux d'entrée
         InputStream inputStream = getClass().getResourceAsStream(fileName);
         if (inputStream == null) {
             throw new IOException("Fichier non trouvé: " + fileName);
         }
 
-        // Créer le BufferedReader si le fichier est trouvé
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -28,7 +25,6 @@ public class ReadFileFromResources {
             }
         }
 
-        // Renvoie la chaîne de caractères sans virgules
         return content.toString();
     }
 }

@@ -22,10 +22,6 @@ public class Main {
         SudokuFileParser fileParser = new SudokuFileParser();
         GameEngine gameEngine = new GameEngine(fileParser, solver);
 
-        SwingUtilities.invokeLater(() -> {
-            new SudokuGUI(gameEngine);
-        });
-
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -36,6 +32,10 @@ public class Main {
             startGame(gameEngine, filename);
             break; // Stop after first game
         }
+
+        SwingUtilities.invokeLater(() -> {
+            new SudokuGUI(gameEngine);
+        });
     }
 
     private static void startGame(GameEngine gameEngine, String filename) {

@@ -46,7 +46,7 @@ public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
 
             if (value != 0) {
                 try {
-                    Thread.sleep(10); // Sleep for 0.01 seconds
+                    Thread.sleep(100); // Sleep for 0.01 seconds
                 } catch (InterruptedException e) {
                     //
                 }
