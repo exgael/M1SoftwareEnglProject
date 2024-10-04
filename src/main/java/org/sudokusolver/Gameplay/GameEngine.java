@@ -40,7 +40,7 @@ public class GameEngine {
         this.initialBoard = fileParser.parseFileTo1DArray(filename);
     }
 
-    public void prepareBoard() throws IOException {
+    public void prepareBoard() {
 
         // Create a new sudoku board
         sudoku = new SudokuBoard();
