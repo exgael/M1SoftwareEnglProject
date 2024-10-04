@@ -40,7 +40,7 @@ public class Main {
 
     private static void startGame(GameEngine gameEngine, String filename) {
         try {
-            gameEngine.playNewSudoku(filename);
+            gameEngine.loadNewSudoku(filename);
         } catch (IOException e) {
             handleFileError(filename, e);
         } catch (Exception e) {

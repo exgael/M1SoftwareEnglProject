@@ -18,6 +18,8 @@ public class GameEngine {
     private final List<Observer<SudokuCellUpdate>> listeners = new ArrayList<>();
     private GameInterface gameInterface;
     private Sudoku sudoku;
+    int[] initialBoard;
+
 
     public GameEngine(SudokuFileParser fileParser, SudokuSolver solver) {
         this.fileParser = fileParser;
@@ -32,16 +34,13 @@ public class GameEngine {
         listeners.add(listener);
     }
 
-    public void playNewSudoku(String filename) throws IOException {
+    public void loadNewSudoku(String filename) throws IOException {
         logger.info("Starting new game with file: " + filename);
-        initGame(filename);
-        logger.info("Game initialized");
-        play();
-        logger.info("Game finished");
+
+        this.initialBoard = fileParser.parseFileTo1DArray(filename);
     }
 
-    private void initGame(String filename) throws IOException {
-        int[] board = fileParser.parseFileTo1DArray(filename);
+    public void prepareBoard() throws IOException {
 
         // Create a new sudoku board
         sudoku = new SudokuBoard();
@@ -50,10 +49,10 @@ public class GameEngine {
         registerListenerToCurrentBoard();
 
         // Now that listeners are registered, we can initialize the board
-        sudoku.init(board);
+        sudoku.init(initialBoard);
     }
 
-    private void play() {
+    public void play() {
         logger.info("Solver trying to solve sudoku");
         int level = solver.trySolveSudoku(sudoku);
 
