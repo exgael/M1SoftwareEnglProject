@@ -1,6 +1,6 @@
 package org.sudokusolver.Strategy.Solver;
 
-import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Gameplay.Solvable;
 
 @FunctionalInterface
 public interface SolvingStrategy {
@@ -12,5 +12,5 @@ public interface SolvingStrategy {
      * @return true if the strategy was able to make new deduction (1 or more)
      * @throws RuntimeException if the strategy encounters an error
      */
-    boolean solve(Sudoku sudoku) throws RuntimeException;
+    boolean solve(Solvable sudoku) throws RuntimeException;
 }

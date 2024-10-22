@@ -1,7 +1,7 @@
 package org.sudokusolver.Strategy.Solver.Rules;
 
-import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
+import org.sudokusolver.Gameplay.Solvable;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class CompositeRule implements DeductionRule {
     }
 
     @Override
-    public boolean apply(Sudoku sudoku) {
+    public boolean apply(Solvable sudoku) {
         return rules.stream()
                 .map(rule -> rule.apply(sudoku))
                 .toList()

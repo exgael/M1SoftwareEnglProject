@@ -1,5 +1,6 @@
 package org.sudokusolver.Gameplay;
 
+@FunctionalInterface
 public interface SudokuSolver {
-    int trySolveSudoku(Sudoku sudoku);
+    int trySolveSudoku(Solvable sudoku);
 }

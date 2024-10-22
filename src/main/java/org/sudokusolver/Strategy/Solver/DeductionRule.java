@@ -1,8 +1,8 @@
 package org.sudokusolver.Strategy.Solver;
 
-import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Gameplay.Solvable;
 
 @FunctionalInterface
 public interface DeductionRule {
-    boolean apply(Sudoku sudoku);
+    boolean apply(Solvable sudoku);
 }

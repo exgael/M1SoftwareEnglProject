@@ -1,6 +1,6 @@
 package org.sudokusolver.Strategy.Solver;
 
-import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Gameplay.Solvable;
 
 public class Solver {
 
@@ -10,7 +10,7 @@ public class Solver {
         this.strategy = StrategyFactory.createStrategy(level);
     }
 
-    public void applySolver(Sudoku sudoku) {
+    public void applySolver(Solvable sudoku) {
         boolean isSolving;
         do {
             isSolving = strategy.solve(sudoku);

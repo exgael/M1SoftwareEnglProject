@@ -1,7 +1,7 @@
 package org.sudokusolver.Strategy.Solver.Rules;
 
 import org.jetbrains.annotations.NotNull;
-import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Gameplay.Solvable;
 import org.sudokusolver.Strategy.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Sudoku.Regions.Region;
@@ -52,7 +52,7 @@ public class DR3 implements DeductionRule {
     }
 
     @Override
-    public boolean apply(Sudoku sudoku) {
+    public boolean apply(Solvable sudoku) {
         return sudoku.streamRegions()
                 .map(this::applyHiddenPairToRegion)
                 .toList()

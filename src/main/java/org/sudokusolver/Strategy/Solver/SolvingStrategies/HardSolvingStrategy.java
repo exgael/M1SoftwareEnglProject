@@ -1,11 +1,11 @@
 package org.sudokusolver.Strategy.Solver.SolvingStrategies;
 
-import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Solver.Rules.CompositeRule;
 import org.sudokusolver.Strategy.Solver.Rules.DR1;
 import org.sudokusolver.Strategy.Solver.Rules.DR2;
 import org.sudokusolver.Strategy.Solver.Rules.DR3;
+import org.sudokusolver.Gameplay.Solvable;
 import org.sudokusolver.Strategy.Solver.SolvingStrategy;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class HardSolvingStrategy implements SolvingStrategy {
     }
 
     @Override
-    public boolean solve(Sudoku sudoku) {
+    public boolean solve(Solvable sudoku) {
         return compositeRule.apply(sudoku);
     }
 }

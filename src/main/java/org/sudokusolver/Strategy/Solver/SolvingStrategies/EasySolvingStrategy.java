@@ -1,8 +1,8 @@
 package org.sudokusolver.Strategy.Solver.SolvingStrategies;
 
-import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Solver.Rules.DR1;
+import org.sudokusolver.Gameplay.Solvable;
 import org.sudokusolver.Strategy.Solver.SolvingStrategy;
 
 public class EasySolvingStrategy implements SolvingStrategy {
@@ -13,7 +13,7 @@ public class EasySolvingStrategy implements SolvingStrategy {
     }
 
     @Override
-    public boolean solve(Sudoku sudoku) {
+    public boolean solve(Solvable sudoku) {
         return compositeRule.apply(sudoku);
     }
 }
