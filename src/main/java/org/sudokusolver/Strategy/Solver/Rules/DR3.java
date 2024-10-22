@@ -4,8 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
-import org.sudokusolver.Strategy.Solver.Regions.Region;
-import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
+import org.sudokusolver.Strategy.Sudoku.Regions.Region;
 
 import java.util.Collections;
 import java.util.Set;
@@ -20,9 +19,41 @@ public class DR3 implements DeductionRule {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Applies the hidden pair to the cells.
+     *
+     * @param cellsWithBothCandidates The cells to apply the hidden pair to.
+     * @param candidate1              The first candidate of the hidden pair.
+     * @param candidate2              The second candidate of the hidden pair.
+     * @return True if a modification was made, otherwise false.
+     */
+    private static boolean applyHiddenPairToCells(Set<SudokuCell> cellsWithBothCandidates, int candidate1, int candidate2) {
+        boolean modificationMade = false;
+        for (SudokuCell cell : cellsWithBothCandidates) {
+            if (retainOnlyHiddenPair(candidate1, candidate2, cell)) {
+                modificationMade = true;
+            }
+        }
+        return modificationMade;
+    }
+
+    /**
+     * Retains only the hidden pair in the cell's candidates.
+     * A hidden pair can be found, but it is not guaranteed that the cell will be modified.
+     * The cell may already have the hidden pair as its candidates.
+     *
+     * @param candidate1 The first candidate of the hidden pair.
+     * @param candidate2 The second candidate of the hidden pair.
+     * @param cell       The cell to retain the hidden pair in.
+     * @return True if the cell was modified, otherwise false.
+     */
+    private static boolean retainOnlyHiddenPair(int candidate1, int candidate2, SudokuCell cell) {
+        return cell.getCandidates().retainAll(Set.of(candidate1, candidate2));
+    }
+
     @Override
-    public boolean apply(RegionManager regionManager, Sudoku sudoku) {
-        return regionManager.stream()
+    public boolean apply(Sudoku sudoku) {
+        return sudoku.streamRegions()
                 .map(this::applyHiddenPairToRegion)
                 .toList()
                 .contains(true);
@@ -83,37 +114,5 @@ public class DR3 implements DeductionRule {
                 .anyMatch(cell -> cell.hasCandidate(candidate1) || cell.hasCandidate(candidate2));
 
         return candidatesAppearElsewhere ? Collections.emptySet() : intersection;
-    }
-
-    /**
-     * Applies the hidden pair to the cells.
-     *
-     * @param cellsWithBothCandidates The cells to apply the hidden pair to.
-     * @param candidate1              The first candidate of the hidden pair.
-     * @param candidate2              The second candidate of the hidden pair.
-     * @return True if a modification was made, otherwise false.
-     */
-    private static boolean applyHiddenPairToCells(Set<SudokuCell> cellsWithBothCandidates, int candidate1, int candidate2) {
-        boolean modificationMade = false;
-        for (SudokuCell cell : cellsWithBothCandidates) {
-            if (retainOnlyHiddenPair(candidate1, candidate2, cell)) {
-                modificationMade = true;
-            }
-        }
-        return modificationMade;
-    }
-
-    /**
-     * Retains only the hidden pair in the cell's candidates.
-     * A hidden pair can be found, but it is not guaranteed that the cell will be modified.
-     * The cell may already have the hidden pair as its candidates.
-     *
-     * @param candidate1 The first candidate of the hidden pair.
-     * @param candidate2 The second candidate of the hidden pair.
-     * @param cell       The cell to retain the hidden pair in.
-     * @return True if the cell was modified, otherwise false.
-     */
-    private static boolean retainOnlyHiddenPair(int candidate1, int candidate2, SudokuCell cell) {
-        return cell.getCandidates().retainAll(Set.of(candidate1, candidate2));
     }
 }

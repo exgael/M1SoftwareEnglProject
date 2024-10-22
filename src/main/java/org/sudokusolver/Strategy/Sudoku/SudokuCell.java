@@ -35,7 +35,7 @@ public class SudokuCell {
             this.value = value;
 
             // Once a number is set, no candidates are needed
-            candidates.clear();
+            clearCandidates();
 
             if (value != 0) {
                 try {
@@ -53,6 +53,10 @@ public class SudokuCell {
 
     public int getCol() {
         return col;
+    }
+
+    public void clearCandidates() {
+        candidates.clear();
     }
 
     public Set<Integer> getCandidates() {

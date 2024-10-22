@@ -14,6 +14,10 @@ public class ObservableBoard<T, K> implements Subject<K> {
     private final int rows;
 
     private final int cols;
+    ///////////////////////
+    // Observation setup //
+    ///////////////////////
+    private final List<Observer<K>> observers = new ArrayList<>();
 
     public ObservableBoard(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
@@ -35,28 +39,23 @@ public class ObservableBoard<T, K> implements Subject<K> {
         }
     }
 
-
     public T getElement(int row, int col) {
         validateCoordinates(row, col);
         return grid.get(row).get(col);
     }
-
 
     public void setElement(int row, int col, T value) {
         validateCoordinates(row, col);
         grid.get(row).set(col, value);
     }
 
-
     public int getRows() {
         return rows;
     }
 
-
     public int getCols() {
         return cols;
     }
-
 
     @Override
     public String toString() {
@@ -71,27 +70,19 @@ public class ObservableBoard<T, K> implements Subject<K> {
         return sb.toString();
     }
 
-
     private void appendValue(int row, int col, @NotNull StringBuilder sb) {
         sb.append(this.getElement(row, col)).append(" ");
     }
 
-
     private void addNewLine(@NotNull StringBuilder sb) {
         sb.append("\n");
     }
-
 
     private void validateCoordinates(int row, int col) {
         if (row < 0 || row >= rows || col < 0 || col >= cols) {
             throw new IllegalArgumentException("Invalid board coordinates: (" + row + ", " + col + ")");
         }
     }
-
-    ///////////////////////
-    // Observation setup //
-    ///////////////////////
-    private final List<Observer<K>> observers = new ArrayList<>();
 
     @Override
     public void addObserver(Observer<K> observer) {

@@ -3,16 +3,15 @@ package org.sudokusolver.Strategy.Solver.Rules;
 import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
-import org.sudokusolver.Strategy.Solver.Regions.Region;
-import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
+import org.sudokusolver.Strategy.Sudoku.Regions.Region;
 
 import java.util.List;
 
 public class DR1 implements DeductionRule {
 
     @Override
-    public boolean apply(RegionManager regionManager, Sudoku sudoku) {
-        return regionManager.stream()
+    public boolean apply(Sudoku sudoku) {
+        return sudoku.streamRegions()
                 .map(region -> applyObviousSingle(region, sudoku))
                 .toList()
                 .contains(true);

@@ -3,10 +3,8 @@ package org.sudokusolver.Strategy.Solver;
 import org.jetbrains.annotations.Nullable;
 import org.sudokusolver.Gameplay.SudokuSolver;
 import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
 
 public class SudokuDRSolver implements SudokuSolver {
-    RegionManager regionManager;
 
     /**
      * Try to solve the Sudoku puzzle and return the solution.
@@ -16,9 +14,7 @@ public class SudokuDRSolver implements SudokuSolver {
      */
     @Override
     public int trySolveSudoku(Sudoku sudoku) {
-        initializeRegionManager(sudoku);
         DifficultyLevel difficulty = solve(sudoku);
-        cleanUpRegionManager();
         return difficulty == null ? -1 : difficulty.ordinal();
     }
 
@@ -36,7 +32,7 @@ public class SudokuDRSolver implements SudokuSolver {
 
         do {
             solver = new Solver(difficulty);
-            solver.applySolver(regionManager, sudoku);
+            solver.applySolver(sudoku);
 
             if (sudoku.isSolved()) {
                 isSolved = true;
@@ -46,26 +42,5 @@ public class SudokuDRSolver implements SudokuSolver {
 
         } while (difficulty != null && !isSolved);
         return difficulty;
-    }
-
-
-    /**
-     * Initialize the region manager.
-     * This is necessary if the SudokuSolver is used multiple times for different Sudoku puzzles.
-     *
-     * @param sudoku the Sudoku puzzle
-     */
-    private void initializeRegionManager(Sudoku sudoku) {
-        if (regionManager == null) {
-            this.regionManager = new RegionManager(sudoku);
-        }
-    }
-
-    /**
-     * Clean up the region manager.
-     * This is necessary if the SudokuSolver is used multiple times for different Sudoku puzzles.
-     */
-    private void cleanUpRegionManager() {
-        regionManager = null;
     }
 }
