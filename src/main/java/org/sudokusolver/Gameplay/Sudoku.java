@@ -17,4 +17,6 @@ public interface Sudoku extends Inspectable {
     int getSubgridSize();
 
     void init(int[] board);
+
+    void load(int[] grid);
 }

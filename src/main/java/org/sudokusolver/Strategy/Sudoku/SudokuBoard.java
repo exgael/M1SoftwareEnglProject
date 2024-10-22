@@ -35,6 +35,12 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
         initializeCandidates();
     }
 
+    @Override
+    public void load(int[] grid) {
+        // Reset
+        init(grid);
+    }
+
     public int getBoardSize() {
         return BOARD_SIZE;
     }

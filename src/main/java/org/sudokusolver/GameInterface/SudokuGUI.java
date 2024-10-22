@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SudokuGUI extends JFrame implements ActionListener, Observer<SudokuCellUpdate>, GameInterface {
+public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
 
     private final JButton startButton;
     private final JButton solveButton;
@@ -25,7 +25,6 @@ public class SudokuGUI extends JFrame implements ActionListener, Observer<Sudoku
         super("Sudoku Solver");
         this.engine = engine;
         this.engine.setGameInterface(this);
-        this.engine.addListener(this);
 
         setSize(600, 400);
         setLocation(200, 200);
@@ -86,20 +85,47 @@ public class SudokuGUI extends JFrame implements ActionListener, Observer<Sudoku
 
     }
 
-    public void whenStartClicked(ActionEvent e){
-        new SwingWorker<Void, Void>() {
+    public void whenStartClicked(ActionEvent e) {
+        String[] options = {"File Path", "String"};
+        int choice = JOptionPane.showOptionDialog(this,
+                "How do you want to load the Sudoku?",
+                "Load Sudoku",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
 
+        if (choice == 0) {
+            // Load from file path
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                loadSudokuFromFilePath(filePath);
+            }
+        } else if (choice == 1) {
+            // Load from string
+            String gridString = JOptionPane.showInputDialog(this, "Enter Sudoku Grid (multiline):");
+            loadSudokuFromString(gridString);
+        }
+    }
+
+    private void loadSudokuFromFilePath(String filePath) {
+        new SwingWorker<Void, Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
-                engine.prepareBoard();
+            protected Void doInBackground() {
+                engine.loadGridFromPath(filePath);
                 return null;
             }
+        }.execute();
+    }
 
+    private void loadSudokuFromString(String gridString) {
+        new SwingWorker<Void, Void>() {
             @Override
-            protected void done() {
-                // osef
+            protected Void doInBackground() {
+                engine.loadGridFromString(gridString);
+                return null;
             }
-
         }.execute();
     }
 
