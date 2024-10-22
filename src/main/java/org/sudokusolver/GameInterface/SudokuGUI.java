@@ -2,11 +2,7 @@ package org.sudokusolver.GameInterface;
 
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.GameInterface;
-import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Strategy.Solver.DifficultyLevel;
-import org.sudokusolver.Strategy.Sudoku.SudokuCellUpdate;
-import org.sudokusolver.Gameplay.UserMove;
-import org.sudokusolver.Utils.Observer;
+import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -147,7 +143,7 @@ public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
     }
 
     @Override
-    public void update(SudokuCellUpdate cell) {
+    public void update(SudokuUpdate cell) {
         // todo: update the GUI
         SwingUtilities.invokeLater(() -> {
             System.out.println("Update");

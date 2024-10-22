@@ -1,7 +1,6 @@
 package org.sudokusolver.Strategy.Sudoku;
 
 import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
+public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> implements Sudoku {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
@@ -65,6 +64,14 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
 
         getElement(row, col).setValue(value);
         notifyChangeAt(row, col);
+    }
+
+    private void notifyChangeAt(int row, int col) {
+        var cell = getElement(row, col);
+        var value = cell.getValue();
+        var candidates = cell.getCandidates();
+        SudokuUpdate update = new SudokuUpdate(row, col, value, candidates);
+        super.notifyObservers(update);
     }
 
     public int[] getCandidates(int row, int col) {
@@ -187,35 +194,5 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
         }
-    }
-
-    ///////////////////////
-    // Observation setup //
-    ///////////////////////
-    private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
-
-    @Override
-    public void addObserver(Observer<SudokuCellUpdate> observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer<SudokuCellUpdate> observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers(SudokuCellUpdate data) {
-        for (Observer<SudokuCellUpdate> observer : observers) {
-            observer.update(data);
-        }
-    }
-
-    private void notifyChangeAt(int row, int col) {
-        var cell = getElement(row, col);
-        var value = cell.getValue();
-        var candidates = cell.getCandidates();
-        SudokuCellUpdate update = new SudokuCellUpdate(row, col, value, candidates);
-        notifyObservers(update);
     }
 }

@@ -1,11 +1,13 @@
 package org.sudokusolver.Strategy.Sudoku;
 
 import org.jetbrains.annotations.NotNull;
+import org.sudokusolver.Utils.Observer;
+import org.sudokusolver.Utils.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board<T> {
+public class ObservableBoard<T, K> implements Subject<K> {
 
     private final List<List<T>> grid;
 
@@ -13,7 +15,7 @@ public class Board<T> {
 
     private final int cols;
 
-    public Board(int rows, int cols) {
+    public ObservableBoard(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
             throw new IllegalArgumentException("Board size must be positive.");
         }
@@ -22,7 +24,6 @@ public class Board<T> {
         this.grid = new ArrayList<>(rows);
         this.initNullBoard();
     }
-
 
     private void initNullBoard() {
         for (int row = 0; row < rows; row++) {
@@ -84,6 +85,28 @@ public class Board<T> {
     private void validateCoordinates(int row, int col) {
         if (row < 0 || row >= rows || col < 0 || col >= cols) {
             throw new IllegalArgumentException("Invalid board coordinates: (" + row + ", " + col + ")");
+        }
+    }
+
+    ///////////////////////
+    // Observation setup //
+    ///////////////////////
+    private final List<Observer<K>> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer<K> observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer<K> observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(K data) {
+        for (Observer<K> observer : observers) {
+            observer.update(data);
         }
     }
 }
