@@ -1,8 +1,6 @@
-package org.sudokusolver.Utils;
+package org.sudokusolver.Utils.Reader;
 
 import org.sudokusolver.Gameplay.SudokuReader;
-import org.sudokusolver.Utils.File.SudokuStringReader;
-import org.sudokusolver.Utils.File.SudokuFileReader;
 
 public class ReaderFactory {
     public static SudokuReader getReader(boolean isPath) {

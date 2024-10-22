@@ -1,6 +1,6 @@
 package org.sudokusolver;
 
-import org.sudokusolver.Utils.File.GridLoader;
+import org.sudokusolver.Utils.Reader.GridLoader;
 import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Sudoku.SudokuBoard;
 import org.sudokusolver.Gameplay.GameEngine;
