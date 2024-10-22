@@ -22,7 +22,7 @@ public class DR2 implements DeductionRule {
     }
 
     private boolean applyHiddenSingle(Region region, Sudoku sudoku) {
-        List<SudokuCell> cells = region.getCells();
+        List<SudokuCell> cells = region.cells();
         Map<Integer, SudokuCell> candidateMap = new HashMap<>();
         boolean hiddenSingleFound = false;
         for (SudokuCell cell : cells) {
