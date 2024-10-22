@@ -58,7 +58,6 @@ public class GameEngine {
     }
 
     private void finishGame(int level) {
-        System.out.println(sudoku.debugDescription());
         gameInterface.onSudokuFinished(level);
     }
 

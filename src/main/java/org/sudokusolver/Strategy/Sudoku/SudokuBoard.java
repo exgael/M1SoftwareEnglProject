@@ -1,7 +1,6 @@
 package org.sudokusolver.Strategy.Sudoku;
 
 import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Utils.Inspectable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectable {
+public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
@@ -182,41 +181,5 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
         }
-    }
-
-    @Override
-    public String debugDescription() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SudokuBoard{\n");
-
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-
-                sb.append(getValue(row, col));
-                sb.append(" ");
-
-                if ((col + 1) % SUBGRID_SIZE == 0 && col + 1 < BOARD_SIZE) {
-                    sb.append("| ");
-                }
-            }
-            sb.append("\n");
-        }
-
-        // Now for each coordinate, print the candidates
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (getValue(row, col) != DEFAULT_VALUE) continue;
-                sb.append("Candidates for cell at row ");
-                sb.append(row + 1);
-                sb.append(" and column ");
-                sb.append(col + 1);
-                sb.append(": ");
-                sb.append(getElement(row, col).getCandidates());
-                sb.append("\n");
-            }
-        }
-
-        sb.append("}");
-        return sb.toString();
     }
 }

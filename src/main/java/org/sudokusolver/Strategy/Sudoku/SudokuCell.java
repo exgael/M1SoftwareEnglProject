@@ -1,6 +1,5 @@
 package org.sudokusolver.Strategy.Sudoku;
 
-import org.sudokusolver.Utils.Inspectable;
 import org.sudokusolver.Utils.Observer;
 import org.sudokusolver.Utils.Subject;
 
@@ -9,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
+public class SudokuCell implements Subject<SudokuCellUpdate> {
     private final Set<Integer> candidates;
     private final int row, col;
     private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
@@ -112,18 +111,5 @@ public class SudokuCell implements Subject<SudokuCellUpdate>, Inspectable {
         for (Observer<SudokuCellUpdate> observer : observers) {
             observer.update(data);
         }
-    }
-
-    @Override
-    public String debugDescription() {
-        StringBuilder sb = new StringBuilder();
-        if (value != 0) {
-            // Centered number in the cell
-            sb.append(String.format("  %1d  ", value));
-        } else {
-            sb.append(String.format("%1d    ", this.candidates.size()));
-        }
-
-        return sb.toString();
     }
 }

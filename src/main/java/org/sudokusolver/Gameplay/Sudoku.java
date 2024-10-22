@@ -1,9 +1,8 @@
 package org.sudokusolver.Gameplay;
 
 import org.sudokusolver.Strategy.Sudoku.SudokuCell;
-import org.sudokusolver.Utils.Inspectable;
 
-public interface Sudoku extends Inspectable {
+public interface Sudoku {
     int getValue(int row, int col);
 
     void setValue(int row, int col, int value);
