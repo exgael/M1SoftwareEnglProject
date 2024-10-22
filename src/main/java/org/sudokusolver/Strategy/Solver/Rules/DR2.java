@@ -1,5 +1,7 @@
 package org.sudokusolver.Strategy.Solver.Rules;
 
+
+import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Sudoku.SudokuCell;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Solver.Regions.Region;
@@ -12,14 +14,14 @@ import java.util.Map;
 public class DR2 implements DeductionRule {
 
     @Override
-    public boolean apply(RegionManager regionManager) {
+    public boolean apply(RegionManager regionManager, Sudoku sudoku) {
         return regionManager.stream()
-                .map(region -> applyHiddenSingle(region, regionManager))
+                .map(region -> applyHiddenSingle(region, sudoku))
                 .toList()
                 .contains(true);
     }
 
-    private boolean applyHiddenSingle(Region region, RegionManager regionManager) {
+    private boolean applyHiddenSingle(Region region, Sudoku sudoku) {
         List<SudokuCell> cells = region.getCells();
         Map<Integer, SudokuCell> candidateMap = new HashMap<>();
         boolean hiddenSingleFound = false;
@@ -39,7 +41,7 @@ public class DR2 implements DeductionRule {
         for (Map.Entry<Integer, SudokuCell> entry : candidateMap.entrySet()) {
             SudokuCell cell = entry.getValue();
             if (cell != null) {
-                regionManager.setValue(cell.getRow(), cell.getCol(), entry.getKey());
+                sudoku.setValue(cell.getRow(), cell.getCol(), entry.getKey());
                 hiddenSingleFound = true;
             }
         }

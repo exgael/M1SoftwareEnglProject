@@ -1,6 +1,7 @@
 package org.sudokusolver.Strategy.Sudoku;
 
 import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
     private static final int DEFAULT_VALUE = 0;
+
 
     public SudokuBoard() {
         super(BOARD_SIZE, BOARD_SIZE);
@@ -29,10 +31,11 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 int value = grid[i * BOARD_SIZE + j];
-                getElement(i, j).setValue(value);
+                setValue(i, j, value);
             }
         }
         initializeCandidates();
+
     }
 
     public int getBoardSize() {
@@ -47,6 +50,8 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
         return getElement(row, col).getValue();
     }
 
+
+
     public void setValue(int row, int col, int value) {
         validateValue(value);
         if (getElement(row, col).getValue() != DEFAULT_VALUE) {
@@ -59,6 +64,7 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
         removeCandidateFromSubgrid(row, col, value);
 
         getElement(row, col).setValue(value);
+        notifyChangeAt(row, col);
     }
 
     public int[] getCandidates(int row, int col) {
@@ -181,5 +187,35 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku {
             String errorMessage = String.format("Invalid value: %d. Must be between 1 and %d", value, BOARD_SIZE);
             throw new IllegalArgumentException(errorMessage);
         }
+    }
+
+    ///////////////////////
+    // Observation setup //
+    ///////////////////////
+    private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer<SudokuCellUpdate> observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer<SudokuCellUpdate> observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(SudokuCellUpdate data) {
+        for (Observer<SudokuCellUpdate> observer : observers) {
+            observer.update(data);
+        }
+    }
+
+    private void notifyChangeAt(int row, int col) {
+        var cell = getElement(row, col);
+        var value = cell.getValue();
+        var candidates = cell.getCandidates();
+        SudokuCellUpdate update = new SudokuCellUpdate(row, col, value, candidates);
+        notifyObservers(update);
     }
 }

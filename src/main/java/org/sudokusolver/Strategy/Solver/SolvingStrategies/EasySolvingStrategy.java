@@ -1,5 +1,6 @@
 package org.sudokusolver.Strategy.Solver.SolvingStrategies;
 
+import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
 import org.sudokusolver.Strategy.Solver.Rules.DR1;
@@ -13,7 +14,7 @@ public class EasySolvingStrategy implements SolvingStrategy {
     }
 
     @Override
-    public boolean solve(RegionManager regionManager) {
-        return compositeRule.apply(regionManager);
+    public boolean solve(RegionManager regionManager, Sudoku sudoku) {
+        return compositeRule.apply(regionManager, sudoku);
     }
 }

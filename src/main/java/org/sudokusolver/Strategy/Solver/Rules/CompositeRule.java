@@ -1,5 +1,6 @@
 package org.sudokusolver.Strategy.Solver.Rules;
 
+import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Solver.DeductionRule;
 import org.sudokusolver.Strategy.Solver.Regions.RegionManager;
 
@@ -13,9 +14,9 @@ public class CompositeRule implements DeductionRule {
     }
 
     @Override
-    public boolean apply(RegionManager regionManager) {
+    public boolean apply(RegionManager regionManager, Sudoku sudoku) {
         return rules.stream()
-                .map(rule -> rule.apply(regionManager))
+                .map(rule -> rule.apply(regionManager, sudoku))
                 .toList()
                 .contains(true);
     }

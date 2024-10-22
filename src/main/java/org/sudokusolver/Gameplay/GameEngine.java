@@ -23,15 +23,7 @@ public class GameEngine {
 
     public void setGameInterface(GameInterface gameInterface) {
         this.gameInterface = gameInterface;
-        registerToSudokuUpdate(gameInterface);
-    }
-
-    private void registerToSudokuUpdate(GameInterface gameInterface) {
-        for (int row = 0; row < sudoku.getBoardSize(); row++) {
-            for (int col = 0; col < sudoku.getBoardSize(); col++) {
-                sudoku.getElement(row, col).addObserver(gameInterface);
-            }
-        }
+        sudoku.addObserver(gameInterface);
     }
 
     public void loadGridFromPath(String filePath) {

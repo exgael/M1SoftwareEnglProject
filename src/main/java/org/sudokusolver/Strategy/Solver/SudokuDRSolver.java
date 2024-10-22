@@ -36,7 +36,7 @@ public class SudokuDRSolver implements SudokuSolver {
 
         do {
             solver = new Solver(difficulty);
-            solver.applySolver(regionManager);
+            solver.applySolver(regionManager, sudoku);
 
             if (sudoku.isSolved()) {
                 isSolved = true;

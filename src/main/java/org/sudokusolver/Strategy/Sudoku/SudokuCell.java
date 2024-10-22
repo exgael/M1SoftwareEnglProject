@@ -1,17 +1,12 @@
 package org.sudokusolver.Strategy.Sudoku;
 
-import org.sudokusolver.Utils.Observer;
-import org.sudokusolver.Utils.Subject;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SudokuCell implements Subject<SudokuCellUpdate> {
+public class SudokuCell {
     private final Set<Integer> candidates;
     private final int row, col;
-    private final List<Observer<SudokuCellUpdate>> observers = new ArrayList<>();
     private int value;
 
     public SudokuCell(int value, int row, int col) {
@@ -24,7 +19,6 @@ public class SudokuCell implements Subject<SudokuCellUpdate> {
     public void initializeCandidates(List<Integer> candidates) {
         if (value == 0) {
             this.candidates.addAll(candidates);
-            this.notifyObservers();
         }
     }
 
@@ -49,7 +43,6 @@ public class SudokuCell implements Subject<SudokuCellUpdate> {
                 } catch (InterruptedException e) {
                     //
                 }
-                this.notifyObservers();
             }
         }
     }
@@ -67,21 +60,15 @@ public class SudokuCell implements Subject<SudokuCellUpdate> {
     }
 
     public void addCandidate(int candidate) {
-        if (candidates.add(candidate)) {
-            this.notifyObservers();
-        }
+        candidates.add(candidate);
     }
 
-    public boolean removeCandidate(int candidate) {
-        boolean changed = candidates.remove(candidate);
-        this.notifyObservers();
-        return changed;
+    public void removeCandidate(int candidate) {
+        candidates.remove(candidate);
     }
 
     public boolean removeCandidates(Set<Integer> candidatesToRemove) {
-        boolean changed = candidates.removeAll(candidatesToRemove);
-        this.notifyObservers();
-        return changed;
+        return candidates.removeAll(candidatesToRemove);
     }
 
     public boolean hasCandidate(int candidate) {
@@ -90,26 +77,5 @@ public class SudokuCell implements Subject<SudokuCellUpdate> {
 
     public int candidateCount() {
         return candidates.size();
-    }
-
-    @Override
-    public void addObserver(Observer<SudokuCellUpdate> observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer<SudokuCellUpdate> observer) {
-        observers.remove(observer);
-    }
-
-    private void notifyObservers() {
-        notifyObservers(new SudokuCellUpdate(row, col, value, candidates));
-    }
-
-    @Override
-    public void notifyObservers(SudokuCellUpdate data) {
-        for (Observer<SudokuCellUpdate> observer : observers) {
-            observer.update(data);
-        }
     }
 }
