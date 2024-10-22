@@ -1,5 +1,6 @@
-package org.sudokusolver.Gameplay;
+package org.sudokusolver.Utils;
 
+import org.sudokusolver.Gameplay.SudokuReader;
 import org.sudokusolver.Utils.File.SudokuStringReader;
 import org.sudokusolver.Utils.File.SudokuFileReader;
 

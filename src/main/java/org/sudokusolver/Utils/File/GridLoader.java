@@ -1,6 +1,6 @@
 package org.sudokusolver.Utils.File;
 
-import org.sudokusolver.Gameplay.ReaderFactory;
+import org.sudokusolver.Utils.ReaderFactory;
 import org.sudokusolver.Gameplay.SudokuReader;
 
 import java.util.logging.Logger;
