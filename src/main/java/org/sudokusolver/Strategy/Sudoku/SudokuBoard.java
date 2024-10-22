@@ -25,20 +25,15 @@ public class SudokuBoard extends Board<SudokuCell> implements Sudoku, Inspectabl
         }
     }
 
-    public void init(int[] board) {
+    @Override
+    public void load(int[] grid) {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                int value = board[i * BOARD_SIZE + j];
+                int value = grid[i * BOARD_SIZE + j];
                 getElement(i, j).setValue(value);
             }
         }
         initializeCandidates();
-    }
-
-    @Override
-    public void load(int[] grid) {
-        // Reset
-        init(grid);
     }
 
     public int getBoardSize() {
