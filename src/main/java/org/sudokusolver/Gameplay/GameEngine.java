@@ -7,16 +7,13 @@ import java.util.logging.Logger;
 public class GameEngine {
 
     private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
-
-    // GUI
-    private GameInterface gameInterface;
-
     // Sudoku & solver
     private final Sudoku sudoku;
     private final SudokuSolver solver;
-
     // Storage
     private final GridLoader gridLoader;
+    // GUI
+    private GameInterface gameInterface;
 
     public GameEngine(GridLoader gridLoader, SudokuSolver solver, Sudoku sudoku) {
         this.gridLoader = gridLoader;
