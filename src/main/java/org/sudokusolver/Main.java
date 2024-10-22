@@ -1,6 +1,8 @@
 package org.sudokusolver;
 
-import org.sudokusolver.Utils.File.SudokuFileParser;
+import org.sudokusolver.Utils.File.GridLoader;
+import org.sudokusolver.Gameplay.Sudoku;
+import org.sudokusolver.Strategy.Sudoku.SudokuBoard;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.SudokuSolver;
 import org.sudokusolver.GameInterface.SudokuGUI;
@@ -19,8 +21,9 @@ public class Main {
         System.out.println("Sudoku Solver");
 
         SudokuSolver solver = new SudokuDRSolver();
-        SudokuFileParser fileParser = new SudokuFileParser();
-        GameEngine gameEngine = new GameEngine(fileParser, solver);
+        GridLoader gridLoader = new GridLoader();
+        Sudoku sudoku = new SudokuBoard();
+        GameEngine gameEngine = new GameEngine(gridLoader, solver, sudoku);
 
         try {
             Thread.sleep(2000);
@@ -28,25 +31,25 @@ public class Main {
             // No need to handle this
         }
 
-        for (String filename : getFileNames()) {
-            startGame(gameEngine, filename);
-            break; // Stop after first game
-        }
+//        for (String filename : getFileNames()) {
+//            startGame(gameEngine, filename);
+//            break; // Stop after first game
+//        }
 
         SwingUtilities.invokeLater(() -> {
             new SudokuGUI(gameEngine);
         });
     }
 
-    private static void startGame(GameEngine gameEngine, String filename) {
-        try {
-            gameEngine.loadNewSudoku(filename);
-        } catch (IOException e) {
-            handleFileError(filename, e);
-        } catch (Exception e) {
-            handleGeneralError(filename, e);
-        }
-    }
+//    private static void startGame(GameEngine gameEngine, String filename) {
+//        try {
+//           // gameEngine.loadNewSudoku(filename, true);
+//        } catch (IOException e) {
+//            handleFileError(filename, e);
+//        } catch (Exception e) {
+//            handleGeneralError(filename, e);
+//        }
+//    }
 
     private static void handleFileError(String filename, IOException e) {
         logger.log(Level.SEVERE, "Erreur lors de la lecture du fichier : " + filename, e);
