@@ -17,7 +17,7 @@ public class SudokuGUI extends JFrame implements GameInterface {
     private final JButton startButton;
     private final JButton solveButton;
     private final NumberPadView numberPad;
-    private final JLabel[][] cells;
+    private final SudokuBoardView board;
     private final GameEngine engine;
     private int selectedValue = -1;
 
@@ -37,17 +37,23 @@ public class SudokuGUI extends JFrame implements GameInterface {
 
         //left side
         JPanel leftPanel = new JPanel(new BorderLayout());
-        JPanel sudokuPanel = new JPanel(new GridLayout(9, 9));
-        cells = new JLabel[9][9];
-        for (int Row = 0; Row < 9; Row++) {
-            for (int Col = 0; Col < 9; Col++) {
-                var cellView = buildCellView(engine, Row, Col);
-                sudokuPanel.add(cellView);
-                cells[Row][Col] = cellView;
+        board = new SudokuBoardView();
+        board.addCellClickListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (selectedValue != -1) {
+                    CellView cellView = (CellView) e.getSource();
+                    cellView.setValue(selectedValue);
+                    engine.receiveUserMove(new UserMove(cellView.getRow(), cellView.getCol(), selectedValue));
+                    selectedValue = -1;
+                    numberPad.resetButtons();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a value first");
+                }
             }
-        }
-        sudokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        leftPanel.add(sudokuPanel, BorderLayout.CENTER);
+        });
+
+        leftPanel.add(board, BorderLayout.CENTER);
 
         //right side
         JPanel rightPanel = new JPanel(new BorderLayout());
@@ -68,7 +74,6 @@ public class SudokuGUI extends JFrame implements GameInterface {
         pane.add(rightPanel);
 
         setVisible(true);
-
     }
 
     private void selectNumber(int i) {
@@ -80,33 +85,6 @@ public class SudokuGUI extends JFrame implements GameInterface {
 
         // Once selected, the button of interest should be marked as such
         numberPad.focusButton(i);
-    }
-
-    @NotNull
-    private CellView buildCellView(GameEngine engine, int row, int col) {
-        var cellView = new CellView(row, col);
-
-        // borders
-        int top = (row % 3 == 0) ? 2 : 1;
-        int left = (col % 3 == 0) ? 2 : 1;
-        int bottom = (row == 8) ? 2 : 1;
-        int right = (col == 8) ? 2 : 1;
-
-        cellView.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
-        cellView.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (selectedValue != -1) {
-                    cellView.setValue(selectedValue);
-                    engine.receiveUserMove(new UserMove(row, col, selectedValue));
-                    selectedValue = -1;
-                    numberPad.resetButtons();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a value first");
-                }
-            }
-        });
-        return cellView;
     }
 
     public void whenStartClicked(ActionEvent e) {
@@ -178,7 +156,7 @@ public class SudokuGUI extends JFrame implements GameInterface {
             int row = cell.row();
             int col = cell.col();
             int value = cell.value();
-            cells[row][col].setText(value == 0 ? "" : String.valueOf(value));
+            board.updateCell(row, col, value);
         });
     }
 
