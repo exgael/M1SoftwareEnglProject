@@ -23,6 +23,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> imple
             }
         }
         regionManager = new RegionManager(this);
+        initializeCandidates();
     }
 
     @Override
