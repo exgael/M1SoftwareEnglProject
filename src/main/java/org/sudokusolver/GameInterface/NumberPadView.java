@@ -42,4 +42,11 @@ public class NumberPadView extends JPanel {
     public void focusButton(int number) {
         numberButtons.get(number - 1).setFocusPainted(true);
     }
+
+    public void enablePad() {
+        for (NumberButtonView button : numberButtons) {
+            button.setFocusPainted(false);
+            button.setEnabled(true);
+        }
+    }
 }

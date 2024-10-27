@@ -1,11 +1,12 @@
 package org.sudokusolver;
 
+import org.sudokusolver.GameInterface.SudokuView;
 import org.sudokusolver.Utils.Reader.GridLoader;
 import org.sudokusolver.Gameplay.Sudoku;
 import org.sudokusolver.Strategy.Sudoku.SudokuBoard;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.SudokuSolver;
-import org.sudokusolver.GameInterface.SudokuGUI;
+import org.sudokusolver.GameInterface.SudokuController;
 import org.sudokusolver.Strategy.Solver.SudokuDRSolver;
 
 import javax.swing.*;
@@ -22,7 +23,9 @@ public class Main {
         Sudoku sudoku = new SudokuBoard();
         GameEngine gameEngine = new GameEngine(gridLoader, solver, sudoku);
 
-        // Launch the UI
-        SwingUtilities.invokeLater(() -> new SudokuGUI(gameEngine));
+        SudokuView sudokuView = new SudokuView();
+
+        // Launch GUI
+        new SudokuController(sudokuView, gameEngine);
     }
 }
