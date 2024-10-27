@@ -14,8 +14,7 @@ import java.awt.event.MouseEvent;
 
 public class SudokuGUI extends JFrame implements GameInterface {
 
-    private final JButton startButton;
-    private final JButton solveButton;
+    private final ControlPanelView controls;
     private final NumberPadView numberPad;
     private final SudokuBoardView board;
     private final GameEngine engine;
@@ -61,12 +60,10 @@ public class SudokuGUI extends JFrame implements GameInterface {
         numberPad.addNumberButtonListener(this::selectNumber);
 
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        startButton = new JButton("Start");
-        solveButton = new JButton("Solve");
-        startButton.addActionListener(this::whenStartClicked);
-        solveButton.addActionListener(this::whenSolveClicked);
-        southPanel.add(startButton);
-        southPanel.add(solveButton);
+        controls = new ControlPanelView();
+        controls.addStartButtonListener(this::whenStartClicked);
+        controls.addSolveButtonListener(this::whenSolveClicked);
+        southPanel.add(controls);
         rightPanel.add(numberPad, BorderLayout.CENTER);
         rightPanel.add(southPanel, BorderLayout.SOUTH);
 
