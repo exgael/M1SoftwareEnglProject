@@ -1,5 +1,6 @@
 package org.sudokusolver.GameInterface;
 
+import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.GameInterface;
 import org.sudokusolver.Gameplay.UserMove;
@@ -8,11 +9,10 @@ import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
+public class SudokuGUI extends JFrame implements GameInterface {
 
     private final JButton startButton;
     private final JButton solveButton;
@@ -41,37 +41,9 @@ public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
         cells = new JLabel[9][9];
         for (int Row = 0; Row < 9; Row++) {
             for (int Col = 0; Col < 9; Col++) {
-                final int row = Row;
-                final int col = Col;
-
-                cells[row][col] = new JLabel("");
-                cells[row][col].setHorizontalAlignment(JTextField.CENTER);
-
-                // borders
-                int top = (row % 3 == 0) ? 2 : 1;
-                int left = (col % 3 == 0) ? 2 : 1;
-                int bottom = (row == 8) ? 2 : 1;
-                int right = (col == 8) ? 2 : 1;
-
-                cells[row][col].setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
-
-                cells[row][col].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (selectedValue != -1) {
-                            cells[row][col].setText(String.valueOf(selectedValue));
-                            engine.receiveUserMove(new UserMove(row, col, selectedValue));
-                            selectedValue = -1;
-                            for (JButton btn : numberButtons) {
-                                btn.setEnabled(true);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Please select a value first");
-                        }
-                    }
-                });
-
-                sudokuPanel.add(cells[row][col]);
+                var cellView = buildCellView(engine, Row, Col);
+                sudokuPanel.add(cellView);
+                cells[Row][Col] = cellView;
             }
         }
         sudokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -110,6 +82,35 @@ public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
 
         setVisible(true);
 
+    }
+
+    @NotNull
+    private CellView buildCellView(GameEngine engine, int row, int col) {
+        var cellView = new CellView(row, col);
+
+        // borders
+        int top = (row % 3 == 0) ? 2 : 1;
+        int left = (col % 3 == 0) ? 2 : 1;
+        int bottom = (row == 8) ? 2 : 1;
+        int right = (col == 8) ? 2 : 1;
+
+        cellView.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
+        cellView.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (selectedValue != -1) {
+                    cellView.setValue(selectedValue);
+                    engine.receiveUserMove(new UserMove(row, col, selectedValue));
+                    selectedValue = -1;
+                    for (JButton btn : numberButtons) {
+                        btn.setEnabled(true);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a value first");
+                }
+            }
+        });
+        return cellView;
     }
 
     public void whenStartClicked(ActionEvent e) {
@@ -210,12 +211,5 @@ public class SudokuGUI extends JFrame implements ActionListener, GameInterface {
     public void onInvalidMove(int value, int row, int col) {
         // todo: implement
         //JOptionPane.showMessageDialog(this, "Invalid move");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // todo: implement
-        // use this.engine.receiveUserMove(new UserMove(row, col, value));
-        // to send the user move to the engine
     }
 }
