@@ -6,16 +6,18 @@ import org.sudokusolver.Gameplay.SudokuSolver;
 
 public class SudokuDRSolver implements SudokuSolver {
 
+    private DifficultyLevel highestDifficulty = DifficultyLevel.EASY;
     /**
      * Try to solve the Sudoku puzzle and return the solution.
      *
      * @param sudoku the Sudoku puzzle
      * @return the Sudoku level
      */
+
     @Override
     public int trySolveSudoku(Solvable sudoku) {
         DifficultyLevel difficulty = solve(sudoku);
-        return difficulty == null ? -1 : difficulty.ordinal();
+        return difficulty == null ? -1 : highestDifficulty.ordinal();
     }
 
     /**
@@ -37,10 +39,13 @@ public class SudokuDRSolver implements SudokuSolver {
             if (sudoku.isSolved()) {
                 isSolved = true;
             } else {
+                if (difficulty.ordinal() > highestDifficulty.ordinal()) {
+                    highestDifficulty = difficulty;
+                }
                 difficulty = difficulty.getNext();
             }
 
         } while (difficulty != null && !isSolved);
-        return difficulty;
+        return isSolved ? highestDifficulty : null;
     }
 }
