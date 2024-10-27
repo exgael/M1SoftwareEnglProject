@@ -54,10 +54,10 @@ public class SudokuView extends JFrame implements GameInterface {
             @Override
             public void mouseClicked(MouseEvent e) {
                 CellView cell = (CellView) e.getSource();
-                listener.accept(cell.getRow(), cell.getCol());
+                SwingUtilities.invokeLater(() -> listener.accept(cell.getRow(), cell.getCol()));
 
                 // On mouse click of boardView, reset Number pad
-                numberPad.resetButtons();
+                SwingUtilities.invokeLater(numberPad::resetButtons);
             }
         });
     }
@@ -77,7 +77,7 @@ public class SudokuView extends JFrame implements GameInterface {
     @Override
     public void onRequestUserInput() {
         JOptionPane.showMessageDialog(this, "Help me!");
-        numberPad.enablePad();
+        SwingUtilities.invokeLater(numberPad::enablePad);
     }
 
     @Override
@@ -109,10 +109,10 @@ public class SudokuView extends JFrame implements GameInterface {
     }
 
     public void focusPadButton(int i) {
-        numberPad.focusButton(i);
+        SwingUtilities.invokeLater(() -> numberPad.focusButton(i));
     }
 
     public void resetPad() {
-        numberPad.resetButtons();
+        SwingUtilities.invokeLater(numberPad::resetButtons);
     }
 }

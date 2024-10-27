@@ -37,12 +37,22 @@ public class SudokuController {
     public void handleCellClick(int row, int col) {
         if (selectedValue != -1) {
             sudokuView.updateCell(row, col, selectedValue);
-            engine.receiveUserMove(new UserMove(row, col, selectedValue));
+            playMove(new UserMove(row, col, selectedValue));
             selectedValue = -1;
             sudokuView.resetPad();
         } else {
             JOptionPane.showMessageDialog(sudokuView, "Please select a value first");
         }
+    }
+
+    private void playMove(UserMove userMove) {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                engine.receiveUserMove(userMove);
+                return null;
+            }
+        }.execute();
     }
 
     public void whenStartClicked(ActionEvent e) {
