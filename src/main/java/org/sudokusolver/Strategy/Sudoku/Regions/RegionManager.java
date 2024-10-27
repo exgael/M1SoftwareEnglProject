@@ -49,7 +49,7 @@ public class RegionManager {
         }
     }
 
-    public void setValue(int row, int col, int value) {
+    public void setValue(int row, int col, int value) throws RuntimeException {
         // Check if the value can be placed in the cell
         if (canPlaceValue(row, col, value)) {
             // Set the value in the specific cell
@@ -58,6 +58,8 @@ public class RegionManager {
 
             // Remove the value from the candidates of related cells in the same row, column, and subgrid
             removeCandidateFromRelatedRegions(row, col, value);
+        } else {
+             throw new RuntimeException("Conflicting value found");
         }
     }
 

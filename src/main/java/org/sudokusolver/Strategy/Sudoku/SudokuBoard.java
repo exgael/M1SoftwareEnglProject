@@ -39,10 +39,16 @@ public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> imple
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 int value = grid[i * BOARD_SIZE + j];
-                setValue(i, j, value);
+                setValueOnLoad(i, j, value);
             }
         }
         initializeCandidates();
+    }
+
+    private void setValueOnLoad(int row, int col, int value) {
+        validateValue(value);
+        getElement(row, col).setValue(value);
+        notifyChangeAt(row, col);
     }
 
     private void initializeCandidates() {
@@ -74,10 +80,10 @@ public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> imple
         return getElement(row, col).getValue();
     }
 
-    public void setValue(int row, int col, int value) {
+    public void setValue(int row, int col, int value) throws RuntimeException {
         validateValue(value);
         if (getElement(row, col).getValue() != DEFAULT_VALUE) {
-            throw new IllegalArgumentException("Cell is already solved");
+            throw new RuntimeException("Cell is already solved");
         }
         regionManager.setValue(row, col, value);
         notifyChangeAt(row, col);

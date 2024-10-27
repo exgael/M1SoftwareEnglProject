@@ -15,6 +15,8 @@ public class GameEngine {
     // GUI
     private GameInterface gameInterface;
 
+    private int[] currentGrid;
+
     public GameEngine(GridLoader gridLoader, SudokuSolver solver, Sudoku sudoku) {
         this.gridLoader = gridLoader;
         this.solver = solver;
@@ -27,13 +29,16 @@ public class GameEngine {
     }
 
     public void loadGridFromPath(String filePath) {
-        var grid = gridLoader.loadNewSudoku(filePath, true);
-        sudoku.load(grid);
+        load(filePath, true);
     }
 
     public void loadGridFromString(String gridString) {
-        var grid = gridLoader.loadNewSudoku(gridString, false);
-        sudoku.load(grid);
+        load(gridString, false);
+    }
+
+    private void load(String str, boolean isPath) {
+        currentGrid = gridLoader.loadNewSudoku(str, isPath);
+        sudoku.load(currentGrid);
     }
 
     public void play() {
@@ -58,8 +63,9 @@ public class GameEngine {
         try {
             sudoku.setValue(move.row(), move.col(), move.value());
             play(); // continue playing
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             gameInterface.onInvalidMove(move.value(), move.row(), move.col());
+            sudoku.load(currentGrid);
         }
     }
 }
