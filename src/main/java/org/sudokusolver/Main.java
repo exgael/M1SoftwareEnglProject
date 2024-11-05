@@ -17,15 +17,16 @@ public class Main {
     public static void main(String[] args) {
         logger.info("Starting Sudoku Solver");
 
-        // Initialize the components
+        // Initialize Strategy Module
         SudokuSolver solver = new SudokuDRSolver();
-        GridLoader gridLoader = new GridLoader();
         Sudoku sudoku = new SudokuBoard();
+
+        // Initialize Gameplay Module
+        GridLoader gridLoader = new GridLoader();
         GameEngine gameEngine = new GameEngine(gridLoader, solver, sudoku);
 
-        // Launch GUI
+        // Initialize GUI
         SudokuController controller = new SudokuController(gameEngine, null);
-        SudokuView sudokuView = new SudokuView(controller);
-
+        new SudokuView(controller);
     }
 }
