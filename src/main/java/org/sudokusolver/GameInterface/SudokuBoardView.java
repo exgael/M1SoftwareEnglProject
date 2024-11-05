@@ -2,20 +2,32 @@ package org.sudokusolver.GameInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 
 public class SudokuBoardView extends JPanel {
+
+    private final SudokuController controller;
     private final CellView[][] cells = new CellView[9][9];
 
-    public SudokuBoardView() {
+    public SudokuBoardView(SudokuController controller) {
         super(new GridLayout(9, 9));
-        buildBoard();
+        this.controller = controller;
+        buildView();
     }
 
-    private void buildBoard() {
+    /**
+     * Update the visual of a cell in the board
+     * @param row row of the cell
+     * @param col column of the cell
+     * @param value new value the cell must take on
+     */
+    public void updateCell(int row, int col, int value) {
+        cells[row][col].setValue(value);
+    }
+
+    private void buildView() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                CellView cell = new CellView(row, col);
+                CellView cell = new CellView(controller, row, col);
 
                 // Borders
                 int top = (row % 3 == 0) ? 2 : 1;
@@ -29,21 +41,5 @@ public class SudokuBoardView extends JPanel {
             }
         }
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    }
-
-    public CellView getCell(int row, int col) {
-        return cells[row][col];
-    }
-
-    public void addCellClickListener(MouseAdapter listener) {
-        for (CellView[] rowCells : cells) {
-            for (CellView cell : rowCells) {
-                cell.addCellClickListener(listener);
-            }
-        }
-    }
-
-    public void updateCell(int row, int col, int value) {
-        cells[row][col].setValue(value);
     }
 }

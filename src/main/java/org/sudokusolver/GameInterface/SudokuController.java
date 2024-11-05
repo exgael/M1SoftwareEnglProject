@@ -1,61 +1,67 @@
 package org.sudokusolver.GameInterface;
 
 import org.sudokusolver.Gameplay.GameEngine;
+import org.sudokusolver.Gameplay.GameInterface;
 import org.sudokusolver.Gameplay.UserMove;
+import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
-public class SudokuController {
-
-    private final SudokuView sudokuView;
-    private final GameEngine engine;
+public class SudokuController implements GameInterface {
+    private SudokuView sudokuView; // view
+    private final GameEngine engine; // model
     private int selectedValue = -1;
 
-    public SudokuController(SudokuView sudokuView, GameEngine engine) {
+    public SudokuController(GameEngine engine, SudokuView sudokuView) {
         this.sudokuView = sudokuView;
         this.engine = engine;
-        this.engine.setGameInterface(sudokuView);
+        this.engine.setGameInterface(this);
+    }
 
-        sudokuView.addCellClickListener(this::handleCellClick);
-        sudokuView.addNumpadClickListener(this::handleNumPadClick);
-        sudokuView.addStartButtonListener(this::whenStartClicked);
-        sudokuView.addSolveButtonListener(this::whenSolveClicked);
+    public void setSudokuView(SudokuView sudokuView) {
+        this.sudokuView = sudokuView;
     }
 
     public void handleNumPadClick(int i) {
-        // Reset any other selection
-        sudokuView.resetPad();
-
-        // Store selection as global
-        selectedValue = i;
-
-        // Once selected, the button of interest should be marked as such
-        sudokuView.focusPadButton(i);
-    }
-
-    public void handleCellClick(int row, int col) {
-        if (selectedValue != -1) {
-            sudokuView.updateCell(row, col, selectedValue);
-            playMove(new UserMove(row, col, selectedValue));
-            selectedValue = -1;
+        SwingUtilities.invokeLater(() -> {
+            // Reset any other selection
             sudokuView.resetPad();
-        } else {
-            JOptionPane.showMessageDialog(sudokuView, "Please select a value first");
-        }
+
+            // Store selection as global
+            selectedValue = i;
+
+            // Once selected, the button of interest should be marked as such
+            sudokuView.focusPadButton(i);
+         });
     }
 
-    private void playMove(UserMove userMove) {
+    public void handlePlayMove(int row, int col) {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                engine.receiveUserMove(userMove);
+                if (selectedValue != -1) {
+                    engine.receiveUserMove(new UserMove(row, col, selectedValue));
+                    selectedValue = -1;
+                    sudokuView.resetPad();
+                } else {
+                    JOptionPane.showMessageDialog(sudokuView, "Please select a value first");
+                }
                 return null;
             }
         }.execute();
     }
 
-    public void whenStartClicked(ActionEvent e) {
+    public void handleSolveClicked(){
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                engine.play();
+                return null;
+            }
+        }.execute();
+    }
+
+    public void handleStartClicked() {
         // Load from string
         String gridString = JOptionPane.showInputDialog(sudokuView, "0,1,2,3,...");
         loadSudokuFromString(gridString);
@@ -71,20 +77,33 @@ public class SudokuController {
         }.execute();
     }
 
-    public void whenSolveClicked(ActionEvent e){
-        new SwingWorker<Void, Void>() {
+    @Override
+    public void onRequestUserInput() {
+        JOptionPane.showMessageDialog(sudokuView, "Help me!");
+        SwingUtilities.invokeLater(sudokuView::enablePad);
+    }
 
-            @Override
-            protected Void doInBackground() throws Exception {
-                engine.play();
-                return null;
-            }
+    @Override
+    public void onSudokuFinished(int level) {
+        JOptionPane.showMessageDialog(sudokuView, "Level difficulty is : "+levelRep(level), "End of solver", JOptionPane.PLAIN_MESSAGE);
+    }
 
-            @Override
-            protected void done() {
-                // osef
-            }
+    private String levelRep(int dif) {
+        return switch (dif) {
+            case 0 -> " Easy :)";
+            case 1 -> " Average :|";
+            case 2 -> " Hard :(";
+            default -> " Impossible ?x_x?";
+        };
+    }
 
-        }.execute();
+    @Override
+    public void onInvalidMove(int value, int row, int col) {
+        JOptionPane.showMessageDialog(sudokuView, "Conflicting values found! Game Over!");
+    }
+
+    @Override
+    public void update(SudokuUpdate data) {
+        SwingUtilities.invokeLater(() ->sudokuView.updateCell(data.row(), data.col(), data.value()));
     }
 }

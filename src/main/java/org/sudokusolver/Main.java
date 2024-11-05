@@ -23,9 +23,9 @@ public class Main {
         Sudoku sudoku = new SudokuBoard();
         GameEngine gameEngine = new GameEngine(gridLoader, solver, sudoku);
 
-        SudokuView sudokuView = new SudokuView();
-
         // Launch GUI
-        new SudokuController(sudokuView, gameEngine);
+        SudokuController controller = new SudokuController(gameEngine, null);
+        SudokuView sudokuView = new SudokuView(controller);
+
     }
 }

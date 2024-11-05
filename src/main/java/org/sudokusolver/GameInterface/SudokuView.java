@@ -11,17 +11,37 @@ import java.awt.event.MouseEvent;
 import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
 
-public class SudokuView extends JFrame implements GameInterface {
+public class SudokuView extends JFrame {
     private final ControlPanelView controls;
     private final NumberPadView numberPad;
     private final SudokuBoardView boardView;
 
-    public SudokuView() {
+    public SudokuView(SudokuController controller) {
         super("Sudoku");
-        controls = new ControlPanelView();
-        numberPad = new NumberPadView();
-        boardView = new SudokuBoardView();
+        controller.setSudokuView(this);
+
+        // Set Sub views
+        controls = new ControlPanelView(controller);
+        numberPad = new NumberPadView(controller);
+        boardView = new SudokuBoardView(controller);
+
         buildView();
+    }
+
+    public void updateCell(int row, int col, int value) {
+        boardView.updateCell(row, col, value);
+    }
+
+    public void focusPadButton(int i) {
+        numberPad.focusButton(i);
+    }
+
+    public void resetPad() {
+        numberPad.resetButtons();
+    }
+
+    public void enablePad() {
+        numberPad.enablePad();
     }
 
     private void buildView() {
@@ -47,72 +67,5 @@ public class SudokuView extends JFrame implements GameInterface {
         pane.add(rightPanel);
 
         setVisible(true);
-    }
-
-    public void addCellClickListener(BiConsumer<Integer, Integer> listener) {
-        boardView.addCellClickListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                CellView cell = (CellView) e.getSource();
-                SwingUtilities.invokeLater(() -> listener.accept(cell.getRow(), cell.getCol()));
-
-                // On mouse click of boardView, reset Number pad
-                SwingUtilities.invokeLater(numberPad::resetButtons);
-            }
-        });
-    }
-
-    public void addNumpadClickListener(IntConsumer listener) {
-        numberPad.addNumberButtonListener(listener);
-    }
-
-    public void addStartButtonListener(ActionListener listener) {
-        controls.addStartButtonListener(listener);
-    }
-
-    public void addSolveButtonListener(ActionListener listener) {
-        controls.addSolveButtonListener(listener);
-    }
-
-    @Override
-    public void onRequestUserInput() {
-        JOptionPane.showMessageDialog(this, "Help me!");
-        SwingUtilities.invokeLater(numberPad::enablePad);
-    }
-
-    @Override
-    public void onSudokuFinished(int level) {
-        JOptionPane.showMessageDialog(this, "Level difficulty is : "+levelRep(level), "End of solver", JOptionPane.PLAIN_MESSAGE);
-    }
-
-    private String levelRep(int dif) {
-        return switch (dif) {
-            case 0 -> " Easy :)";
-            case 1 -> " Average :|";
-            case 2 -> " Hard :(";
-            default -> " Impossible ?x_x?";
-        };
-    }
-
-    @Override
-    public void onInvalidMove(int value, int row, int col) {
-        JOptionPane.showMessageDialog(this, "Conflicting values found! Game Over!");
-    }
-
-    @Override
-    public void update(SudokuUpdate data) {
-        updateCell(data.row(), data.col(), data.value());
-    }
-
-    public void updateCell(int row, int col, int value) {
-        SwingUtilities.invokeLater(() -> boardView.updateCell(row, col, value));
-    }
-
-    public void focusPadButton(int i) {
-        SwingUtilities.invokeLater(() -> numberPad.focusButton(i));
-    }
-
-    public void resetPad() {
-        SwingUtilities.invokeLater(numberPad::resetButtons);
     }
 }

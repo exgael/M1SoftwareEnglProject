@@ -9,14 +9,14 @@ import java.util.function.IntConsumer;
 public class NumberPadView extends JPanel {
     private final List<NumberButtonView> numberButtons = new ArrayList<>();
 
-    public NumberPadView() {
+    public NumberPadView(SudokuController controller) {
         super(new GridLayout(3, 3));
-        buildNumberPad();
+        buildNumberPad(controller);
     }
 
-    private void buildNumberPad() {
+    private void buildNumberPad(SudokuController controller) {
         for (int i = 1; i <= 9; i++) {
-            NumberButtonView button = new NumberButtonView(i);
+            NumberButtonView button = new NumberButtonView(controller, i);
 
             // Add to list for ref
             numberButtons.add(button);
