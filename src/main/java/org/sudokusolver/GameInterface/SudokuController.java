@@ -67,6 +67,10 @@ public class SudokuController implements GameInterface {
         loadSudokuFromString(gridString);
     }
 
+    public void handleResetClicked() {
+        engine.resetSudoku();
+    }
+
     private void loadSudokuFromString(String gridString) {
         new SwingWorker<Void, Void>() {
             @Override
