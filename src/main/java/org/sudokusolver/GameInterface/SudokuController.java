@@ -56,37 +56,9 @@ public class SudokuController {
     }
 
     public void whenStartClicked(ActionEvent e) {
-        String[] options = {"File Path", "String"};
-        int choice = JOptionPane.showOptionDialog(sudokuView,
-                "How do you want to load the Sudoku?",
-                "Load Sudoku",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]);
-
-        if (choice == 0) {
-            // Load from file path
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(sudokuView);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                loadSudokuFromFilePath(filePath);
-            }
-        } else if (choice == 1) {
-            // Load from string
-            String gridString = JOptionPane.showInputDialog(sudokuView, "0,1,2,3,...");
-            loadSudokuFromString(gridString);
-        }
-    }
-
-    private void loadSudokuFromFilePath(String filePath) {
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() {
-                engine.loadGridFromPath(filePath);
-                return null;
-            }
-        }.execute();
+        // Load from string
+        String gridString = JOptionPane.showInputDialog(sudokuView, "0,1,2,3,...");
+        loadSudokuFromString(gridString);
     }
 
     private void loadSudokuFromString(String gridString) {
