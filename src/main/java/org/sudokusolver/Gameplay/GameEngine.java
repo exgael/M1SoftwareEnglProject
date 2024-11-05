@@ -64,6 +64,7 @@ public class GameEngine {
             sudoku.setValue(move.row(), move.col(), move.value());
             play(); // continue playing
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             gameInterface.onInvalidMove(move.value(), move.row(), move.col());
             sudoku.load(currentGrid);
         }

@@ -12,45 +12,6 @@ import java.util.stream.Collectors;
 
 public class DR3 implements DeductionRule {
 
-    @NotNull
-    private static Set<Integer> extractAllCandidates(Set<SudokuCell> unsolvedCells) {
-        return unsolvedCells.stream()
-                .flatMap(cell -> cell.getCandidates().stream())
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Applies the hidden pair to the cells.
-     *
-     * @param cellsWithBothCandidates The cells to apply the hidden pair to.
-     * @param candidate1              The first candidate of the hidden pair.
-     * @param candidate2              The second candidate of the hidden pair.
-     * @return True if a modification was made, otherwise false.
-     */
-    private static boolean applyHiddenPairToCells(Set<SudokuCell> cellsWithBothCandidates, int candidate1, int candidate2) {
-        boolean modificationMade = false;
-        for (SudokuCell cell : cellsWithBothCandidates) {
-            if (retainOnlyHiddenPair(candidate1, candidate2, cell)) {
-                modificationMade = true;
-            }
-        }
-        return modificationMade;
-    }
-
-    /**
-     * Retains only the hidden pair in the cell's candidates.
-     * A hidden pair can be found, but it is not guaranteed that the cell will be modified.
-     * The cell may already have the hidden pair as its candidates.
-     *
-     * @param candidate1 The first candidate of the hidden pair.
-     * @param candidate2 The second candidate of the hidden pair.
-     * @param cell       The cell to retain the hidden pair in.
-     * @return True if the cell was modified, otherwise false.
-     */
-    private static boolean retainOnlyHiddenPair(int candidate1, int candidate2, SudokuCell cell) {
-        return cell.getCandidates().retainAll(Set.of(candidate1, candidate2));
-    }
-
     @Override
     public boolean apply(Solvable sudoku) {
         return sudoku.streamRegions()
@@ -88,6 +49,13 @@ public class DR3 implements DeductionRule {
         return modificationMade;
     }
 
+    @NotNull
+    private static Set<Integer> extractAllCandidates(Set<SudokuCell> unsolvedCells) {
+        return unsolvedCells.stream()
+                .flatMap(cell -> cell.getCandidates().stream())
+                .collect(Collectors.toSet());
+    }
+
     /**
      * Finds two cells that contain both candidate1 and candidate2.
      * If any other cells contain candidate1 or candidate2, the method returns an empty set.
@@ -114,5 +82,37 @@ public class DR3 implements DeductionRule {
                 .anyMatch(cell -> cell.hasCandidate(candidate1) || cell.hasCandidate(candidate2));
 
         return candidatesAppearElsewhere ? Collections.emptySet() : intersection;
+    }
+
+    /**
+     * Applies the hidden pair to the cells.
+     *
+     * @param cellsWithBothCandidates The cells to apply the hidden pair to.
+     * @param candidate1              The first candidate of the hidden pair.
+     * @param candidate2              The second candidate of the hidden pair.
+     * @return True if a modification was made, otherwise false.
+     */
+    private static boolean applyHiddenPairToCells(Set<SudokuCell> cellsWithBothCandidates, int candidate1, int candidate2) {
+        boolean modificationMade = false;
+        for (SudokuCell cell : cellsWithBothCandidates) {
+            if (retainOnlyHiddenPair(candidate1, candidate2, cell)) {
+                modificationMade = true;
+            }
+        }
+        return modificationMade;
+    }
+
+    /**
+     * Retains only the hidden pair in the cell's candidates.
+     * A hidden pair can be found, but it is not guaranteed that the cell will be modified.
+     * The cell may already have the hidden pair as its candidates.
+     *
+     * @param candidate1 The first candidate of the hidden pair.
+     * @param candidate2 The second candidate of the hidden pair.
+     * @param cell       The cell to retain the hidden pair in.
+     * @return True if the cell was modified, otherwise false.
+     */
+    private static boolean retainOnlyHiddenPair(int candidate1, int candidate2, SudokuCell cell) {
+        return cell.getCandidates().retainAll(Set.of(candidate1, candidate2));
     }
 }

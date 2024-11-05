@@ -8,8 +8,8 @@ import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
 import javax.swing.*;
 
 public class SudokuController implements GameInterface {
-    private SudokuView sudokuView; // view
     private final GameEngine engine; // model
+    private SudokuView sudokuView; // view
     private int selectedValue = -1;
 
     public SudokuController(GameEngine engine, SudokuView sudokuView) {
