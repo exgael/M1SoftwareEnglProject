@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ControlPanelView extends JPanel {
-    private final JButton startButton = new JButton("Start");
+    private final JButton loadGridButton = new JButton("Load Grid");
     private final JButton solveButton = new JButton("Solve");
+    private final JButton resetButton = new JButton("Reset");
 
     public ControlPanelView(SudokuController controller) {
         super(new FlowLayout(FlowLayout.CENTER));
@@ -14,12 +15,14 @@ public class ControlPanelView extends JPanel {
     }
 
     private void buildView() {
-        add(startButton);
+        add(loadGridButton);
         add(solveButton);
+        add(resetButton);
     }
 
     private void addAction(SudokuController controller) {
-        startButton.addActionListener(e -> controller.handleStartClicked());
+        loadGridButton.addActionListener(e -> controller.handleStartClicked());
         solveButton.addActionListener(e -> controller.handleSolveClicked());
+        resetButton.addActionListener(e -> controller.handleResetClicked());
     }
 }

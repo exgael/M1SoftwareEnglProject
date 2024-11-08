@@ -70,4 +70,13 @@ public class GameEngine {
             sudoku.load(currentGrid);
         }
     }
+
+    public void resetSudoku() {
+        if (currentGrid != null) {
+            sudoku.load(currentGrid);
+            logger.info("Sudoku grid reset to initial state.");
+        } else {
+            logger.warning("No initial grid loaded to reset.");
+        }
+    }
 }
