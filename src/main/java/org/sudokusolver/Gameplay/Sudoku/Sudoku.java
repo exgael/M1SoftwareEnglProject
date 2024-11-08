@@ -1,6 +1,5 @@
 package org.sudokusolver.Gameplay.Sudoku;
 
-import org.sudokusolver.Gameplay.Modifiable;
 import org.sudokusolver.Gameplay.Solvable;
 import org.sudokusolver.Gameplay.Sudoku.Regions.Region;
 import org.sudokusolver.Gameplay.Sudoku.Regions.RegionManager;
