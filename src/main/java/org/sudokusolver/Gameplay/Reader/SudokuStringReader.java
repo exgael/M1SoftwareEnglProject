@@ -1,10 +1,7 @@
-package org.sudokusolver.Utils.Reader;
-
-import org.sudokusolver.Gameplay.SudokuReader;
+package org.sudokusolver.Gameplay.Reader;
 
 public class SudokuStringReader implements SudokuReader {
 
-    @Override
     public int[] readGridFrom(String str) throws RuntimeException {
         str = str.replaceAll("[\\s,]+", "");
 

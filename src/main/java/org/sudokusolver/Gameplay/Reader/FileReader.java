@@ -1,4 +1,4 @@
-package org.sudokusolver.Utils.Reader;
+package org.sudokusolver.Gameplay.Reader;
 
 import java.io.*;
 

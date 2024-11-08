@@ -1,4 +1,4 @@
-package org.sudokusolver.Gameplay;
+package org.sudokusolver.Gameplay.Reader;
 
 @FunctionalInterface
 public interface SudokuReader {

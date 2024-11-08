@@ -1,7 +1,7 @@
 package org.sudokusolver;
 
 import org.sudokusolver.GameInterface.SudokuView;
-import org.sudokusolver.Utils.Reader.GridLoader;
+import org.sudokusolver.Gameplay.Reader.GridLoader;
 import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.SudokuSolver;
