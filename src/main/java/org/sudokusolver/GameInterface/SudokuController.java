@@ -2,7 +2,6 @@ package org.sudokusolver.GameInterface;
 
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.GameInterface;
-import org.sudokusolver.Gameplay.UserMove;
 import org.sudokusolver.Gameplay.Sudoku.SudokuUpdate;
 
 import javax.swing.*;
@@ -40,7 +39,7 @@ public class SudokuController implements GameInterface {
             @Override
             protected Void doInBackground() {
                 if (selectedValue != -1) {
-                    engine.receiveUserMove(new UserMove(row, col, selectedValue));
+                    engine.receiveUserMove(row, col, selectedValue);
                     selectedValue = -1;
                     sudokuView.resetPad();
                 } else {

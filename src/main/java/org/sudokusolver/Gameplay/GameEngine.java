@@ -59,14 +59,14 @@ public class GameEngine {
         gameInterface.onSudokuFinished(level);
     }
 
-    public void receiveUserMove(UserMove move) {
-        logger.info("Received user move: " + move);
+    public void receiveUserMove(int row, int col, int value) {
+        logger.info("Received user move: (" + row + "," + col + ") with value " + value + ".");
         try {
-            sudoku.setValue(move.row(), move.col(), move.value());
+            sudoku.setValue(row, col, value);
             play(); // continue playing
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            gameInterface.onInvalidMove(move.value(), move.row(), move.col());
+            gameInterface.onInvalidMove(value, row, col);
             sudoku.load(currentGrid);
         }
     }
