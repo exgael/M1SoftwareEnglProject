@@ -1,4 +1,4 @@
-package org.sudokusolver.Strategy.Sudoku;
+package org.sudokusolver.Gameplay.Sudoku;
 
 import org.jetbrains.annotations.NotNull;
 import org.sudokusolver.Utils.Observer;

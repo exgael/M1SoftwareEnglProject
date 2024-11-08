@@ -1,8 +1,8 @@
-package org.sudokusolver.Strategy.Solver;
+package org.sudokusolver.Strategy;
 
-import org.sudokusolver.Strategy.Solver.SolvingStrategies.EasySolvingStrategy;
-import org.sudokusolver.Strategy.Solver.SolvingStrategies.HardSolvingStrategy;
-import org.sudokusolver.Strategy.Solver.SolvingStrategies.MediumSolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategies.EasySolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategies.HardSolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategies.MediumSolvingStrategy;
 
 public class StrategyFactory {
     public static SolvingStrategy createStrategy(DifficultyLevel difficultyLevel) {

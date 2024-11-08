@@ -2,14 +2,12 @@ package org.sudokusolver;
 
 import org.sudokusolver.GameInterface.SudokuView;
 import org.sudokusolver.Utils.Reader.GridLoader;
-import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Strategy.Sudoku.SudokuBoard;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.SudokuSolver;
 import org.sudokusolver.GameInterface.SudokuController;
-import org.sudokusolver.Strategy.Solver.SudokuDRSolver;
+import org.sudokusolver.Strategy.SudokuDRSolver;
 
-import javax.swing.*;
 import java.util.logging.Logger;
 
 public class Main {
@@ -19,7 +17,7 @@ public class Main {
 
         // Initialize Strategy Module
         SudokuSolver solver = new SudokuDRSolver();
-        Sudoku sudoku = new SudokuBoard();
+        Sudoku sudoku = new Sudoku();
 
         // Initialize Gameplay Module
         GridLoader gridLoader = new GridLoader();

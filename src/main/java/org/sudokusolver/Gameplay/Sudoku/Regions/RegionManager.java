@@ -1,7 +1,7 @@
-package org.sudokusolver.Strategy.Sudoku.Regions;
+package org.sudokusolver.Gameplay.Sudoku.Regions;
 
-import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Strategy.Sudoku.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 
 import java.util.*;
 import java.util.function.BiConsumer;

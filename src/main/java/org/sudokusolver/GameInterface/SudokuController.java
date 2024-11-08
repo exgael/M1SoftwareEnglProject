@@ -3,7 +3,7 @@ package org.sudokusolver.GameInterface;
 import org.sudokusolver.Gameplay.GameEngine;
 import org.sudokusolver.Gameplay.GameInterface;
 import org.sudokusolver.Gameplay.UserMove;
-import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
+import org.sudokusolver.Gameplay.Sudoku.SudokuUpdate;
 
 import javax.swing.*;
 

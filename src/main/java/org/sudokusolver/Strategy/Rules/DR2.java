@@ -1,10 +1,10 @@
-package org.sudokusolver.Strategy.Solver.Rules;
+package org.sudokusolver.Strategy.Rules;
 
 
 import org.sudokusolver.Gameplay.Solvable;
-import org.sudokusolver.Strategy.Sudoku.SudokuCell;
-import org.sudokusolver.Strategy.Solver.DeductionRule;
-import org.sudokusolver.Strategy.Sudoku.Regions.Region;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
+import org.sudokusolver.Strategy.DeductionRule;
+import org.sudokusolver.Gameplay.Sudoku.Regions.Region;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,15 +1,7 @@
 package org.sudokusolver.GameInterface;
 
-import org.sudokusolver.Gameplay.GameInterface;
-import org.sudokusolver.Strategy.Sudoku.SudokuUpdate;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.function.BiConsumer;
-import java.util.function.IntConsumer;
 
 public class SudokuView extends JFrame {
     private final ControlPanelView controls;

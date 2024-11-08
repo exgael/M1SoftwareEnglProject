@@ -1,5 +1,6 @@
 package org.sudokusolver.Gameplay;
 
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
 import org.sudokusolver.Utils.Reader.GridLoader;
 
 import java.util.logging.Logger;

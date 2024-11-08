@@ -1,13 +1,15 @@
-package org.sudokusolver.Strategy.Sudoku;
+package org.sudokusolver.Gameplay.Sudoku;
 
-import org.sudokusolver.Gameplay.Sudoku;
-import org.sudokusolver.Strategy.Sudoku.Regions.Region;
-import org.sudokusolver.Strategy.Sudoku.Regions.RegionManager;
+import org.sudokusolver.Gameplay.Loadable;
+import org.sudokusolver.Gameplay.Modifiable;
+import org.sudokusolver.Gameplay.Solvable;
+import org.sudokusolver.Gameplay.Sudoku.Regions.Region;
+import org.sudokusolver.Gameplay.Sudoku.Regions.RegionManager;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> implements Sudoku {
+public class Sudoku extends ObservableBoard<SudokuCell, SudokuUpdate> implements Modifiable, Solvable, Loadable {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
@@ -15,7 +17,7 @@ public class SudokuBoard extends ObservableBoard<SudokuCell, SudokuUpdate> imple
 
     private final RegionManager regionManager;
 
-    public SudokuBoard() {
+    public Sudoku() {
         super(BOARD_SIZE, BOARD_SIZE);
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {

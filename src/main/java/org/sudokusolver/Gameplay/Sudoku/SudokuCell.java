@@ -1,4 +1,4 @@
-package org.sudokusolver.Strategy.Sudoku;
+package org.sudokusolver.Gameplay.Sudoku;
 
 import java.util.HashSet;
 import java.util.List;

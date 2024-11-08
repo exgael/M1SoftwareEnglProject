@@ -1,6 +1,6 @@
 package org.sudokusolver.Gameplay;
 
-import org.sudokusolver.Strategy.Sudoku.Regions.Region;
+import org.sudokusolver.Gameplay.Sudoku.Regions.Region;
 
 import java.util.stream.Stream;
 

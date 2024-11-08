@@ -1,4 +1,4 @@
-package org.sudokusolver.Strategy.Solver;
+package org.sudokusolver.Strategy;
 
 import org.sudokusolver.Gameplay.Solvable;
 

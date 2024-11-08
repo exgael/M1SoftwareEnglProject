@@ -1,6 +1,6 @@
-package org.sudokusolver.Strategy.Sudoku.Regions;
+package org.sudokusolver.Gameplay.Sudoku.Regions;
 
-import org.sudokusolver.Strategy.Sudoku.SudokuCell;
+import org.sudokusolver.Gameplay.Sudoku.SudokuCell;
 
 import java.util.List;
 import java.util.Set;

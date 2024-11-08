@@ -1,12 +1,12 @@
-package org.sudokusolver.Strategy.Solver.SolvingStrategies;
+package org.sudokusolver.Strategy.SolvingStrategies;
 
-import org.sudokusolver.Strategy.Solver.DeductionRule;
-import org.sudokusolver.Strategy.Solver.Rules.CompositeRule;
-import org.sudokusolver.Strategy.Solver.Rules.DR1;
-import org.sudokusolver.Strategy.Solver.Rules.DR2;
-import org.sudokusolver.Strategy.Solver.Rules.DR3;
+import org.sudokusolver.Strategy.DeductionRule;
+import org.sudokusolver.Strategy.Rules.CompositeRule;
+import org.sudokusolver.Strategy.Rules.DR1;
+import org.sudokusolver.Strategy.Rules.DR2;
+import org.sudokusolver.Strategy.Rules.DR3;
 import org.sudokusolver.Gameplay.Solvable;
-import org.sudokusolver.Strategy.Solver.SolvingStrategy;
+import org.sudokusolver.Strategy.SolvingStrategy;
 
 import java.util.List;
 

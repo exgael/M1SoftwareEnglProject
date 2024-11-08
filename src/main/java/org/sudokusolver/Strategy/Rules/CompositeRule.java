@@ -1,6 +1,6 @@
-package org.sudokusolver.Strategy.Solver.Rules;
+package org.sudokusolver.Strategy.Rules;
 
-import org.sudokusolver.Strategy.Solver.DeductionRule;
+import org.sudokusolver.Strategy.DeductionRule;
 import org.sudokusolver.Gameplay.Solvable;
 
 import java.util.List;
