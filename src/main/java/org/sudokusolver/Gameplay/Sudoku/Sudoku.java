@@ -1,6 +1,5 @@
 package org.sudokusolver.Gameplay.Sudoku;
 
-import org.sudokusolver.Gameplay.Loadable;
 import org.sudokusolver.Gameplay.Modifiable;
 import org.sudokusolver.Gameplay.Solvable;
 import org.sudokusolver.Gameplay.Sudoku.Regions.Region;
@@ -9,7 +8,7 @@ import org.sudokusolver.Gameplay.Sudoku.Regions.RegionManager;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Sudoku extends ObservableBoard<SudokuCell, SudokuUpdate> implements Modifiable, Solvable, Loadable {
+public class Sudoku extends ObservableBoard<SudokuCell, SudokuUpdate> implements Modifiable, Solvable {
 
     private static final int BOARD_SIZE = 9;
     private static final int SUBGRID_SIZE = 3;
@@ -28,7 +27,6 @@ public class Sudoku extends ObservableBoard<SudokuCell, SudokuUpdate> implements
         initializeCandidates();
     }
 
-    @Override
     public void load(int[] grid) {
 
         // Reset
