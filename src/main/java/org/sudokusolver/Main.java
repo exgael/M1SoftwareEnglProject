@@ -1,26 +1,30 @@
 package org.sudokusolver;
 
-import org.sudokusolver.Solver.Solvers.SudokuSolution;
-import org.sudokusolver.Solver.Solvers.SudokuSolver;
+import org.sudokusolver.GameInterface.SudokuView;
+import org.sudokusolver.Gameplay.Reader.GridLoader;
+import org.sudokusolver.Gameplay.Sudoku.Sudoku;
+import org.sudokusolver.Gameplay.GameEngine;
+import org.sudokusolver.Gameplay.SudokuSolver;
+import org.sudokusolver.GameInterface.SudokuController;
+import org.sudokusolver.Strategy.SudokuDRSolver;
+
+import java.util.logging.Logger;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        System.out.println("Sudoku Solver");
+        logger.info("Starting Sudoku Solver");
 
-        int[] easySudoku = new int[]{
-                2, 9, 0, 0, 7, 1, 0, 0, 0,
-                0, 8, 0, 3, 0, 9, 0, 0, 6,
-                0, 4, 0, 0, 0, 0, 0, 0, 0,
-                9, 0, 7, 0, 8, 0, 2, 0, 4,
-                0, 0, 0, 9, 0, 0, 6, 0, 0,
-                0, 0, 8, 0, 2, 0, 9, 1, 3,
-                0, 2, 9, 7, 0, 4, 0, 3, 8,
-                8, 0, 5, 1, 0, 0, 0, 7, 9,
-                0, 7, 4, 0, 9, 0, 1, 6, 2
-        };
+        // Initialize Strategy Module
+        SudokuSolver solver = new SudokuDRSolver();
+        Sudoku sudoku = new Sudoku();
 
-        SudokuSolver sudokuSolver = SudokuSolver.build();
-        SudokuSolution sol = sudokuSolver.findSudokuLevel(easySudoku);
-        System.out.println(sol);
+        // Initialize Gameplay Module
+        GridLoader gridLoader = new GridLoader();
+        GameEngine gameEngine = new GameEngine(gridLoader, solver, sudoku);
+
+        // Initialize GUI
+        SudokuController controller = new SudokuController(gameEngine, null);
+        new SudokuView(controller);
     }
 }
