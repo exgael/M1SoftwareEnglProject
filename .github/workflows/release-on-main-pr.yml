@@ -7,13 +7,10 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
 
 jobs:
   build-and-release:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
