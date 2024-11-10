@@ -19,9 +19,14 @@ public class SudokuDRSolver implements SudokuSolver {
         DifficultyLevel difficulty = solve(sudoku);
         int diff = difficulty == null ? -1 : highestDifficulty.ordinal();
         if (sudoku.isSolved()) {
-            highestDifficulty = DifficultyLevel.EASY;
+            reset();
         }
         return diff;
+    }
+
+    @Override
+    public void reset() {
+        highestDifficulty = DifficultyLevel.EASY;
     }
 
     /**

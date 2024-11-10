@@ -39,7 +39,7 @@ public class GameEngine {
 
     private void load(String str, boolean isPath) throws RuntimeException {
         currentGrid = gridLoader.loadNewSudoku(str, isPath);
-        sudoku.load(currentGrid);
+        loadSudokuAndResetSolver();
     }
 
     public void play() {
@@ -67,16 +67,21 @@ public class GameEngine {
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             gameInterface.onInvalidMove(value, row, col);
-            sudoku.load(currentGrid);
+            loadSudokuAndResetSolver();
         }
     }
 
     public void resetSudoku() {
         if (currentGrid != null) {
-            sudoku.load(currentGrid);
+            loadSudokuAndResetSolver();
             logger.info("Sudoku grid reset to initial state.");
         } else {
             logger.warning("No initial grid loaded to reset.");
         }
+    }
+
+    private void loadSudokuAndResetSolver() {
+        sudoku.load(currentGrid);
+        solver.reset();
     }
 }
