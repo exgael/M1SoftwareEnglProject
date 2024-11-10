@@ -29,15 +29,15 @@ public class GameEngine {
         sudoku.addObserver(gameInterface);
     }
 
-    public void loadGridFromPath(String filePath) {
+    public void loadGridFromPath(String filePath) throws RuntimeException {
         load(filePath, true);
     }
 
-    public void loadGridFromString(String gridString) {
+    public void loadGridFromString(String gridString) throws RuntimeException {
         load(gridString, false);
     }
 
-    private void load(String str, boolean isPath) {
+    private void load(String str, boolean isPath) throws RuntimeException {
         currentGrid = gridLoader.loadNewSudoku(str, isPath);
         sudoku.load(currentGrid);
     }

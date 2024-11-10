@@ -36,6 +36,10 @@ public class SudokuView extends JFrame {
         numberPad.enablePad();
     }
 
+    public void updateControlButtons(boolean isGridLoaded) {
+        controls.setControlButtonsEnabled(isGridLoaded);
+    }
+
     private void buildView() {
         setSize(600, 400);
         setLocation(200, 200);

@@ -14,14 +14,20 @@ public class ControlPanelView extends JPanel {
         addAction(controller);
     }
 
+    public void setControlButtonsEnabled(boolean enabled) {
+        solveButton.setEnabled(enabled);
+        resetButton.setEnabled(enabled);
+    }
+
     private void buildView() {
         add(loadGridButton);
         add(solveButton);
         add(resetButton);
+        setControlButtonsEnabled(false);
     }
 
     private void addAction(SudokuController controller) {
-        loadGridButton.addActionListener(e -> controller.handleStartClicked());
+        loadGridButton.addActionListener(e -> controller.handleLoadGridClick());
         solveButton.addActionListener(e -> controller.handleSolveClicked());
         resetButton.addActionListener(e -> controller.handleResetClicked());
     }

@@ -10,6 +10,7 @@ public class SudokuController implements GameInterface {
     private final GameEngine engine; // model
     private SudokuView sudokuView; // view
     private int selectedValue = -1;
+    private boolean isGridLoaded = false;
 
     public SudokuController(GameEngine engine, SudokuView sudokuView) {
         this.sudokuView = sudokuView;
@@ -60,14 +61,55 @@ public class SudokuController implements GameInterface {
         }.execute();
     }
 
-    public void handleStartClicked() {
-        // Load from string
-        String gridString = JOptionPane.showInputDialog(sudokuView, "0,1,2,3,...");
-        loadSudokuFromString(gridString);
+    public void handleLoadGridClick() {
+        String[] options = {"File Path", "String"};
+        int choice = JOptionPane.showOptionDialog(sudokuView,
+                "How do you want to load the Sudoku?",
+                "Load Sudoku",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (choice == 0) {
+            // Load from file path
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(sudokuView);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    loadSudokuFromFilePath(filePath);
+                    isGridLoaded = true; // Update status after loading grid
+                    sudokuView.updateControlButtons(isGridLoaded); // Enable "Solve" and "Reset" buttons
+                } catch (RuntimeException e) {
+                    JOptionPane.showMessageDialog(sudokuView, e.getLocalizedMessage());
+                }
+            }
+        } else if (choice == 1) {
+            // Load from string
+            String gridString = JOptionPane.showInputDialog(sudokuView, "0,1,2,3,...");
+            if (gridString != null && !gridString.trim().isEmpty()) {
+                try {
+                    loadSudokuFromString(gridString);
+                    isGridLoaded = true; // Update status after loading grid
+                    sudokuView.updateControlButtons(isGridLoaded); // Enable "Solve" and "Reset" buttons
+                } catch (RuntimeException e) {
+                    JOptionPane.showMessageDialog(sudokuView, e.getLocalizedMessage());
+                }
+            }
+        }
     }
 
     public void handleResetClicked() {
         engine.resetSudoku();
+    }
+
+    private void loadSudokuFromFilePath(String filePath) {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                engine.loadGridFromPath(filePath);
+                return null;
+            }
+        }.execute();
     }
 
     private void loadSudokuFromString(String gridString) {
